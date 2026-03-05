@@ -158,7 +158,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		$instance = $old_instance;
 
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 		$instance['number'] = absint( $new_instance['number'] );
 
 		return $instance;
@@ -178,7 +178,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		);
 
 		// Display the admin form
-		include plugin_dir_path( __FILE__ . 'views/admin.php' );
+		include plugin_dir_path( __FILE__ ) . 'views/admin.php';
 
 	} // end form
 

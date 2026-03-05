@@ -88,7 +88,7 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		$expiry = apply_filters( 'hmn_cp_cookie_expiry', time() + ( 7 * DAY_IN_SECONDS ) );
 
 		//Set a cookie now to see if they are supported by the browser.
-		$secure = ( 'https' === parse_url( site_url(), PHP_URL_SCHEME ) && 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
+		$secure = ( 'https' === wp_parse_url( site_url(), PHP_URL_SCHEME ) && 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) );
 
 		setcookie( 'hmn_cp_visitor', $this->visitor_id, $expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
 		if ( SITECOOKIEPATH !== COOKIEPATH ) {
