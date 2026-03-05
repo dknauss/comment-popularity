@@ -37,7 +37,6 @@ class HMN_Comment_Popularity_Admin {
 		}
 
 		return self::$instance;
-
 	}
 
 	/**
@@ -58,9 +57,22 @@ class HMN_Comment_Popularity_Admin {
 
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id();
-			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+			$prefs   = get_blog_option(
+				$blog_id,
+				'comment_popularity_prefs',
+				array(
+					'default_expert_karma' => 0,
+					'ranking_mode'         => 'karma',
+				)
+			);
 		} else {
-			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+			$prefs = get_option(
+				'comment_popularity_prefs',
+				array(
+					'default_expert_karma' => 0,
+					'ranking_mode'         => 'karma',
+				)
+			);
 		}
 
 		$default_expert_karma = array_key_exists( 'default_expert_karma', $prefs ) ? $prefs['default_expert_karma'] : 0;
@@ -70,7 +82,6 @@ class HMN_Comment_Popularity_Admin {
 			esc_attr__( 'Enter value', 'comment-popularity' ),
 			esc_attr( $default_expert_karma )
 		);
-
 	}
 
 	/**
@@ -80,9 +91,22 @@ class HMN_Comment_Popularity_Admin {
 
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id();
-			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+			$prefs   = get_blog_option(
+				$blog_id,
+				'comment_popularity_prefs',
+				array(
+					'default_expert_karma' => 0,
+					'ranking_mode'         => 'karma',
+				)
+			);
 		} else {
-			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+			$prefs = get_option(
+				'comment_popularity_prefs',
+				array(
+					'default_expert_karma' => 0,
+					'ranking_mode'         => 'karma',
+				)
+			);
 		}
 
 		$ranking_mode = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
@@ -107,7 +131,7 @@ class HMN_Comment_Popularity_Admin {
 		$valid = array();
 
 		$valid['default_expert_karma'] = isset( $input['default_expert_karma'] ) ? absint( $input['default_expert_karma'] ) : 0;
-		$valid['ranking_mode'] = ( isset( $input['ranking_mode'] ) && in_array( $input['ranking_mode'], array( 'karma', 'wilson' ), true ) ) ? $input['ranking_mode'] : 'karma';
+		$valid['ranking_mode']         = ( isset( $input['ranking_mode'] ) && in_array( $input['ranking_mode'], array( 'karma', 'wilson' ), true ) ) ? $input['ranking_mode'] : 'karma';
 
 		return $valid;
 	}
@@ -126,7 +150,7 @@ class HMN_Comment_Popularity_Admin {
 
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id();
-			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0 ) );
+			$prefs   = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0 ) );
 		} else {
 			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0 ) );
 		}
@@ -182,7 +206,7 @@ class HMN_Comment_Popularity_Admin {
 
 		</table>
 
-	<?php
+		<?php
 	}
 
 	/**
@@ -194,10 +218,12 @@ class HMN_Comment_Popularity_Admin {
 	 */
 	public function add_comment_columns( $columns ) {
 
-		return array_merge( $columns, array(
-			'comment_karma' => __( 'Weight', 'comment-popularity' ),
-		) );
-
+		return array_merge(
+			$columns,
+			array(
+				'comment_karma' => __( 'Weight', 'comment-popularity' ),
+			)
+		);
 	}
 
 	/**
@@ -226,10 +252,12 @@ class HMN_Comment_Popularity_Admin {
 	 */
 	public function add_users_columns( $columns ) {
 
-		return array_merge( $columns, array(
-			'user_karma' => __( 'Karma', 'comment-popularity' )
-		) );
-
+		return array_merge(
+			$columns,
+			array(
+				'user_karma' => __( 'Karma', 'comment-popularity' ),
+			)
+		);
 	}
 
 	/**
@@ -274,7 +302,6 @@ class HMN_Comment_Popularity_Admin {
 		$columns['comment_karma'] = 'comment_karma';
 
 		return $columns;
-
 	}
 	/**
 	 * Saves the custom user meta data.
@@ -314,7 +341,5 @@ class HMN_Comment_Popularity_Admin {
 		update_user_option( $user_id, 'hmn_user_karma', $user_karma );
 
 		update_user_option( $user_id, 'hmn_user_expert_status', $user_expert_status );
-
 	}
-
 }
