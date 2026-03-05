@@ -48,6 +48,7 @@ class HMN_Comment_Popularity_Admin {
 		register_setting( 'discussion', 'comment_popularity_prefs', array( $this, 'validate_settings' ) );
 
 		add_settings_field( 'hmn_cp_expert_karma_field', __( 'Default karma value for expert users', 'comment-popularity' ), array( $this, 'render_expert_karma_input' ), 'discussion', 'default', array( 'label_for' => 'hmn_cp_expert_karma_field' ) );
+		add_settings_field( 'hmn_cp_comment_ranking_mode', __( 'Comment ranking mode', 'comment-popularity' ), array( $this, 'render_ranking_mode_input' ), 'discussion', 'default', array( 'label_for' => 'hmn_cp_comment_ranking_mode' ) );
 	}
 
 	/**
@@ -57,9 +58,9 @@ class HMN_Comment_Popularity_Admin {
 
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id();
-			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0 ) );
+			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
 		} else {
-			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0 ) );
+			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
 		}
 
 		$default_expert_karma = array_key_exists( 'default_expert_karma', $prefs ) ? $prefs['default_expert_karma'] : 0;
@@ -73,6 +74,28 @@ class HMN_Comment_Popularity_Admin {
 	}
 
 	/**
+	 * Callback to render ranking mode select input.
+	 */
+	public function render_ranking_mode_input() {
+
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			$prefs = get_blog_option( $blog_id, 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+		} else {
+			$prefs = get_option( 'comment_popularity_prefs', array( 'default_expert_karma' => 0, 'ranking_mode' => 'karma' ) );
+		}
+
+		$ranking_mode = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
+		?>
+		<select id="hmn_cp_comment_ranking_mode" name="comment_popularity_prefs[ranking_mode]">
+			<option value="karma" <?php selected( $ranking_mode, 'karma' ); ?>><?php esc_html_e( 'Karma (current behavior)', 'comment-popularity' ); ?></option>
+			<option value="wilson" <?php selected( $ranking_mode, 'wilson' ); ?>><?php esc_html_e( 'Wilson score lower bound', 'comment-popularity' ); ?></option>
+		</select>
+		<p class="description"><?php esc_html_e( 'Wilson score uses upvote/downvote confidence and is better for low-vote comments.', 'comment-popularity' ); ?></p>
+		<?php
+	}
+
+	/**
 	 * Sanitize the user input.
 	 *
 	 * @param $input
@@ -83,7 +106,8 @@ class HMN_Comment_Popularity_Admin {
 
 		$valid = array();
 
-		$valid['default_expert_karma'] = absint( $input['default_expert_karma'] );
+		$valid['default_expert_karma'] = isset( $input['default_expert_karma'] ) ? absint( $input['default_expert_karma'] ) : 0;
+		$valid['ranking_mode'] = ( isset( $input['ranking_mode'] ) && in_array( $input['ranking_mode'], array( 'karma', 'wilson' ), true ) ) ? $input['ranking_mode'] : 'karma';
 
 		return $valid;
 	}

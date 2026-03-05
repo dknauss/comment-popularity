@@ -373,7 +373,9 @@ class HMN_Comment_Popularity {
 			'container_classes' => $container_classes,
 			'comment_id'        => $comment_id,
 			'comment_weight'    => $this->get_comment_weight( $comment_id ),
+			'comment_wilson'    => $this->get_comment_wilson_score( $comment_id ),
 			'enable_voting'     => $this->visitor_can_vote(),
+			'ranking_mode'      => $this->get_comment_ranking_mode(),
 			'vote_type'         => array_key_exists( $comment_id, $comment_ids_voted_on ) ? $comment_ids_voted_on[ $comment_id ] : '',
 		);
 
@@ -482,9 +484,41 @@ class HMN_Comment_Popularity {
 	 * @return string
 	 */
 	public function get_comment_ranking_mode() {
-		$mode = apply_filters( 'hmn_cp_comment_ranking_mode', 'karma' );
+		$prefs = $this->get_plugin_prefs();
+		$mode = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
+		$mode = apply_filters( 'hmn_cp_comment_ranking_mode', $mode );
 
 		return in_array( $mode, array( 'karma', 'wilson' ), true ) ? $mode : 'karma';
+	}
+
+	/**
+	 * Read plugin preferences.
+	 *
+	 * @return array
+	 */
+	protected function get_plugin_prefs() {
+		$defaults = array(
+			'default_expert_karma' => 0,
+			'ranking_mode'         => 'karma',
+		);
+
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			return get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults );
+		}
+
+		return get_option( 'comment_popularity_prefs', $defaults );
+	}
+
+	/**
+	 * Get stored Wilson score for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return float
+	 */
+	public function get_comment_wilson_score( $comment_id ) {
+		return (float) get_comment_meta( $comment_id, self::COMMENT_META_WILSON_LOWER_BOUND, true );
 	}
 
 	/**
