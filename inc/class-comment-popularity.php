@@ -555,7 +555,7 @@ class HMN_Comment_Popularity {
 	 *
 	 * @return string
 	 */
-	public function get_comments_sorted_by_weight( $html = false, array $args ) {
+	public function get_comments_sorted_by_weight( array $args, $html = false ) {
 
 		// WP_Comment_Query arguments
 		$defaults = array(

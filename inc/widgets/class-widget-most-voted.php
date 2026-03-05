@@ -98,7 +98,7 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 		}
 
 		$hmn_cp_plugin = HMN_Comment_Popularity::get_instance();
-		$comments = $hmn_cp_plugin->get_comments_sorted_by_weight( false, array( 'number' => $number, 'echo' => false ) );
+		$comments = $hmn_cp_plugin->get_comments_sorted_by_weight( array( 'number' => $number, 'echo' => false ), false );
 
 		$output .= $args['before_widget'];
 		if ( $title ) {

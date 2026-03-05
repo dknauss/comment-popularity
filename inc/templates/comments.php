@@ -43,7 +43,7 @@ endif;
 			);
 
 			if ( $hmn_cp_obj->are_comments_sorted_by_weight() ) {
-				$hmn_cp_obj->get_comments_sorted_by_weight( true, $args );
+				$hmn_cp_obj->get_comments_sorted_by_weight( $args, true );
 			} else {
 				wp_list_comments( $args );
 			}

@@ -59,7 +59,7 @@ function hmn_cp_the_sorted_comments( array $args ) {
 			$args['callback'] = array( $hmn_cp_obj, 'comment_callback' );
 		}
 
-		echo $hmn_cp_obj->get_comments_sorted_by_weight( true, $args );
+		$hmn_cp_obj->get_comments_sorted_by_weight( $args, true );
 
 	}
 
