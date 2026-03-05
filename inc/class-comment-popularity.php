@@ -21,6 +21,14 @@ class HMN_Comment_Popularity {
 	 */
 	const HMN_CP_REQUIRED_WP_VERSION = '4.9';
 
+	const COMMENT_META_UPVOTES = '_hmn_cp_upvotes';
+
+	const COMMENT_META_DOWNVOTES = '_hmn_cp_downvotes';
+
+	const COMMENT_META_WILSON_LOWER_BOUND = '_hmn_cp_wilson_lb';
+
+	const COMMENT_META_TOTAL_VOTES = '_hmn_cp_total_votes';
+
 	/**
 	 * The instance of HMN_Comment_Popularity.
 	 *
@@ -469,6 +477,134 @@ class HMN_Comment_Popularity {
 	}
 
 	/**
+	 * Get ranking mode for comment ordering.
+	 *
+	 * @return string
+	 */
+	public function get_comment_ranking_mode() {
+		$mode = apply_filters( 'hmn_cp_comment_ranking_mode', 'karma' );
+
+		return in_array( $mode, array( 'karma', 'wilson' ), true ) ? $mode : 'karma';
+	}
+
+	/**
+	 * Read Wilson vote counters for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return array
+	 */
+	protected function get_comment_vote_counts( $comment_id ) {
+
+		$upvotes = (int) get_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, true );
+		$downvotes = (int) get_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, true );
+		$total_votes = (int) get_comment_meta( $comment_id, self::COMMENT_META_TOTAL_VOTES, true );
+
+		if ( 0 === $total_votes ) {
+			$total_votes = $upvotes + $downvotes;
+		}
+
+		return array(
+			'upvotes' => max( 0, $upvotes ),
+			'downvotes' => max( 0, $downvotes ),
+			'total_votes' => max( 0, $total_votes ),
+		);
+	}
+
+	/**
+	 * Persist Wilson vote counters for a comment.
+	 *
+	 * @param int   $comment_id Comment ID.
+	 * @param array $counts Vote counts.
+	 */
+	protected function set_comment_vote_counts( $comment_id, array $counts ) {
+
+		update_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, (int) $counts['upvotes'] );
+		update_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, (int) $counts['downvotes'] );
+		update_comment_meta( $comment_id, self::COMMENT_META_TOTAL_VOTES, (int) $counts['total_votes'] );
+	}
+
+	/**
+	 * Update vote counters from previous/current vote action.
+	 *
+	 * @param int    $comment_id Comment ID.
+	 * @param string $previous_vote Previous vote action.
+	 * @param string $vote Current vote action.
+	 *
+	 * @return array
+	 */
+	protected function update_comment_vote_counts( $comment_id, $previous_vote, $vote ) {
+
+		$counts = $this->get_comment_vote_counts( $comment_id );
+
+		if ( 'upvote' === $previous_vote ) {
+			$counts['upvotes'] = max( 0, $counts['upvotes'] - 1 );
+		}
+
+		if ( 'downvote' === $previous_vote ) {
+			$counts['downvotes'] = max( 0, $counts['downvotes'] - 1 );
+		}
+
+		if ( 'upvote' === $vote ) {
+			$counts['upvotes']++;
+		}
+
+		if ( 'downvote' === $vote ) {
+			$counts['downvotes']++;
+		}
+
+		$counts['total_votes'] = $counts['upvotes'] + $counts['downvotes'];
+
+		$this->set_comment_vote_counts( $comment_id, $counts );
+
+		return $counts;
+	}
+
+	/**
+	 * Calculate Wilson lower bound score.
+	 *
+	 * @param int   $upvotes Upvotes.
+	 * @param int   $downvotes Downvotes.
+	 * @param float $z Wilson confidence z-score.
+	 *
+	 * @return float
+	 */
+	protected function calculate_wilson_lower_bound( $upvotes, $downvotes, $z ) {
+
+		$total = (int) $upvotes + (int) $downvotes;
+
+		if ( $total <= 0 ) {
+			return 0;
+		}
+
+		$phat = $upvotes / $total;
+		$z2 = $z * $z;
+
+		$numerator = $phat + $z2 / ( 2 * $total ) - $z * sqrt( ( $phat * ( 1 - $phat ) + $z2 / ( 4 * $total ) ) / $total );
+		$denominator = 1 + $z2 / $total;
+
+		return $numerator / $denominator;
+	}
+
+	/**
+	 * Update Wilson rank metadata for a comment.
+	 *
+	 * @param int   $comment_id Comment ID.
+	 * @param array $counts Vote counts.
+	 *
+	 * @return float
+	 */
+	protected function update_comment_wilson_rank( $comment_id, array $counts ) {
+
+		$z = (float) apply_filters( 'hmn_cp_wilson_z_score', 1.96 );
+		$score = $this->calculate_wilson_lower_bound( $counts['upvotes'], $counts['downvotes'], $z );
+
+		update_comment_meta( $comment_id, self::COMMENT_META_WILSON_LOWER_BOUND, $score );
+
+		return $score;
+	}
+
+	/**
 	 * Get the current visitor vote state for a comment.
 	 *
 	 * @param int $comment_id Comment ID.
@@ -557,13 +693,19 @@ class HMN_Comment_Popularity {
 	 */
 	public function get_comments_sorted_by_weight( array $args, $html = false ) {
 
+		$ranking_mode = $this->get_comment_ranking_mode();
+
 		// WP_Comment_Query arguments
 		$defaults = array(
 			'status'  => 'approve',
 			'type'    => 'comment',
 			'order'   => 'DESC',
-			'orderby' => 'comment_karma',
+			'orderby' => ( 'wilson' === $ranking_mode ) ? 'meta_value_num' : 'comment_karma',
 		);
+
+		if ( 'wilson' === $ranking_mode ) {
+			$defaults['meta_key'] = self::COMMENT_META_WILSON_LOWER_BOUND;
+		}
 
 		$get_comments_args = wp_parse_args( $args, $defaults );
 
@@ -725,6 +867,9 @@ class HMN_Comment_Popularity {
 			$this->get_visitor()->log_vote( $comment_id, $next_vote );
 		}
 
+		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
+		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
+
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
 		$return = array(
@@ -732,6 +877,11 @@ class HMN_Comment_Popularity {
 			'weight'          => $this->get_comment_weight( $comment_id ),
 			'comment_id'      => $comment_id,
 			'vote_type'       => $labels[ $vote ],
+			'ranking_mode'    => $this->get_comment_ranking_mode(),
+			'upvotes'         => $counts['upvotes'],
+			'downvotes'       => $counts['downvotes'],
+			'total_votes'     => $counts['total_votes'],
+			'wilson_lb'       => $wilson_score,
 		);
 
 		return $return;
