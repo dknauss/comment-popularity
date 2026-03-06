@@ -117,13 +117,13 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 
 	public function test_too_soon_to_vote_again() {
 
-		$this->plugin->comment_vote( $this->test_voter_id,  $this->test_comment_id, 'upvote' );
+		$first_vote = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 
 		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 
 		$this->assertArrayHasKey( 'error_code', $ret );
-
 		$this->assertEquals( 'voting_flood', $ret['error_code'] );
+		$this->assertEquals( $first_vote['weight'], $this->plugin->get_comment_weight( $this->test_comment_id ) );
 
 	}
 
@@ -242,11 +242,13 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 	}
 
 	public function test_undo_vote() {
-		 // do an upvote
-		// do a second upvote
-		// check that comment weight is same as it was before
-		// check user karma is same as before
-		// ex
-   }
+
+		$this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
+		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'undo' );
+
+		$this->assertArrayNotHasKey( 'error_code', $ret );
+		$this->assertEquals( 'undo', $ret['vote_type'] );
+		$this->assertEquals( 0, $this->plugin->get_comment_weight( $this->test_comment_id ) );
+	}
 
 }

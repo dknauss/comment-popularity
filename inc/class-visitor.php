@@ -165,15 +165,19 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		if ( is_multisite() ) {
 
 			$blog_id = get_current_blog_id();
-			$hmn_cp_guests_logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes' );
+			$hmn_cp_guests_logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
 
 		} else {
 
-			$hmn_cp_guests_logged_votes = get_option( 'hmn_cp_guests_logged_votes' );
+			$hmn_cp_guests_logged_votes = get_option( 'hmn_cp_guests_logged_votes', array() );
 
 		}
 
-		return $hmn_cp_guests_logged_votes[ $this->cookie ];
+		if ( ! is_array( $hmn_cp_guests_logged_votes ) ) {
+			return array();
+		}
+
+		return ( isset( $hmn_cp_guests_logged_votes[ $this->cookie ] ) && is_array( $hmn_cp_guests_logged_votes[ $this->cookie ] ) ) ? $hmn_cp_guests_logged_votes[ $this->cookie ] : array();
 	}
 
 	/**
@@ -187,10 +191,17 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 
 		if ( is_multisite() ) {
 			$blog_id                           = get_current_blog_id();
-			$logged_votes                      = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes' );
+			$logged_votes                      = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
+			if ( ! is_array( $logged_votes ) ) {
+				$logged_votes = array();
+			}
 			$logged_votes[ $this->visitor_id ] = $votes;
 			update_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', $logged_votes );
 		} else {
+			$logged_votes = get_option( 'hmn_cp_guests_logged_votes', array() );
+			if ( ! is_array( $logged_votes ) ) {
+				$logged_votes = array();
+			}
 			$logged_votes[ $this->visitor_id ] = $votes;
 			update_option( 'hmn_cp_guests_logged_votes', $logged_votes );
 		}
@@ -231,6 +242,10 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 	public function is_vote_valid( $comment_id, $action = '' ) {
 
 		$comment = get_comment( $comment_id );
+
+		if ( ! $comment ) {
+			return new \WP_Error( 'invalid_comment_id', __( 'Invalid comment ID', 'comment-popularity' ) );
+		}
 
 		if ( ! current_user_can( 'vote_on_comments' ) ) {
 			return new \WP_Error( 'insufficient_permissions', __( 'You lack sufficient permissions to vote on comments', 'comment-popularity' ) );
@@ -293,9 +308,7 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		unset( $comments_voted_on[ 'comment_id_' . $comment_id ] );
 
-		if ( ! empty( $comments_voted_on ) ) {
-			update_user_option( $this->get_id(), 'hmn_comments_voted_on', $comments_voted_on );
-		}
+		update_user_option( $this->get_id(), 'hmn_comments_voted_on', $comments_voted_on );
 	}
 
 	/**

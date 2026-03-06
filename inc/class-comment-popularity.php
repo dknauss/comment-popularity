@@ -98,6 +98,7 @@ class HMN_Comment_Popularity {
 
 	public function styles() {
 		$styles = '<style>.comment-weight-container .upvote a, .comment-weight-container .downvote a, .comment-weight-container span.upvote, .comment-weight-container span.downvote {color:red !important;}</style>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Filtered CSS output is intentionally emitted as HTML.
 		echo apply_filters( 'hmn_cp_inline_styles', $styles );
 	}
 
@@ -199,7 +200,7 @@ class HMN_Comment_Popularity {
 		if ( ! current_user_can( 'activate_plugins' ) || version_compare( $wp_version, self::HMN_CP_REQUIRED_WP_VERSION, '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
 			/* translators: the plugin version number */
-			wp_die( sprintf( __( 'This plugin requires WordPress version %s. Sorry about that.', 'comment-popularity' ), self::HMN_CP_REQUIRED_WP_VERSION ), 'Comment Popularity', array( 'back_link' => true ) );
+			wp_die( sprintf( esc_html__( 'This plugin requires WordPress version %s. Sorry about that.', 'comment-popularity' ), esc_html( self::HMN_CP_REQUIRED_WP_VERSION ) ), 'Comment Popularity', array( 'back_link' => true ) );
 		}
 
 		self::set_permissions();
@@ -350,6 +351,9 @@ class HMN_Comment_Popularity {
 			return;
 		}
 		$votes = $this->visitor->retrieve_logged_votes();
+		if ( ! is_array( $votes ) ) {
+			$votes = array();
+		}
 
 		$comment_ids_voted_on = array();
 
@@ -365,6 +369,7 @@ class HMN_Comment_Popularity {
 			'vote_type'         => array_key_exists( $comment_id, $comment_ids_voted_on ) ? $comment_ids_voted_on[ $comment_id ] : '',
 		);
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Twig template handles output escaping.
 		echo $this->twig->render( 'voting-system.html', $vars );
 	}
 
@@ -464,6 +469,86 @@ class HMN_Comment_Popularity {
 	}
 
 	/**
+	 * Get the current visitor vote state for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return array
+	 */
+	protected function get_logged_vote_state( $comment_id ) {
+
+		$state = array(
+			'last_action' => '',
+			'vote_time'   => 0,
+		);
+
+		$logged_votes = $this->get_visitor()->retrieve_logged_votes();
+		$key          = 'comment_id_' . $comment_id;
+
+		if ( ! is_array( $logged_votes ) || ! isset( $logged_votes[ $key ] ) || ! is_array( $logged_votes[ $key ] ) ) {
+			return $state;
+		}
+
+		$logged_vote = $logged_votes[ $key ];
+
+		$state['last_action'] = isset( $logged_vote['last_action'] ) ? $logged_vote['last_action'] : '';
+		$state['vote_time']   = isset( $logged_vote['vote_time'] ) ? (int) $logged_vote['vote_time'] : 0;
+
+		return $state;
+	}
+
+	/**
+	 * Calculate the net legacy karma delta for a vote transition.
+	 *
+	 * @param string $previous_vote Previous visitor vote.
+	 * @param string $next_vote Next visitor vote.
+	 *
+	 * @return int
+	 */
+	protected function get_vote_delta_from_transition( $previous_vote, $next_vote ) {
+
+		$delta = 0;
+
+		if ( 'upvote' === $previous_vote ) {
+			$delta += $this->get_vote_value( 'downvote' );
+		} elseif ( 'downvote' === $previous_vote ) {
+			$delta += $this->get_vote_value( 'upvote' );
+		}
+
+		if ( 'upvote' === $next_vote ) {
+			$delta += $this->get_vote_value( 'upvote' );
+		} elseif ( 'downvote' === $next_vote ) {
+			$delta += $this->get_vote_value( 'downvote' );
+		}
+
+		return $delta;
+	}
+
+	/**
+	 * Resolve the registered user ID for a comment author when possible.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return int
+	 */
+	protected function get_comment_author_id( $comment_id ) {
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			return 0;
+		}
+
+		if ( ! empty( $comment->user_id ) ) {
+			return (int) $comment->user_id;
+		}
+
+		$email  = get_comment_author_email( $comment_id );
+		$author = get_user_by( 'email', $email );
+
+		return ( false !== $author ) ? (int) $author->ID : 0;
+	}
+
+	/**
 	 * Sorts the comments by weight and returns them.
 	 *
 	 * @param array $args
@@ -500,11 +585,25 @@ class HMN_Comment_Popularity {
 
 		check_ajax_referer( 'hmn_vote_submit', 'hmn_vote_nonce' );
 
-		$comment_id = absint( $_POST['comment_id'] );
+		$comment_id = 0;
+		if ( isset( $_POST['comment_id'] ) ) {
+			$comment_id = absint( wp_unslash( $_POST['comment_id'] ) );
+		}
 
-		$vote = $_POST['vote'];
+		$vote = '';
+		if ( isset( $_POST['vote'] ) ) {
+			$vote = sanitize_key( wp_unslash( $_POST['vote'] ) );
+		}
 
-		if ( ! in_array( $vote, array( 'upvote', 'downvote', 'undo' ) ) ) {
+		if ( 0 === $comment_id ) {
+			wp_send_json_error( $this->send_error( 'invalid_comment_id', __( 'Invalid comment ID', 'comment-popularity' ), 0 ) );
+		}
+
+		if ( ! ( $this->get_visitor() instanceof HMN_CP_Visitor ) ) {
+			wp_send_json_error( $this->send_error( 'invalid_visitor', __( 'Voting is unavailable for this user', 'comment-popularity' ), $comment_id ) );
+		}
+
+		if ( ! in_array( $vote, array( 'upvote', 'downvote', 'undo' ), true ) ) {
 
 			$return = array(
 				'error_code'    => 'invalid_action',
@@ -592,38 +691,39 @@ class HMN_Comment_Popularity {
 
 		$labels = $this->get_vote_labels();
 
-		$vote_value = $this->get_vote_value( $vote );
-
 		$result = $this->is_vote_valid( $comment_id, $labels, $vote );
 		if ( ! empty( $result ) ) {
 			return $this->send_error( $result['error_code'], $result['error_msg'], $comment_id );
 		}
 
-		// see if user has already voted
-		$logged_votes = $this->get_visitor()->retrieve_logged_votes();
-		if ( is_array( $logged_votes ) && array_key_exists( 'comment_id_' . $comment_id, $logged_votes ) ) {
-			$last_action = $logged_votes[ 'comment_id_' . $comment_id ]['last_action'];
+		$logged_vote   = $this->get_logged_vote_state( $comment_id );
+		$previous_vote = $logged_vote['last_action'];
+		$next_vote     = ( 'undo' === $vote ) ? '' : $vote;
 
-			if ( 'undo' === $labels [ $vote ] ) {
-				// undo the previous action
-				$this->get_visitor()->unlog_vote( $comment_id, $last_action );
-
-				$vote_value = ( 'upvote' === $last_action ) ? $this->get_vote_value( 'downvote' ) : $this->get_vote_value( 'upvote' );
-			}
+		if ( '' !== $previous_vote && $previous_vote === $vote ) {
+			return $this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id );
 		}
+
+		if ( 'undo' === $vote && '' === $previous_vote ) {
+			return $this->send_error( 'invalid_action', __( 'There is no previous vote to undo.', 'comment-popularity' ), $comment_id );
+		}
+
+		$vote_value = $this->get_vote_delta_from_transition( $previous_vote, $next_vote );
 
 		$this->update_comment_weight( $comment_id, $vote_value );
 
-		// Get the comment author object.
-		$email  = get_comment_author_email( $comment_id );
-		$author = get_user_by( 'email', $email );
+		$author_id = $this->get_comment_author_id( $comment_id );
 
 		// update comment author karma if registered user.
-		if ( false !== $author ) {
-			$this->update_comment_author_karma( $author->ID, $vote_value );
+		if ( 0 !== $author_id ) {
+			$this->update_comment_author_karma( $author_id, $vote_value );
 		}
 
-		$this->get_visitor()->log_vote( $comment_id, $vote );
+		if ( '' === $next_vote ) {
+			$this->get_visitor()->unlog_vote( $comment_id );
+		} else {
+			$this->get_visitor()->log_vote( $comment_id, $next_vote );
+		}
 
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
@@ -656,8 +756,15 @@ class HMN_Comment_Popularity {
 			);
 		}
 
-		// Prevent negative weight if not allowed.
 		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			return array(
+				'error_code' => 'invalid_comment_id',
+				'error_msg'  => __( 'Invalid comment ID', 'comment-popularity' ),
+			);
+		}
+
+		// Prevent negative weight if not allowed.
 		if ( ( $action === 'downvote' && ! $this->is_negative_comment_weight_allowed() ) && 0 >= $comment->comment_karma ) {
 			$error_code = 'downvote_zero_karma';
 			$error_msg  = __( 'Unable to downvote a comment with no karma', 'comment-popularity' );

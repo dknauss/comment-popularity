@@ -64,7 +64,11 @@ class HMN_Comment_Popularity_Admin {
 
 		$default_expert_karma = array_key_exists( 'default_expert_karma', $prefs ) ? $prefs['default_expert_karma'] : 0;
 
-		echo '<input class="small-text" id="default_expert_karma" name="comment_popularity_prefs[default_expert_karma]" placeholder="' . esc_attr_e( 'Enter value', 'comment-popularity' ) . '" type="number" min="0" max="" step="1" value="' . esc_attr( $default_expert_karma ) . '" />';
+		printf(
+			'<input class="small-text" id="default_expert_karma" name="comment_popularity_prefs[default_expert_karma]" placeholder="%1$s" type="number" min="0" max="" step="1" value="%2$s" />',
+			esc_attr__( 'Enter value', 'comment-popularity' ),
+			esc_attr( $default_expert_karma )
+		);
 
 	}
 
@@ -112,6 +116,8 @@ class HMN_Comment_Popularity_Admin {
 		$user_expert_status = get_user_option( 'hmn_user_expert_status', $user->ID );
 
 		?>
+
+		<?php wp_nonce_field( 'hmn_cp_user_meta', 'hmn_cp_user_meta_nonce' ); ?>
 
 		<h3><?php esc_html_e( 'Comment popularity settings', 'comment-popularity' ); ?></h3>
 
@@ -261,9 +267,25 @@ class HMN_Comment_Popularity_Admin {
 			return false;
 		}
 
-		$user_karma = absint( $_POST['hmn_user_karma'] );
+		if ( ! isset( $_POST['hmn_cp_user_meta_nonce'] ) ) {
+			return false;
+		}
 
-		$user_expert_status = (bool)$_POST['hmn_user_expert_status'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['hmn_cp_user_meta_nonce'] ) );
+
+		if ( ! wp_verify_nonce( $nonce, 'hmn_cp_user_meta' ) ) {
+			return false;
+		}
+
+		$user_karma = 0;
+		if ( isset( $_POST['hmn_user_karma'] ) ) {
+			$user_karma = absint( wp_unslash( $_POST['hmn_user_karma'] ) );
+		}
+
+		$user_expert_status = false;
+		if ( isset( $_POST['hmn_user_expert_status'] ) ) {
+			$user_expert_status = (bool) absint( wp_unslash( $_POST['hmn_user_expert_status'] ) );
+		}
 
 		update_user_option( $user_id, 'hmn_user_karma', $user_karma );
 

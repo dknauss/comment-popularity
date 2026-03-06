@@ -11,16 +11,17 @@ endif;
 	<?php if ( have_comments() ) : ?>
 		<h3 class="comments-title">
 			<?php
+			$comments_number = get_comments_number();
 			printf(
-				_nx( 'One comment', '%1$s comments', get_comments_number(), 'comments title', 'comment-popularity' ),
-				number_format_i18n( get_comments_number() )
+				esc_html( _nx( 'One comment', '%1$s comments', $comments_number, 'comments title', 'comment-popularity' ) ),
+				esc_html( number_format_i18n( $comments_number ) )
 			);
 			?>
 		</h3>
 
 		<?php if ( get_comment_pages_count() > 1 ) : ?>
 			<nav id="comment-nav-above" class="comment-navigation" role="navigation">
-				<span class="screen-reader-text"><?php _e( 'Comment navigation', 'comment-popularity' ); ?></span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'comment-popularity' ); ?></span>
 				<?php paginate_comments_links(); ?>
 			</nav>
 		<?php endif; ?>
@@ -53,7 +54,7 @@ endif;
 
 		<?php if ( get_comment_pages_count() > 1 ) : ?>
 			<nav id="comment-nav-below" class="comment-navigation" role="navigation">
-				<span class="screen-reader-text"><?php _e( 'Comment navigation', 'comment-popularity' ); ?></span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'comment-popularity' ); ?></span>
 				<?php paginate_comments_links(); ?>
 			</nav>
 		<?php endif; ?>

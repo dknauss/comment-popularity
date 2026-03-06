@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 // Check PHP version. We need at least 5.3.2.
 if ( version_compare( PHP_VERSION, '5.3.2', '<' ) ) {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
-	wp_die( sprintf( __( 'This plugin requires PHP Version %s. Sorry about that.', 'comment-popularity' ), '5.3.2' ), 'Comment Popularity', array( 'back_link' => true ) );
+	wp_die( sprintf( esc_html__( 'This plugin requires PHP Version %s. Sorry about that.', 'comment-popularity' ), '5.3.2' ), 'Comment Popularity', array( 'back_link' => true ) );
 }
 
 // Main plugin class
@@ -34,7 +34,17 @@ function hmn_cp_init() {
 	if ( is_user_logged_in() ) {
 		$visitor = new CommentPopularity\HMN_CP_Visitor_Member( get_current_user_id() );
 	} elseif ( $comment_popularity->is_guest_voting_allowed() ) {
-		$visitor = new CommentPopularity\HMN_CP_Visitor_Guest( $_SERVER['REMOTE_ADDR'] );
+		$remote_addr = '';
+
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			$remote_addr = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+		}
+
+		if ( '' === $remote_addr ) {
+			return;
+		}
+
+		$visitor = new CommentPopularity\HMN_CP_Visitor_Guest( $remote_addr );
 	} else {
 		return;
 	}
