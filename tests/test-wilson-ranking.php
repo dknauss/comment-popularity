@@ -129,6 +129,7 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 		$this->assertSame( 0, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_DOWNVOTES, true ) );
 		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES, true ) );
+		$this->assertSame( 1, $this->plugin->get_comment_weight( $this->comment_id ) );
 		$this->assertGreaterThan( 0.0, (float) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_WILSON_LOWER_BOUND, true ) );
 	}
 
@@ -148,6 +149,17 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 
 		$this->assertSame( 0, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_DOWNVOTES, true ) );
+		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES, true ) );
+		$this->assertSame( 0, $this->plugin->get_comment_weight( $this->comment_id ) );
+	}
+
+	public function test_repeat_vote_returns_error_without_changing_legacy_or_wilson_state() {
+		$first_vote = $this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
+		$second_vote = $this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
+
+		$this->assertSame( 'voting_flood', $second_vote['error_code'] );
+		$this->assertSame( $first_vote['weight'], $this->plugin->get_comment_weight( $this->comment_id ) );
+		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES, true ) );
 	}
 

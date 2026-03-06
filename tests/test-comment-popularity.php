@@ -124,6 +124,7 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$this->assertArrayHasKey( 'error_code', $ret );
 		$this->assertEquals( 'voting_flood', $ret['error_code'] );
 		$this->assertEquals( $first_vote['weight'], $this->plugin->get_comment_weight( $this->test_comment_id ) );
+		$this->assertEquals( 1, (int) get_comment_meta( $this->test_comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 
 	}
 

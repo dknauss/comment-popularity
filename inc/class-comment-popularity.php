@@ -895,14 +895,14 @@ class HMN_Comment_Popularity {
 			$this->update_comment_author_karma( $author_id, $vote_value );
 		}
 
+		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
+		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
+
 		if ( '' === $next_vote ) {
 			$this->get_visitor()->unlog_vote( $comment_id );
 		} else {
 			$this->get_visitor()->log_vote( $comment_id, $next_vote );
 		}
-
-		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
-		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
 
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
