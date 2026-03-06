@@ -49,11 +49,11 @@ abstract class HMN_CP_Visitor {
 	public function get_id() {
 		return $this->visitor_id;
 	}
-
 }
 
 /**
  * Class HMN_CP_Visitor_Guest
+ *
  * @package CommentPopularity
  */
 class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
@@ -87,7 +87,7 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		// Set a cookie with the visitor IP address that expires in a week.
 		$expiry = apply_filters( 'hmn_cp_cookie_expiry', time() + ( 7 * DAY_IN_SECONDS ) );
 
-		//Set a cookie now to see if they are supported by the browser.
+		// Set a cookie now to see if they are supported by the browser.
 		$secure = ( 'https' === wp_parse_url( site_url(), PHP_URL_SCHEME ) && 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) );
 
 		setcookie( 'hmn_cp_visitor', $this->visitor_id, $expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
@@ -140,7 +140,6 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		do_action( 'hmn_cp_logged_guest_vote', $this->visitor_id, $comment_id, $updated );
 
 		return $updated;
-
 	}
 
 	/**
@@ -164,7 +163,7 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 
 		if ( is_multisite() ) {
 
-			$blog_id = get_current_blog_id();
+			$blog_id                    = get_current_blog_id();
 			$hmn_cp_guests_logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
 
 		} else {
@@ -190,8 +189,8 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		$logged_votes = array();
 
 		if ( is_multisite() ) {
-			$blog_id                           = get_current_blog_id();
-			$logged_votes                      = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
+			$blog_id      = get_current_blog_id();
+			$logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
 			if ( ! is_array( $logged_votes ) ) {
 				$logged_votes = array();
 			}
@@ -219,9 +218,7 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 
 		// For now, all votes are valid.
 		return true;
-
 	}
-
 }
 
 /**
@@ -262,7 +259,6 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		// Vote is valid.
 		return true;
-
 	}
 
 	/**
@@ -322,5 +318,4 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		return ! empty( $votes ) ? $votes : array();
 	}
-
 }

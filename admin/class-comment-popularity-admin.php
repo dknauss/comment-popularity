@@ -263,16 +263,16 @@ class HMN_Comment_Popularity_Admin {
 	/**
 	 * Display values for the user karma column.
 	 *
-	 * @param $empty
+	 * @param $output
 	 * @param $column_name
 	 * @param $user_id
 	 *
 	 * @return string
 	 */
-	public function populate_users_columns( $empty, $column_name, $user_id ) {
+	public function populate_users_columns( $output, $column_name, $user_id ) {
 
 		if ( 'user_karma' !== $column_name ) {
-			return $empty;
+			return $output;
 		}
 
 		return get_user_option( 'hmn_user_karma', $user_id );

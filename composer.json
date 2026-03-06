@@ -6,7 +6,10 @@
 	"homepage"   : "https://github.com/humanmade/comment-popularity",
 	"license"    : "GPL-2.0+",
 	"config": {
-		"vendor-dir": "inc/lib"
+		"vendor-dir": "inc/lib",
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	},
 	"authors"          : [
 		{
@@ -26,6 +29,18 @@
 	"require-dev": {
 		"squizlabs/php_codesniffer": "^3.10",
 		"wp-coding-standards/wpcs": "^3",
-		"dealerdirect/phpcodesniffer-composer-installer": "^1"
+		"dealerdirect/phpcodesniffer-composer-installer": "^1",
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^2.0"
+	},
+	"scripts": {
+		"lint": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist",
+		"lint:full-report": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist --report=summary",
+		"test:setup": "bash bin/install-wp-tests.sh wp_tests root root 127.0.0.1:3306 ${WP_VERSION:-6.4}",
+		"test": "./inc/lib/bin/phpunit --configuration phpunit.xml",
+		"qa": [
+			"@lint",
+			"@test"
+		]
 	}
 }

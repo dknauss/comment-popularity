@@ -12,7 +12,7 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 
 		$widget_options = array(
 			'classname'   => 'widget-most-voted widget_most_voted',
-			'description' => esc_html__( 'Most voted comments', 'comment-popularity' )
+			'description' => esc_html__( 'Most voted comments', 'comment-popularity' ),
 		);
 
 		parent::__construct( 'hmn-cp-most-voted', __( 'Most voted comments', 'comment-popularity' ), $widget_options );
@@ -35,8 +35,7 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of comments to show:', 'comment-popularity' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo $number; ?>" size="3" />
 		</p>
-	<?php
-
+		<?php
 	}
 
 	/**
@@ -58,7 +57,6 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 		}
 
 		return $instance;
-
 	}
 
 	/**
@@ -98,7 +96,13 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 		}
 
 		$hmn_cp_plugin = HMN_Comment_Popularity::get_instance();
-		$comments = $hmn_cp_plugin->get_comments_sorted_by_weight( array( 'number' => $number, 'echo' => false ), false );
+		$comments      = $hmn_cp_plugin->get_comments_sorted_by_weight(
+			array(
+				'number' => $number,
+				'echo'   => false,
+			),
+			false
+		);
 
 		$output .= $args['before_widget'];
 		if ( $title ) {
@@ -109,12 +113,14 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 		if ( $comments ) {
 			// Prime cache for associated posts. (Prime post term cache if we need it for permalinks.)
 			$post_ids = array_unique( wp_list_pluck( $comments, 'comment_post_ID' ) );
-			_prime_post_caches( $post_ids, strpos( get_option( 'permalink_structure' ), '%category%' ), false );
+				_prime_post_caches( $post_ids, strpos( get_option( 'permalink_structure' ), '%category%' ), false );
 
 			foreach ( (array) $comments as $comment ) {
 				$output .= '<li class="recentcomments">';
-				/* translators: comments widget: 1: comment author, 2: post link */
-				$output .= sprintf( _x( '%1$s on %2$s, ( Weight: %3$s )', '1: Author 2: Post title 3: Weight', 'comment-popularity' ),
+				/* translators: 1: comment author, 2: post link, 3: comment weight. */
+				$label   = _x( '%1$s on %2$s, ( Weight: %3$s )', '1: Author 2: Post title 3: Weight', 'comment-popularity' );
+				$output .= sprintf(
+					$label,
 					'<span class="comment-author-link">' . get_comment_author_link( $comment->comment_ID ) . '</span>',
 					'<a href="' . esc_url( get_comment_link( $comment->comment_ID ) ) . '">' . get_the_title( $comment->comment_post_ID ) . '</a>',
 					'<span class="comment-weight">' . $comment->comment_karma . '</span>'
@@ -131,7 +137,6 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 			$cache[ $args['widget_id'] ] = $output;
 			wp_cache_set( 'widget_hmn_cp_most_voted', $cache, 'widget' );
 		}
-
 	}
 
 	/**
@@ -140,5 +145,4 @@ class HMN_CP_Widget_Most_Voted extends \WP_Widget {
 	public function flush_widget_cache() {
 		wp_cache_delete( 'widget_hmn_cp_most_voted', 'widget' );
 	}
-
 }

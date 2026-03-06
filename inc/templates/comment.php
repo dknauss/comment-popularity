@@ -19,9 +19,10 @@ if ( 'pingback' === $comment->comment_type || 'trackback' === $comment->comment_
 			$hmn_cp_plugin = HMN_Comment_Popularity::get_instance();
 			$hmn_cp_plugin->render_ui( get_comment_ID() );
 			?>
-			<?php // Avatar
+			<?php
+			// Avatar
 			if ( 0 !== $args['avatar_size'] ) :
-			echo get_avatar( $comment, $args['avatar_size'] );
+				echo get_avatar( $comment, $args['avatar_size'] );
 			endif;
 
 			?>
@@ -30,8 +31,10 @@ if ( 'pingback' === $comment->comment_type || 'trackback' === $comment->comment_
 				<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
 					<time datetime="<?php comment_time( 'c' ); ?>">
 						<?php
+						/* translators: 1: comment date, 2: comment time. */
+						$comment_date_time_label = esc_html_x( '%1$s at %2$s', '1: date, 2: time', 'comment-popularity' );
 						printf(
-							esc_html_x( '%1$s at %2$s', '1: date, 2: time', 'comment-popularity' ),
+							$comment_date_time_label,
 							esc_html( get_comment_date() ),
 							esc_html( get_comment_time() )
 						);
@@ -42,16 +45,16 @@ if ( 'pingback' === $comment->comment_type || 'trackback' === $comment->comment_
 			<div class="comment-author vcard">
 				<?php
 				$comment_author_email = get_comment_author_email( $comment->comment_ID );
-				$author = get_user_by( 'email', $comment_author_email );
-				$karma_element = '';
+				$author               = get_user_by( 'email', $comment_author_email );
+				$karma_element        = '';
 				if ( false !== $author ) {
 
-					$author_karma = $hmn_cp_plugin->get_comment_author_karma( $author->ID );
+						$author_karma = $hmn_cp_plugin->get_comment_author_karma( $author->ID );
 
 					if ( false !== $author_karma ) {
+						/* translators: %s: user karma value. */
 						$karma_element = sprintf( '%1$s%2$s%3$s', '<small class="user-karma">', sprintf( esc_html_x( '( User Karma: %s )', 'Karma value for user.', 'comment-popularity' ), esc_html( $author_karma ) ), '</small>' );
 					}
-
 				}
 				printf(
 					'%1$s %3$s <span class="says">%2$s</span>',
@@ -76,14 +79,20 @@ if ( 'pingback' === $comment->comment_type || 'trackback' === $comment->comment_
 		</div>
 
 		<?php
-		comment_reply_link( array_merge( $args, array(
-			'add_below' => 'div-comment',
-			'depth'     => $depth,
-			'max_depth' => $args['max_depth'],
-			'before'    => '<footer class="comment-reply">',
-			'after'     => '</footer>',
-		) ) );
+		comment_reply_link(
+			array_merge(
+				$args,
+				array(
+					'add_below' => 'div-comment',
+					'depth'     => $depth,
+					'max_depth' => $args['max_depth'],
+					'before'    => '<footer class="comment-reply">',
+					'after'     => '</footer>',
+				)
+			)
+		);
 		?>
 	</article>
 
-<?php endif;
+		<?php
+endif;

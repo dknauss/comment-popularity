@@ -9,7 +9,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 	 *
 	 * Unique identifier for your widget.
 	 *
-	 *
 	 * The variable name is used as the text domain when internationalizing strings
 	 * of text. Its value should match the Text Domain file header in the main
 	 * widget file.
@@ -24,8 +23,10 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 	protected $twig;
 
-	/*--------------------------------------------------*/
-	/* Constructor
+	/*
+	--------------------------------------------------*/
+	/*
+	Constructor
 	/*--------------------------------------------------*/
 
 	/**
@@ -52,7 +53,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		add_action( 'save_post', array( $this, 'flush_widget_cache' ) );
 		add_action( 'deleted_post', array( $this, 'flush_widget_cache' ) );
 		add_action( 'switch_theme', array( $this, 'flush_widget_cache' ) );
-
 	} // end constructor
 
 	/**
@@ -62,9 +62,8 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		$template_path = apply_filters( 'hmn_cp_experts_widget_template_path', plugin_dir_path( __FILE__ ) . '/views' );
 
-		$loader = new \Twig_Loader_Filesystem( $template_path );
+		$loader     = new \Twig_Loader_Filesystem( $template_path );
 		$this->twig = new \Twig_Environment( $loader );
-
 	}
 
 
@@ -79,8 +78,10 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		return $this->widget_slug;
 	}
 
-	/*--------------------------------------------------*/
-	/* Widget API Functions
+	/*
+	--------------------------------------------------*/
+	/*
+	Widget API Functions
 	/*--------------------------------------------------*/
 
 	/**
@@ -108,8 +109,8 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 			return print $cache[ $args['widget_id'] ];
 		}
 
-		extract( $args, EXTR_SKIP );
-
+		$before_widget = isset( $args['before_widget'] ) ? $args['before_widget'] : '';
+		$after_widget  = isset( $args['after_widget'] ) ? $args['after_widget'] : '';
 		$widget_string = $before_widget;
 
 		/* If a title was input by the user, display it. */
@@ -118,7 +119,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		}
 
 		$experts = $this->get_experts();
-		$plugin = HMN_Comment_Popularity::get_instance();
+		$plugin  = HMN_Comment_Popularity::get_instance();
 		$this->init_twig();
 		$vars = array(
 			'experts' => $experts,
@@ -140,7 +141,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
 
 		print $widget_string;
-
 	} // end widget
 
 
@@ -158,11 +158,10 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		$instance = $old_instance;
 
-		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
+		$instance['title']  = wp_strip_all_tags( $new_instance['title'] );
 		$instance['number'] = absint( $new_instance['number'] );
 
 		return $instance;
-
 	} // end widget
 
 	/**
@@ -179,7 +178,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		// Display the admin form
 		include plugin_dir_path( __FILE__ ) . 'views/admin.php';
-
 	} // end form
 
 	/**
@@ -191,18 +189,18 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		/* Get the experts list. */
 		$args = array(
-			'number'         => '5',
-			'meta_query'     => array(
+			'number'     => '5',
+			'meta_query' => array(
 				array(
-					'key'       => 'hmn_user_expert_status',
-					'value'     => '1',
-					'compare'   => '=',
-					'type'      => 'NUMERIC',
+					'key'     => 'hmn_user_expert_status',
+					'value'   => '1',
+					'compare' => '=',
+					'type'    => 'NUMERIC',
 				),
 			),
-			'orderby'  => 'meta_value',
-			'order'    => 'DESC',
-			'meta_key' => 'hmn_user_karma',
+			'orderby'    => 'meta_value',
+			'order'      => 'DESC',
+			'meta_key'   => 'hmn_user_karma',
 		);
 
 		$experts = get_users( $args );
@@ -212,18 +210,17 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 			$return[ $key ]['name'] = $expert->user_login;
 
 			if ( ! empty( $expert->first_name ) && ! empty( $expert->last_name ) ) {
-				$return[ $key ]['name']  = $expert->first_name . ' ' . $expert->last_name;
+				$return[ $key ]['name'] = $expert->first_name . ' ' . $expert->last_name;
 			} elseif ( ! empty( $expert->display_name ) ) {
 				$return[ $key ]['name'] = $expert->display_name;
 			}
 
-			$return[ $key ]['karma'] = get_user_option( 'hmn_user_karma', $expert->ID );
+			$return[ $key ]['karma']  = get_user_option( 'hmn_user_karma', $expert->ID );
 			$return[ $key ]['avatar'] = $this->get_gravatar_url( $expert->user_email );
 
 		}
 
 		return $return;
-
 	}
 
 	public function get_gravatar_url( $email ) {
@@ -231,5 +228,4 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		$hash = md5( strtolower( trim( $email ) ) );
 		return 'http://gravatar.com/avatar/' . $hash;
 	}
-
 } // end class

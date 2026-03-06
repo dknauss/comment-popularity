@@ -12,8 +12,10 @@ endif;
 		<h3 class="comments-title">
 			<?php
 			$comments_number = get_comments_number();
+			/* translators: %1$s: number of comments. */
+			$comments_title = esc_html( _nx( '%1$s comment', '%1$s comments', $comments_number, 'comments title', 'comment-popularity' ) );
 			printf(
-				esc_html( _nx( 'One comment', '%1$s comments', $comments_number, 'comments title', 'comment-popularity' ) ),
+				$comments_title,
 				esc_html( number_format_i18n( $comments_number ) )
 			);
 			?>
@@ -39,7 +41,7 @@ endif;
 				'post_id'  => $post->ID,
 				'echo'     => true,
 				'callback' => array( $hmn_cp_obj, 'comment_callback' ),
-				'style'    => 'ol'
+				'style'    => 'ol',
 			);
 
 			if ( $hmn_cp_obj->are_comments_sorted_by_weight() ) {

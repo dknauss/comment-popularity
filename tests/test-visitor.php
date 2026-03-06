@@ -15,7 +15,7 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 
 	protected $comment_author_id;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->user_id = $this->factory->user->create(
@@ -42,7 +42,7 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 		wp_set_current_user( $this->user_id );
 		$this->visitor = new HMN_CP_Visitor_Member( $this->user_id );
 
-		$this->post_id = $this->factory->post->create();
+		$this->post_id    = $this->factory->post->create();
 		$this->comment_id = $this->factory->comment->create(
 			array(
 				'comment_post_ID' => $this->post_id,
@@ -51,7 +51,7 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 		);
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		delete_user_option( $this->user_id, 'hmn_comments_voted_on' );
 		wp_delete_comment( $this->comment_id, true );
 		wp_delete_post( $this->post_id, true );
@@ -62,7 +62,7 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 	}
 
 	public function test_member_log_vote_persists_vote_data() {
-		$logged_vote = $this->visitor->log_vote( $this->comment_id, 'upvote' );
+		$logged_vote  = $this->visitor->log_vote( $this->comment_id, 'upvote' );
 		$stored_votes = $this->visitor->retrieve_logged_votes();
 
 		$this->assertSame( 'upvote', $logged_vote['last_action'] );
@@ -80,6 +80,8 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 	public function test_member_vote_requires_vote_capability() {
 		$role = get_role( 'author' );
 		$role->remove_cap( 'vote_on_comments' );
+		wp_set_current_user( 0 );
+		wp_set_current_user( $this->user_id );
 
 		$result = $this->visitor->is_vote_valid( $this->comment_id, 'upvote' );
 

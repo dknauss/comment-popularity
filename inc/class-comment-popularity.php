@@ -2,6 +2,7 @@
 
 /**
  * Class HMN_Comment_Popularity
+ *
  * @package CommentPopularity
  */
 class HMN_Comment_Popularity {
@@ -101,7 +102,6 @@ class HMN_Comment_Popularity {
 		add_action( 'wp_head', array( $this, 'styles' ) );
 
 		$this->init_twig();
-
 	}
 
 	public function styles() {
@@ -152,7 +152,6 @@ class HMN_Comment_Popularity {
 
 		register_widget( 'CommentPopularity\HMN_CP_Widget_Most_Voted' );
 		register_widget( 'CommentPopularity\HMN_CP_Widget_Experts' );
-
 	}
 
 	/**
@@ -234,7 +233,6 @@ class HMN_Comment_Popularity {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -246,7 +244,6 @@ class HMN_Comment_Popularity {
 
 		$loader     = new \Twig_Loader_Filesystem( $template_path );
 		$this->twig = new \Twig_Environment( $loader );
-
 	}
 
 	/**
@@ -265,7 +262,6 @@ class HMN_Comment_Popularity {
 				$role->add_cap( 'manage_user_karma_settings' );
 
 			}
-
 		}
 
 		// Allow all user roles to vote.
@@ -277,7 +273,6 @@ class HMN_Comment_Popularity {
 				$role->add_cap( 'vote_on_comments' );
 			}
 		}
-
 	}
 
 	/**
@@ -296,11 +291,16 @@ class HMN_Comment_Popularity {
 		wp_enqueue_script( 'growl', plugins_url( '../js/jquery.growl.min.js', __FILE__ ), array( 'jquery' ), self::HMN_CP_PLUGIN_VERSION, true );
 
 		$js_file = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? '../js/voting.js' : '../js/voting.min.js';
-		wp_register_script( 'comment-popularity', plugins_url( $js_file, __FILE__ ), array(
-			'jquery',
-			'underscore',
-			'growl',
-		), self::HMN_CP_PLUGIN_VERSION );
+		wp_register_script(
+			'comment-popularity',
+			plugins_url( $js_file, __FILE__ ),
+			array(
+				'jquery',
+				'underscore',
+				'growl',
+			),
+			self::HMN_CP_PLUGIN_VERSION
+		);
 
 		$args = array(
 			'hmn_vote_nonce' => wp_create_nonce( 'hmn_vote_submit' ),
@@ -310,7 +310,6 @@ class HMN_Comment_Popularity {
 		wp_localize_script( 'comment-popularity', 'comment_popularity', $args );
 
 		wp_enqueue_script( 'comment-popularity' );
-
 	}
 
 	/**
@@ -329,7 +328,6 @@ class HMN_Comment_Popularity {
 		}
 
 		return apply_filters( 'hmn_cp_comments_template_path', plugin_dir_path( __FILE__ ) . 'templates/comments.php' );
-
 	}
 
 	/**
@@ -343,7 +341,6 @@ class HMN_Comment_Popularity {
 	public function comment_callback( $comment, $args, $depth ) {
 
 		include apply_filters( 'hmn_cp_single_comment_template_path', plugin_dir_path( __FILE__ ) . 'templates/comment.php' );
-
 	}
 
 	/**
@@ -389,7 +386,7 @@ class HMN_Comment_Popularity {
 	protected function visitor_can_vote() {
 
 		// Visitor can vote if guest voting is enabled, if user is logged in and has correct permission
-		return ( null !== $this->visitor  ) && ( $this->is_guest_voting_allowed() || ( is_user_logged_in() && current_user_can( 'vote_on_comments' ) ) );
+		return ( null !== $this->visitor ) && ( $this->is_guest_voting_allowed() || ( is_user_logged_in() && current_user_can( 'vote_on_comments' ) ) );
 	}
 
 	/**
@@ -404,7 +401,6 @@ class HMN_Comment_Popularity {
 		$comment = get_comment( $comment_id );
 
 		return (int) $comment->comment_karma;
-
 	}
 
 	/**
@@ -452,7 +448,8 @@ class HMN_Comment_Popularity {
 			return;
 		}
 
-		if ( ! $user = get_userdata( $comment->user_id ) ) {
+		$user = get_userdata( $comment->user_id );
+		if ( ! $user ) {
 			return;
 		}
 
@@ -463,7 +460,6 @@ class HMN_Comment_Popularity {
 		if ( $is_expert && ( 0 < $user_karma ) ) {
 			$this->update_comment_weight( $comment_id, $user_karma );
 		}
-
 	}
 
 	/**
@@ -485,8 +481,8 @@ class HMN_Comment_Popularity {
 	 */
 	public function get_comment_ranking_mode() {
 		$prefs = $this->get_plugin_prefs();
-		$mode = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
-		$mode = apply_filters( 'hmn_cp_comment_ranking_mode', $mode );
+		$mode  = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
+		$mode  = apply_filters( 'hmn_cp_comment_ranking_mode', $mode );
 
 		return in_array( $mode, array( 'karma', 'wilson' ), true ) ? $mode : 'karma';
 	}
@@ -530,8 +526,8 @@ class HMN_Comment_Popularity {
 	 */
 	protected function get_comment_vote_counts( $comment_id ) {
 
-		$upvotes = (int) get_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, true );
-		$downvotes = (int) get_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, true );
+		$upvotes     = (int) get_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, true );
+		$downvotes   = (int) get_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, true );
 		$total_votes = (int) get_comment_meta( $comment_id, self::COMMENT_META_TOTAL_VOTES, true );
 
 		if ( 0 === $total_votes ) {
@@ -539,8 +535,8 @@ class HMN_Comment_Popularity {
 		}
 
 		return array(
-			'upvotes' => max( 0, $upvotes ),
-			'downvotes' => max( 0, $downvotes ),
+			'upvotes'     => max( 0, $upvotes ),
+			'downvotes'   => max( 0, $downvotes ),
 			'total_votes' => max( 0, $total_votes ),
 		);
 	}
@@ -580,11 +576,11 @@ class HMN_Comment_Popularity {
 		}
 
 		if ( 'upvote' === $vote ) {
-			$counts['upvotes']++;
+			++$counts['upvotes'];
 		}
 
 		if ( 'downvote' === $vote ) {
-			$counts['downvotes']++;
+			++$counts['downvotes'];
 		}
 
 		$counts['total_votes'] = $counts['upvotes'] + $counts['downvotes'];
@@ -612,9 +608,9 @@ class HMN_Comment_Popularity {
 		}
 
 		$phat = $upvotes / $total;
-		$z2 = $z * $z;
+		$z2   = $z * $z;
 
-		$numerator = $phat + $z2 / ( 2 * $total ) - $z * sqrt( ( $phat * ( 1 - $phat ) + $z2 / ( 4 * $total ) ) / $total );
+		$numerator   = $phat + $z2 / ( 2 * $total ) - $z * sqrt( ( $phat * ( 1 - $phat ) + $z2 / ( 4 * $total ) ) / $total );
 		$denominator = 1 + $z2 / $total;
 
 		return $numerator / $denominator;
@@ -630,7 +626,7 @@ class HMN_Comment_Popularity {
 	 */
 	protected function update_comment_wilson_rank( $comment_id, array $counts ) {
 
-		$z = (float) apply_filters( 'hmn_cp_wilson_z_score', 1.96 );
+		$z     = (float) apply_filters( 'hmn_cp_wilson_z_score', 1.96 );
 		$score = $this->calculate_wilson_lower_bound( $counts['upvotes'], $counts['downvotes'], $z );
 
 		update_comment_meta( $comment_id, self::COMMENT_META_WILSON_LOWER_BOUND, $score );
@@ -721,11 +717,24 @@ class HMN_Comment_Popularity {
 	/**
 	 * Sorts the comments by weight and returns them.
 	 *
-	 * @param array $args
+	 * @param array|bool $args Query args, or legacy html flag.
+	 * @param bool       $html Return html if true.
 	 *
-	 * @return string
+	 * @return array|string
 	 */
-	public function get_comments_sorted_by_weight( array $args, $html = false ) {
+	public function get_comments_sorted_by_weight( $args = array(), $html = false ) {
+
+		// Backward-compatibility: older integrations passed $html first and $args second.
+		if ( is_bool( $args ) ) {
+			$legacy_html = $args;
+			$legacy_args = $html;
+			$html        = $legacy_html;
+			$args        = is_array( $legacy_args ) ? $legacy_args : array();
+		}
+
+		if ( ! is_array( $args ) ) {
+			$args = array();
+		}
 
 		$ranking_mode = $this->get_comment_ranking_mode();
 
@@ -744,7 +753,7 @@ class HMN_Comment_Popularity {
 		$get_comments_args = wp_parse_args( $args, $defaults );
 
 		// The Comment Query
-		$comment_query = new \WP_Comment_Query;
+		$comment_query = new \WP_Comment_Query();
 		$comments      = $comment_query->query( $get_comments_args );
 
 		if ( $html ) {
@@ -801,7 +810,6 @@ class HMN_Comment_Popularity {
 			wp_send_json_success( $result );
 
 		}
-
 	}
 
 	/**
@@ -829,10 +837,15 @@ class HMN_Comment_Popularity {
 	 */
 	public function update_comment_author_karma( $commenter_id, $value ) {
 
+		if ( is_string( $value ) && in_array( $value, array( 'upvote', 'downvote' ), true ) ) {
+			$value = $this->get_vote_value( $value );
+		}
+		$value = (int) $value;
+
 		$user_karma = $this->get_comment_author_karma( $commenter_id );
 
 		// Do not allow negative karma
-		if ( $user_karma === 0 && $value < 0 ) {
+		if ( 0 === $user_karma && 0 > $value ) {
 			return $user_karma;
 		}
 
@@ -949,7 +962,7 @@ class HMN_Comment_Popularity {
 		}
 
 		// Prevent negative weight if not allowed.
-		if ( ( $action === 'downvote' && ! $this->is_negative_comment_weight_allowed() ) && 0 >= $comment->comment_karma ) {
+		if ( ( 'downvote' === $action && ! $this->is_negative_comment_weight_allowed() ) && 0 >= $comment->comment_karma ) {
 			$error_code = 'downvote_zero_karma';
 			$error_msg  = __( 'Unable to downvote a comment with no karma', 'comment-popularity' );
 
@@ -1036,5 +1049,4 @@ class HMN_Comment_Popularity {
 	public function is_negative_comment_weight_allowed() {
 		return apply_filters( 'hmn_cp_allow_negative_comment_weight', $this->allow_negative_comment_weight );
 	}
-
 }

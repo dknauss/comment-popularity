@@ -64,7 +64,7 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 		wp_set_current_user( $this->voter_id );
 		$this->plugin->set_visitor( new HMN_CP_Visitor_Member( $this->voter_id ) );
 
-		$this->post_id = $this->factory->post->create();
+		$this->post_id    = $this->factory->post->create();
 		$this->comment_id = $this->factory->comment->create(
 			array(
 				'comment_post_ID'      => $this->post_id,
@@ -154,7 +154,7 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 	}
 
 	public function test_repeat_vote_returns_error_without_changing_legacy_or_wilson_state() {
-		$first_vote = $this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
+		$first_vote  = $this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
 		$second_vote = $this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
 
 		$this->assertSame( 'voting_flood', $second_vote['error_code'] );

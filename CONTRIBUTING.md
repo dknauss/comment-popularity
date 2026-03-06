@@ -6,6 +6,18 @@ Coding Standards
 
 Please follow the [WordPress Coding Standards](http://make.wordpress.org/core/handbook/coding-standards/)
 
+Quality baseline (local + CI)
+-----------------------------
+
+From a clean checkout:
+
+1. `composer install --no-interaction --prefer-dist --ignore-platform-reqs`
+2. `composer lint`
+3. `WP_VERSION=6.4 composer test:setup`
+4. `composer test`
+
+CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
+
 Contributions
 -------------
 
