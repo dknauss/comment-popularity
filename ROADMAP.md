@@ -166,6 +166,57 @@ Close the loop after the code and tests are credible.
 - Each upstream PR has a matching changelog or release-note decision.
 - The roadmap can be used as an issue and PR sequencing guide.
 
+## Phase 7: Fork-Specific Modernization (PHP 8.2, PSR-4, PHPStan)
+
+This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. It enforces a PHP 8.2 minimum, introduces PSR-4 autoloading under the `CommentPopularity` namespace, and adds PHPStan static analysis. It also picks up two small bug fixes in the experts widget that were identified during quality review but are not on any existing branch.
+
+### Backlog
+
+1. Fix the experts widget Gravatar URL to use HTTPS instead of HTTP.
+2. Initialize `$return = array()` in `get_experts()` before population to prevent undefined-variable notices.
+3. Declare PHP 8.2 as the minimum in `composer.json` (`"php": "^8.2"`) and update the CI matrix.
+4. Add PSR-4 autoload mapping for the `CommentPopularity` namespace in `composer.json`.
+5. Add namespace declarations to class files and update the bootstrap to use the Composer autoloader.
+6. Install PHPStan with WordPress stubs, create `phpstan.neon` with a baseline, and add a PHPStan job to the CI workflow.
+
+### Acceptance Criteria
+
+- Gravatar URLs in the experts widget use HTTPS; no mixed-content warnings on HTTPS sites.
+- `get_experts()` returns an empty array (not undefined) when no experts exist.
+- `composer.json` requires `"php": "^8.2"` and CI only tests PHP 8.2+.
+- `composer dump-autoload` generates working PSR-4 autoloading for `CommentPopularity\` classes.
+- The plugin boots and passes all existing tests using the Composer autoloader.
+- PHPStan runs at level 5+ with a committed baseline; CI fails on new errors above baseline.
+
+### Likely File Scope
+
+- `inc/widgets/experts/class-widget-experts.php`
+- `composer.json`
+- `comment-popularity.php`
+- `inc/class-comment-popularity.php`
+- `inc/class-visitor.php`
+- `admin/class-comment-popularity-admin.php`
+- `phpstan.neon`
+- `.github/workflows/quality.yml`
+
+### Plans
+
+- [ ] 07-01-PLAN.md — Remaining bug fixes and PHP 8.2 minimum declaration
+- [ ] 07-02-PLAN.md — PHPStan setup and CI integration
+- [ ] 07-03-PLAN.md — PSR-4 autoloading migration
+
+## Branch Status (Phases 1–5)
+
+Phases 1–5 are largely implemented on restacked `codex/*` branches awaiting upstream merge. See `.planning/prs/README.md` for the full PR strategy and `gh pr create` commands.
+
+| Branch | Covers | Status |
+|--------|--------|--------|
+| `codex/core-correctness` | Phase 1 + Phase 2 | Ready for upstream PR |
+| `codex/fix-comment-sort-signature` | Phase 3 (sort signature) | Ready, stacked on above |
+| `codex/wpcs-modernization` | Phase 3 (WPCS cleanup) + Phase 5 (PHPCS config) | Ready, stacked |
+| `codex/ci-quality` | Phase 5 (GitHub Actions CI) | Ready, stacked |
+| `codex/wilson-activation` | Deferred (Wilson ranking) | Draft, stacked |
+
 ## Deferred Until Core Bugs Are Resolved
 
 These are not good first upstream targets for this codebase:
@@ -190,4 +241,5 @@ These are not good first upstream targets for this codebase:
 - The highest-risk voting bugs are fixed first.
 - Each phase can be proposed upstream as one or more focused pull requests.
 - Changes follow WordPress Coding Standards and do not depend on fork-only architecture.
+- Phase 7 (fork-specific modernization) is tracked separately and does not block upstream work.
 - The roadmap stays grounded in the code that actually exists in this repository.
