@@ -21,7 +21,8 @@ WordPress.org distribution is currently closed for this plugin (closed on March 
 
 - This repository is a traditional WordPress plugin, not a block plugin or modern JS app.
 - The most urgent problems are correctness and data integrity, not feature expansion.
-- The current checkout does not implement Wilson scoring, ranking-mode settings, or a modern CI pipeline, so roadmap items should not assume those features already exist.
+- The current fork checkout does implement Wilson scoring, ranking-mode settings, and a GitHub Actions quality workflow, so roadmap items should treat those as existing fork behavior.
+- Runtime support declarations are still inconsistent: the plugin bootstrap and class constant still advertise PHP `5.3.2`, `composer.json` does not declare a PHP requirement, and fork docs/plans discuss higher floors that are not yet enforced in code.
 - The PHPUnit suite depends on the WordPress test library bootstrap in `/tmp/wordpress-tests-lib`, which must be installed before tests can run.
 
 ## Phase 1: Correctness And Data Integrity
@@ -82,15 +83,17 @@ Reduce avoidable warnings, deprecations, and standards drift without changing th
 
 ### Backlog
 
-1. Fix PHP 8+ deprecations such as optional parameters preceding required parameters.
-2. Sanitize and unslash request data consistently in AJAX and admin save handlers.
-3. Clean up rendering issues such as misused escaping helpers and null-unsafe array access.
-4. Fix the experts widget admin include path.
-5. Switch Gravatar URLs to HTTPS.
-6. Make uninstall routines prefix-safe and complete capability cleanup.
+1. Reconcile the declared PHP support floor across `comment-popularity.php`, `HMN_CP_REQUIRED_PHP_VERSION`, `composer.json`, CI, and release docs before raising the minimum.
+2. Fix PHP 8+ deprecations such as optional parameters preceding required parameters.
+3. Sanitize and unslash request data consistently in AJAX and admin save handlers.
+4. Clean up rendering issues such as misused escaping helpers and null-unsafe array access.
+5. Fix the experts widget admin include path.
+6. Switch Gravatar URLs to HTTPS.
+7. Make uninstall routines prefix-safe and complete capability cleanup.
 
 ### Acceptance Criteria
 
+- Version declarations, Composer constraints, CI targets, and release notes agree on the supported PHP floor.
 - Core PHP files lint cleanly on a current PHP runtime without plugin-specific deprecation notices.
 - PHPCS findings move toward a clean WordPress-standard baseline.
 - Uninstall does not hardcode the comments table name.
@@ -99,9 +102,14 @@ Reduce avoidable warnings, deprecations, and standards drift without changing th
 
 - `comment-popularity.php`
 - `admin/class-comment-popularity-admin.php`
+- `composer.json`
 - `inc/class-comment-popularity.php`
 - `inc/helpers.php`
 - `inc/widgets/experts/class-widget-experts.php`
+- `.github/workflows/*`
+- `README.md`
+- `CONTRIBUTING.md`
+- `CHANGELOG_UNRELEASED.md`
 - `uninstall.php`
 
 ## Phase 4: Test Foundation
@@ -140,12 +148,14 @@ Add the smallest possible automation layer that supports upstream maintenance.
 2. Add Composer scripts for the supported local quality commands if upstream maintainers want them.
 3. Replace or supplement legacy Travis-only automation with a modest GitHub Actions workflow.
 4. Keep the matrix small and realistic for an upstream plugin: one modern PHP target first, then expand only if the suite is stable.
+5. Re-evaluate whether `bin/php-runtime.sh` is still needed after the Twig 3 upgrade; keep it only if it solves a reproducible host-runtime failure.
 
 ### Acceptance Criteria
 
 - A contributor can run lint and tests with documented commands.
 - CI uses the same commands documented in the repo.
 - CI introduction does not block upstream review with an oversized matrix or unrelated refactors.
+- Wrapper behavior and wrapper documentation match a reproducible local compatibility need.
 
 ### Likely File Scope
 
@@ -153,6 +163,10 @@ Add the smallest possible automation layer that supports upstream maintenance.
 - `phpunit.xml`
 - `.travis.yml`
 - `.github/workflows/*`
+- `bin/php-runtime.sh`
+- `README.md`
+- `CONTRIBUTING.md`
+- `CHANGELOG_UNRELEASED.md`
 
 ## Phase 6: Documentation And Release Readiness
 
@@ -171,9 +185,9 @@ Close the loop after the code and tests are credible.
 - Each upstream PR has a matching changelog or release-note decision.
 - The roadmap can be used as an issue and PR sequencing guide.
 
-## Phase 7: Fork-Specific Modernization (PHP 8.2, PSR-4, PHPStan)
+## Phase 7: Fork-Specific Modernization (Explicit PHP Floor, PSR-4, PHPStan)
 
-This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. It enforces a PHP 8.2 minimum, introduces PSR-4 autoloading under the `CommentPopularity` namespace, and adds PHPStan static analysis. It also picks up two small bug fixes in the experts widget that were identified during quality review but are not on any existing branch.
+This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. It is where the fork would make an explicit higher PHP floor decision, introduce PSR-4 autoloading under the `CommentPopularity` namespace, and add PHPStan static analysis. The current `develop` branch has not yet enforced that higher PHP floor in code, so this phase should be treated as prospective work rather than current state. It also picks up two small bug fixes in the experts widget that were identified during quality review but are not on any existing branch.
 
 ### Backlog
 
