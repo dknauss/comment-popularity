@@ -1,5 +1,7 @@
 ## Summary
 
+Fork-first note: this repository ships from the fork. Use this PR body only when there is an explicit decision to export this branch upstream.
+
 This PR modernizes a few legacy helper patterns and adds a project-local PHPCS ruleset so linting can run against the plugin's actual conventions instead of a generic standard invocation.
 
 ## What Changed

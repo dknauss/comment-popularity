@@ -1,26 +1,36 @@
-# Upstream PR Draft Set
+# Optional Upstream Export Draft Set
 
 Prepared on 2026-03-06 for `humanmade/comment-popularity`.
+
+## Fork-First Note
+
+This repository is operated fork-first.
+
+- Canonical integration branch: `develop` on `dknauss/comment-popularity`
+- Primary shipping channel: this fork
+- Upstream PRs: optional, minimized, and only opened when there is a clear external need
+
+Use the drafts in this folder as export templates, not as the default development workflow. See `FORK_FIRST_POLICY.md`, `README.md`, and `CONTRIBUTING.md` for the canonical process.
 
 ## Replacement Map
 
 1. `codex/core-correctness`
-   - Open a new PR against `master`
+   - If an upstream export is needed, open a new PR against `master`
    - Replaces closed, unmerged `#132`
    - Title: `Harden voting flows and fix vote state persistence`
 
 2. `codex/fix-comment-sort-signature`
-   - Open after `codex/core-correctness` merges
+   - If upstream export is needed, open after `codex/core-correctness` merges upstream
    - Supersedes open `#135`
    - Title: `Fix deprecated comment sort method signature`
 
 3. `codex/wpcs-modernization`
-   - Open after `codex/fix-comment-sort-signature` merges
+   - If upstream export is needed, open after `codex/fix-comment-sort-signature` merges upstream
    - Supersedes open `#133`
    - Title: `Modernize helper APIs and add PHPCS project rules`
 
 4. `codex/ci-quality`
-   - Open after `codex/wpcs-modernization` merges
+   - If upstream export is needed, open after `codex/wpcs-modernization` merges upstream
    - Replaces closed, unmerged `#137`
    - Title: `Add project-aware quality checks in CI`
 
@@ -37,7 +47,9 @@ Prepared on 2026-03-06 for `humanmade/comment-popularity`.
 
 ## Create Commands
 
-Run these from the repo root. Only create the next PR after the predecessor has merged, since the `codex/*` branches are intentionally restacked.
+Run these from the repo root only if you are intentionally exporting work upstream. The default path remains landing and shipping changes from fork `develop`.
+
+Only create the next upstream PR after the predecessor has merged, since the `codex/*` branches are intentionally restacked.
 
 ```bash
 gh pr create \
