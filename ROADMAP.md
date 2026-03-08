@@ -7,6 +7,7 @@ Define an upstream-friendly backlog for modernizing Comment Popularity without t
 ## Workflow Direction (Current)
 
 The active workflow for this repository is fork-first. `dknauss/comment-popularity` `develop` is the canonical integration branch, and upstream PRs are minimized. See `FORK_FIRST_POLICY.md` for the authoritative working process.
+WordPress.org distribution is currently closed for this plugin (closed on March 3, 2021), so roadmap execution does not include SVN/.org release steps.
 
 ## Guardrails
 

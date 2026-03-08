@@ -42,9 +42,15 @@ Pull requests, reporting issues, feedback and ideas for new features and improve
 Releasing a new version
 -----------------------
 
-Obviously you'll need contributor access to the WordPress.org repository.
+WordPress.org distribution is not part of this project workflow right now. The plugin is closed on WordPress.org (closed on March 3, 2021), so do not use SVN deploy tooling for releases.
 
-Install and run [the deployment script as per instructions](https://github.com/GaryJones/wordpress-plugin-svn-deploy)
+Release from the fork instead:
+
+1. Merge release-ready changes to `develop`.
+2. Bump version metadata (`comment-popularity.php`, `README.txt`, and changelog files).
+3. Run the quality baseline commands in this document.
+4. Merge `develop` to `master` through a PR with green required checks.
+5. Create and push a Git tag, then publish a GitHub Release.
 
 Available Grunt tasks
 ---------------------

@@ -15,6 +15,13 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 - Open upstream PRs only when there is a clear external need.
 - Do not keep overlapping upstream PR stacks open.
 
+## Distribution Channel Policy
+
+- WordPress.org plugin distribution is currently closed for this plugin (closed on March 3, 2021).
+- Do not deploy releases to WordPress.org SVN.
+- The active release channel is this fork (`dknauss/comment-popularity`) using Git tags and GitHub Releases.
+- If WordPress.org distribution is ever reinstated, update this policy before adding any SVN deploy steps.
+
 ## Branch Lifecycle
 
 - Prefer direct work on `develop` for small changes.

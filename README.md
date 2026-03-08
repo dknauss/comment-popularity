@@ -16,6 +16,12 @@ Comment Popularity adds the ability for visitors to vote on comments.
 This repository follows a fork-first workflow for active development.
 See `FORK_FIRST_POLICY.md` for the canonical branch strategy, quality gates, and branch cleanup process.
 
+## Distribution Status ##
+
+WordPress.org distribution is currently closed for this plugin (closed on March 3, 2021).
+Do not use WordPress.org SVN release/deploy steps for this repository.
+Publish releases from this fork via Git tags and GitHub Releases.
+
 ## Description ##
 
 With this plugin, members of your site will be able to vote comments up or down. Think Reddit comments.
