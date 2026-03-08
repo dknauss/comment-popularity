@@ -58,7 +58,7 @@ add_filter( 'hmn_cp_allow_negative_comment_weight', '__return_true' );
 From repo root:
 
 ```bash
-composer install --no-interaction --prefer-dist --ignore-platform-reqs
+composer install --no-interaction --prefer-dist
 WP_VERSION=6.4 composer test:setup
 composer lint
 composer test
@@ -71,8 +71,8 @@ composer test:local-smoke
 
 Notes:
 
-- `--ignore-platform-reqs` is currently required because locked legacy Twig constraints predate modern local runtimes.
-- CLI quality commands use `bin/php-runtime.sh` to prefer a compatible PHP runtime on local machines running PHP 8.5+ (override with `CP_PHP_BIN` when needed).
+- PHP `8.1+` is required for both runtime and local quality tooling.
+- CLI quality commands use `bin/php-runtime.sh` to enforce a compatible PHP runtime and prefer Local PHP `8.4`/`8.3`/`8.2`/`8.1` when the host `php` is older (override with `CP_PHP_BIN` when needed).
 - Coverage artifacts are written to `tests/cache/coverage`.
 - `composer test:local-smoke` targets `https://single-site-local.local`.
 

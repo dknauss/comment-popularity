@@ -13,7 +13,7 @@ Quality baseline (local + CI)
 
 From a clean checkout:
 
-1. `composer install --no-interaction --prefer-dist --ignore-platform-reqs`
+1. `composer install --no-interaction --prefer-dist`
 2. `composer lint`
 3. `WP_VERSION=6.4 composer test:setup`
 4. `composer test`
@@ -24,9 +24,9 @@ From a clean checkout:
 9. `composer test:psalm`
 10. `composer test:local-smoke`
 
-CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
+CI uses the same Composer scripts for consistency. PHP `8.1+` is required for this repository.
 `composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
-`bin/php-runtime.sh` now routes local CLI quality commands to a compatible PHP runtime (prefers Local PHP 8.4 when host `php` is 8.5+). Override with `CP_PHP_BIN=/path/to/php` if needed.
+`bin/php-runtime.sh` now routes local CLI quality commands to a compatible PHP runtime and enforces `8.1+` (prefers Local PHP `8.4`/`8.3`/`8.2`/`8.1` when host `php` is older). Override with `CP_PHP_BIN=/path/to/php` if needed.
 
 Coverage and hardening notes
 ----------------------------

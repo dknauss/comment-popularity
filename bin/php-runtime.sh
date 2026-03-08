@@ -15,10 +15,20 @@ if [[ "$runtime" != "php" && "$runtime" != "phpdbg" ]]; then
 	exit 2
 fi
 
+is_php_compatible() {
+	local php_path="$1"
+	"${php_path}" -r 'exit(PHP_VERSION_ID >= 80100 ? 0 : 1);'
+}
+
 find_php_bin() {
 	if [[ -n "${CP_PHP_BIN:-}" ]]; then
 		if [[ ! -x "${CP_PHP_BIN}" ]]; then
 			echo "Configured CP_PHP_BIN is not executable: ${CP_PHP_BIN}" >&2
+			exit 2
+		fi
+
+		if ! is_php_compatible "${CP_PHP_BIN}"; then
+			echo "Configured CP_PHP_BIN must point to PHP 8.1+." >&2
 			exit 2
 		fi
 
@@ -28,28 +38,38 @@ find_php_bin() {
 
 	local default_php
 	default_php="$(command -v php)"
+	local selected_php="${default_php}"
 
-	# Keep the current runtime unless we are on PHP 8.5+, where legacy Twig paths can fatal.
-	if "${default_php}" -r 'exit(PHP_VERSION_ID > 80499 ? 0 : 1);'; then
+	# Keep the current runtime unless it is below the project floor (PHP 8.1+).
+	if ! is_php_compatible "${default_php}"; then
 		shopt -s nullglob
 		local candidates=(
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.4."*/bin/darwin-arm64/bin/php
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.4."*/bin/darwin/bin/php
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.3."*/bin/darwin-arm64/bin/php
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.3."*/bin/darwin/bin/php
+			"${HOME}/Library/Application Support/Local/lightning-services/php-8.2."*/bin/darwin-arm64/bin/php
+			"${HOME}/Library/Application Support/Local/lightning-services/php-8.2."*/bin/darwin/bin/php
+			"${HOME}/Library/Application Support/Local/lightning-services/php-8.1."*/bin/darwin-arm64/bin/php
+			"${HOME}/Library/Application Support/Local/lightning-services/php-8.1."*/bin/darwin/bin/php
 		)
 		shopt -u nullglob
 
 		local candidate
 		for candidate in "${candidates[@]}"; do
-			if [[ -x "${candidate}" ]]; then
-				echo "${candidate}"
-				return
+			if [[ -x "${candidate}" ]] && is_php_compatible "${candidate}"; then
+				selected_php="${candidate}"
+				break
 			fi
 		done
 	fi
 
-	echo "${default_php}"
+	if ! is_php_compatible "${selected_php}"; then
+		echo "Unable to find a PHP 8.1+ binary. Set CP_PHP_BIN to a compatible PHP executable." >&2
+		exit 2
+	fi
+
+	echo "${selected_php}"
 }
 
 resolve_runtime_bin() {
