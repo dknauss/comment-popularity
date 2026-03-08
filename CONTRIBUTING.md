@@ -18,7 +18,9 @@ From a clean checkout:
 3. `WP_VERSION=6.4 composer test:setup`
 4. `composer test`
 5. `composer test:coverage`
-6. `composer test:local-smoke`
+6. `composer test:phpstan`
+7. `composer test:psalm`
+8. `composer test:local-smoke`
 
 CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
 `composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
@@ -29,11 +31,18 @@ Coverage and hardening notes
 - Coverage scope excludes vendored dependencies under `inc/lib`.
 - `composer test:coverage` uses `phpdbg`, so no Xdebug/PCOV setup is required.
 - Coverage threshold is enforced from Clover output (`tests/cache/coverage/clover.xml`) via `tests/check-coverage-threshold.php`.
-- Current statement coverage threshold is `23%` (baseline from measured `24.18%` signal on 2026-03-08).
+- Current statement coverage threshold is `25%` (raised from measured `26.37%` signal on 2026-03-08).
 - Threshold ratcheting policy:
   - Raise only after at least 3 consecutive green CI coverage runs and 1 local confirmation run.
   - Raise in small increments (normally 1-2 points).
   - Do not lower threshold for feature work. If rollback is required (environment drift or confirmed flake), limit to 1 point and document follow-up.
+
+Static analysis baseline policy
+-------------------------------
+
+- `composer test:phpstan` is a blocking quality gate (level 5 with `phpstan-baseline.neon`).
+- `composer test:psalm` is currently advisory/non-blocking in CI phase 1 and uses `psalm-baseline.xml`.
+- New work should avoid adding fresh baseline entries; reduce baseline counts when touching related files.
 
 Local development smoke testing
 -------------------------------

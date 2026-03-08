@@ -10,6 +10,7 @@
 
 	<exclude-pattern>*/inc/lib/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/tests/cache/*</exclude-pattern>
 
 	<rule ref="WordPress-Core">
 		<!-- Legacy architecture: keep core safety checks, relax historical style-only hotspots. -->

@@ -81,6 +81,47 @@ jobs:
       - name: Run PHPCS full report
         run: composer lint:full-report
 
+  phpstan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          tools: composer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+
+      - name: Run PHPStan
+        run: composer test:phpstan
+
+  psalm:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          tools: composer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+
+      - name: Run Psalm (phase 1, non-blocking)
+        run: composer test:psalm
+
   phpunit:
     runs-on: ubuntu-latest
     services:
