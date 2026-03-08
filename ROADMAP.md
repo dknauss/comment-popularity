@@ -4,6 +4,10 @@
 
 Define an upstream-friendly backlog for modernizing Comment Popularity without turning it into a fork-only rewrite. The goal is to send small, reviewable improvements back to `humanmade/comment-popularity` while staying aligned with the existing plugin structure and WordPress coding standards.
 
+## Workflow Direction (Current)
+
+The active workflow for this repository is fork-first. `dknauss/comment-popularity` `develop` is the canonical integration branch, and upstream PRs are minimized. See `FORK_FIRST_POLICY.md` for the authoritative working process.
+
 ## Guardrails
 
 - Follow the WordPress Coding Standards already called out in `CONTRIBUTING.md`.

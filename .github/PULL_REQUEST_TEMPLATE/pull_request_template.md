@@ -2,6 +2,7 @@
 - [ ] The commit message follows our guidelines
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
+- [ ] This PR follows `FORK_FIRST_POLICY.md` (targeting fork `develop` unless explicitly justified)
 
 
 * **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
