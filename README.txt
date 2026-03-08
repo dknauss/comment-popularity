@@ -4,7 +4,7 @@ Contributors: pauldewouters,mattheu,humanmade,cfo-publishing
 Tags: comments,vote,upvote,karma,widget
 Requires at least: 4.9
 Tested up to: 4.9.3
-Stable tag: 1.5
+Stable tag: 1.5.1
 Requires PHP: 5.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -110,6 +110,10 @@ To display the comment author karma:
 
 == Upgrade Notice ==
 
+= 1.5.1 =
+
+* Fork release with hardened CI quality gates, vote-state correctness fixes, and improved local/fork maintainer workflow.
+
 = 1.3.0 =
 
 * Guest visitors can now vote ( requires setting a flag )
@@ -130,6 +134,13 @@ To display the comment author karma:
 * Fixes a bug which prevented the user karma to appear in the single comment template.
 
 == Changelog ==
+
+= 1.5.1 =
+
+* Fix vote-state persistence and transition correctness for member and guest voting paths.
+* Add deterministic CI quality gates (changed-files PHPCS, full PHPCS, PHPUnit) on the fork workflow.
+* Remove SVN dependency from test bootstrap by downloading `wordpress-develop` test assets via archive.
+* Document and enforce fork-first maintainer process.
 
 = 1.5 =
 
