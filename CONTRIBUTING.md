@@ -31,7 +31,7 @@ Coverage and hardening notes
 - Coverage scope excludes vendored dependencies under `inc/lib`.
 - `composer test:coverage` uses `phpdbg`, so no Xdebug/PCOV setup is required.
 - Coverage threshold is enforced from Clover output (`tests/cache/coverage/clover.xml`) via `tests/check-coverage-threshold.php`.
-- Current statement coverage threshold is `25%` (raised from measured `26.37%` signal on 2026-03-08).
+- Current statement coverage threshold is `27%` (raised from measured `43.68%` signal on 2026-03-08).
 - Threshold ratcheting policy:
   - Raise only after at least 3 consecutive green CI coverage runs and 1 local confirmation run.
   - Raise in small increments (normally 1-2 points).

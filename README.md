@@ -17,7 +17,7 @@ For canonical branch/release policy, see [FORK_FIRST_POLICY.md](FORK_FIRST_POLIC
 ## What Changed In This Fork
 
 - Deterministic test bootstrap (`bin/test-setup.sh`) and stable CI run order
-- Enforced coverage gate (`composer test:coverage`) with current threshold at **25%**
+- Enforced coverage gate (`composer test:coverage`) with current threshold at **27%**
 - Blocking PHPStan gate with committed baseline (`phpstan-baseline.neon`)
 - Phase-1 advisory Psalm analysis with committed baseline (`psalm-baseline.xml`)
 - Local smoke testing for Local site environment (`single-site-local.local`)

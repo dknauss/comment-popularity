@@ -8,6 +8,10 @@ Unreleased
 - CI: added phase-1 non-blocking `psalm` quality check with committed baseline (`psalm-baseline.xml`).
 - Tooling: added Composer scripts for `analyse:phpstan`, `analyse:psalm`, `test:phpstan`, and `test:psalm`.
 - Docs: updated contributing and fork-first quality baselines to include static analysis gates.
+- Tests: added admin settings/profile regression tests and helper regression tests.
+- Fix: `hmn_cp_the_comment_author_karma()` now resolves commenter karma by registered comment `user_id` instead of email lookup.
+- CI: raised coverage gate threshold from `25%` to `27%` after increasing measured statement coverage to `43.68%` (`401/918`).
+- Static analysis: reduced PHPStan baseline entries and updated Psalm baseline after helper-path cleanup.
 
 1.5.1 - 2026-03-08
 ==================
