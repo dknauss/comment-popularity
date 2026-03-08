@@ -1,5 +1,7 @@
 ## Summary
 
+Fork-first note: this repository ships from the fork. Use this PR body only when there is an explicit decision to export this branch upstream.
+
 This PR fixes the deprecated `get_comments_sorted_by_weight()` method signature and updates the internal call sites to match the corrected parameter order.
 
 ## What Changed
