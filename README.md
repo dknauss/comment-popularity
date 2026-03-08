@@ -17,7 +17,7 @@ For canonical branch/release policy, see [FORK_FIRST_POLICY.md](FORK_FIRST_POLIC
 ## What Changed In This Fork
 
 - Deterministic test bootstrap (`bin/test-setup.sh`) and stable CI run order
-- Enforced coverage gate (`composer test:coverage`) with current threshold at **27%**
+- Enforced coverage gate (`composer test:coverage`) with current threshold at **29%**
 - Blocking PHPStan gate with committed baseline (`phpstan-baseline.neon`)
 - Phase-1 advisory Psalm analysis with committed baseline (`psalm-baseline.xml`)
 - Local smoke testing for Local site environment (`single-site-local.local`)
@@ -71,6 +71,7 @@ composer test:local-smoke
 Notes:
 
 - `--ignore-platform-reqs` is currently required because locked legacy Twig constraints predate modern local runtimes.
+- CLI quality commands use `bin/php-runtime.sh` to prefer a compatible PHP runtime on local machines running PHP 8.5+ (override with `CP_PHP_BIN` when needed).
 - Coverage artifacts are written to `tests/cache/coverage`.
 - `composer test:local-smoke` targets `https://single-site-local.local`.
 

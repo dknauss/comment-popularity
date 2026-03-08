@@ -9,9 +9,12 @@ Unreleased
 - Tooling: added Composer scripts for `analyse:phpstan`, `analyse:psalm`, `test:phpstan`, and `test:psalm`.
 - Docs: updated contributing and fork-first quality baselines to include static analysis gates.
 - Tests: added admin settings/profile regression tests and helper regression tests.
+- Tests: added bootstrap init regression tests for logged-in and guest-voting-disabled paths (`hmn_cp_init`).
 - Fix: `hmn_cp_the_comment_author_karma()` now resolves commenter karma by registered comment `user_id` instead of email lookup.
 - CI: raised coverage gate threshold from `25%` to `27%` after increasing measured statement coverage to `43.68%` (`401/918`).
+- CI: raised coverage gate threshold from `27%` to `29%` after increasing measured statement coverage to `44.99%` (`413/918`).
 - Static analysis: reduced PHPStan baseline entries and updated Psalm baseline after helper-path cleanup.
+- Tooling: added `bin/php-runtime.sh` and routed Composer quality commands through it to prefer a compatible local PHP runtime on PHP 8.5+ hosts.
 
 1.5.1 - 2026-03-08
 ==================
