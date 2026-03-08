@@ -116,9 +116,6 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
 
-      - name: Install Subversion client
-        run: sudo apt-get update && sudo apt-get install -y subversion
-
       - name: Install WordPress test suite
         env:
           WP_VERSION: ${{ matrix.wp-version }}

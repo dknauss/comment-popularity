@@ -18,6 +18,19 @@ From a clean checkout:
 
 CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
 
+Current CI baseline
+-------------------
+
+- Treat failing run `22812182249` as historical (pre-fix).
+- Use successful run `22812774619` on `develop` as the current baseline for Quality workflow health.
+
+Fork-first workflow
+-------------------
+
+1. Default integration branch is `develop` on `dknauss/comment-popularity`.
+2. Keep upstream PRs to a minimum; ship from the fork unless explicitly needed.
+3. Use short-lived feature branches only when needed, then delete local and remote branches after merge.
+
 Contributions
 -------------
 
