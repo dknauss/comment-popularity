@@ -38,9 +38,9 @@ class HMN_Comment_Popularity {
 	private static $instance;
 
 	/**
-	 * The instance of Twig_Environment
+	 * The instance of Twig\Environment
 	 *
-	 * @var null
+	 * @var \Twig\Environment|null
 	 */
 	protected $twig;
 
@@ -242,8 +242,8 @@ class HMN_Comment_Popularity {
 
 		$template_path = apply_filters( 'hmn_cp_template_path', plugin_dir_path( __FILE__ ) . '/templates' );
 
-		$loader     = new \Twig_Loader_Filesystem( $template_path );
-		$this->twig = new \Twig_Environment( $loader );
+		$loader     = new \Twig\Loader\FilesystemLoader( $template_path );
+		$this->twig = new \Twig\Environment( $loader );
 	}
 
 	/**

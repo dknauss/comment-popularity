@@ -135,9 +135,6 @@
       <code><![CDATA[1 + $z2 / $total]]></code>
       <code><![CDATA[1 - $phat]]></code>
     </InvalidOperand>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[new \Twig_Environment( $loader )]]></code>
-    </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement>
       <code><![CDATA[$comments]]></code>
     </InvalidReturnStatement>
@@ -214,7 +211,6 @@
       <code><![CDATA[$role]]></code>
       <code><![CDATA[$role['name']]]></code>
       <code><![CDATA[$template_path]]></code>
-      <code><![CDATA[$this->twig->render( 'voting-system.html', $vars )]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$vote]]></code>
       <code><![CDATA[$wp_version]]></code>
@@ -317,9 +313,6 @@
       <code><![CDATA[get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults )]]></code>
       <code><![CDATA[get_option( 'comment_popularity_prefs', $defaults )]]></code>
     </MixedReturnStatement>
-    <NullReference>
-      <code><![CDATA[render]]></code>
-    </NullReference>
     <NullableReturnStatement>
       <code><![CDATA[wp_list_comments( $args, $comments )]]></code>
     </NullableReturnStatement>
@@ -332,6 +325,9 @@
       <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
       <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
     </PossiblyNullOperand>
+    <PossiblyNullReference>
+      <code><![CDATA[render]]></code>
+    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$visitor]]></code>
     </PropertyNotSetInConstructor>
@@ -651,7 +647,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$defaults]]></code>
-      <code><![CDATA[$twig]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[flush_widget_cache]]></code>
@@ -671,7 +666,6 @@
       <code><![CDATA[$template_path]]></code>
       <code><![CDATA[$this->defaults]]></code>
       <code><![CDATA[$this->defaults]]></code>
-      <code><![CDATA[$this->twig->render( 'experts-widget.html', $vars )]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$return[ $key ]]]></code>
@@ -711,9 +705,6 @@
       <code><![CDATA[$template_path]]></code>
       <code><![CDATA[$widget_string]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[render]]></code>
-    </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$after_widget]]></code>
       <code><![CDATA[$args['after_title']]]></code>
@@ -731,6 +722,9 @@
       <code><![CDATA[$expert->user_email]]></code>
       <code><![CDATA[$expert->user_login]]></code>
     </MixedPropertyFetch>
+    <PossiblyNullReference>
+      <code><![CDATA[render]]></code>
+    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$return]]></code>
       <code><![CDATA[$return]]></code>
