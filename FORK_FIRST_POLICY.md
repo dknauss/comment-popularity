@@ -35,6 +35,7 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
   - `phpcs-changed`
   - `phpcs-report`
   - `phpunit (8.1, 6.4)`
+  - `coverage-gate`
 - Treat failing run `22812182249` as historical pre-fix noise.
 - Use run `22812774619` and newer successful `develop` runs as baseline.
 
@@ -42,12 +43,15 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 
 - WordPress test suite setup must not depend on `svn`.
 - `bin/install-wp-tests.sh` uses `wordpress-develop` archives so CI works on standard GitHub runners without extra package installs.
+- `composer test:setup` performs a deterministic reset of the `wp_tests` database before reinstalling test fixtures.
 
 ## Working Checklist
 
 1. Start from fork `develop`.
 2. Run `composer lint:full-report`.
 3. Run `WP_VERSION=6.4 composer test:setup` and `composer test`.
-4. Push to fork `develop`.
-5. Verify `Quality` workflow passes.
-6. Prune temporary branches/worktrees.
+4. Run `composer test:coverage`.
+5. Run `composer test:local-smoke`.
+6. Push to fork `develop`.
+7. Verify `Quality` workflow passes.
+8. Prune temporary branches/worktrees.

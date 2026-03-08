@@ -2,3 +2,5 @@ node_modules
 build
 .idea
 inc/lib
+tests/cache
+.phpunit.result.cache

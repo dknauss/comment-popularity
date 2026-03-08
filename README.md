@@ -15,6 +15,7 @@ Comment Popularity adds the ability for visitors to vote on comments.
 
 This repository follows a fork-first workflow for active development.
 See `FORK_FIRST_POLICY.md` for the canonical branch strategy, quality gates, and branch cleanup process.
+See `docs/manual-testing-checklist.md` for local hardening and smoke-test validation before release promotion.
 
 ## Distribution Status ##
 
