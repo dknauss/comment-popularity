@@ -57,7 +57,7 @@
 			"@test:setup",
 			"mkdir -p tests/cache/coverage",
 			"WP_TESTS_DIR=/tmp/wordpress-tests-lib phpdbg -qrr ./inc/lib/bin/phpunit --configuration phpunit.xml --coverage-clover=tests/cache/coverage/clover.xml",
-			"php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 25"
+			"php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 27"
 		],
 		"test:local-smoke": "bash bin/local-smoke-test.sh",
 		"qa": [

@@ -506,8 +506,6 @@
   <file src="inc/helpers.php">
     <InvalidArgument>
       <code><![CDATA[$author_karma]]></code>
-      <code><![CDATA[get_comment_ID()]]></code>
-      <code><![CDATA[get_comment_ID()]]></code>
     </InvalidArgument>
     <InvalidGlobal>
       <code><![CDATA[global $post;]]></code>

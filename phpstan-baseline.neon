@@ -126,16 +126,6 @@ parameters:
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#1 \\$comment_id of function get_comment_author_email expects int\\|WP_Comment, string given\\.$#"
-			count: 1
-			path: inc/helpers.php
-
-		-
-			message: "#^Parameter \\#1 \\$comment_id of method CommentPopularity\\\\HMN_Comment_Popularity\\:\\:render_ui\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: inc/helpers.php
-
-		-
 			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int given\\.$#"
 			count: 1
 			path: inc/helpers.php
