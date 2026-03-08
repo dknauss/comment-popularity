@@ -5,7 +5,7 @@ Tags: comments,vote,upvote,karma,widget
 Requires at least: 4.9
 Tested up to: 4.9.3
 Stable tag: 1.5.2-dev
-Requires PHP: 5.3.2
+Requires PHP: 8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ You'll find an option under discussion for the default expert karma and it can a
 
 Follow development of this plugin on [Github](https://github.com/humanmade/comment-popularity/)
 
-Requires PHP `5.3.2` or newer.
+Requires PHP `8.2` or newer.
 
 == Installation ==
 

@@ -22,6 +22,7 @@ WordPress.org distribution is currently closed for this plugin (closed on March 
 - This repository is a traditional WordPress plugin, not a block plugin or modern JS app.
 - The most urgent problems are correctness and data integrity, not feature expansion.
 - The current fork checkout does implement Wilson scoring, ranking-mode settings, and a GitHub Actions quality workflow, so roadmap items should treat those as existing fork behavior.
+- Wilson work in the fork is now primarily stabilization work: keep legacy weight, author karma, Wilson metadata, callback behavior, and tests in sync rather than reintroducing Wilson as a new feature.
 - Runtime support declarations are aligned on PHP `8.2`: the plugin bootstrap, class constant, `composer.json`, CI workflow, and fork docs all describe the same floor.
 - The PHPUnit suite depends on the WordPress test library bootstrap in `/tmp/wordpress-tests-lib`, which must be installed before tests can run.
 
@@ -58,7 +59,7 @@ Move vote integrity checks out of the browser and into the backend so the plugin
 
 ### Backlog
 
-1. Enforce duplicate-vote and vote-interval rules on the server.
+1. Enforce duplicate-vote and vote-transition rules on the server.
 2. Normalize vote transitions so `upvote`, `downvote`, and `undo` update comment weight and author karma exactly once per state change.
 3. Return stable error codes and payloads for invalid transitions.
 4. Align guest and member validation paths where behavior should match.
@@ -224,9 +225,36 @@ This phase is fork-only work that goes beyond the upstream-friendly scope of Pha
 - [ ] 07-02-PLAN.md — PHPStan setup and CI integration
 - [ ] 07-03-PLAN.md — PSR-4 autoloading migration
 
+## Phase 8: Post-Review Remediation
+
+This phase consolidates the remaining review findings into one fork-first execution plan. It does not add Wilson as new product work; it closes the remaining correctness, lifecycle, coverage, and planning gaps around the already-implemented fork baseline.
+
+### Backlog
+
+1. Remove email fallback from author-karma attribution so only registered comment `user_id` values can mutate user karma.
+2. Make uninstall cleanup multisite-safe for blog-scoped prefs and guest vote storage.
+3. Retire the unused vote-interval hook and keep duplicate-vote rejection/state-transition rules as the canonical server policy.
+4. Add direct callback-level regression coverage for the public vote AJAX endpoint and guest persistence paths.
+5. Fix the remaining experts widget defects: undefined empty-state return value and insecure Gravatar URL.
+6. Reconcile roadmap/export/release docs so they describe the fork's actual execution state instead of the old upstream queue.
+
+### Acceptance Criteria
+
+- Author karma, helper behavior, and tests all use `comment->user_id` consistently.
+- Multisite uninstall removes blog-scoped plugin state.
+- Public callback coverage is non-zero and guest persistence is tested.
+- Experts widget fixes are landed and covered.
+- Wilson remains documented as existing fork behavior.
+- The roadmap becomes the canonical remediation source for the fork.
+
+### Plans
+
+- [ ] 08-01-PLAN.md — Comprehensive remediation backlog after full consistency review
+- [ ] 08-02-PLAN.md — TDD coverage matrix and execution order for Phase 8 remediation
+
 ## Branch Status (Phases 1–5)
 
-Phases 1–5 are largely implemented on restacked `codex/*` branches awaiting upstream merge. See `.planning/prs/README.md` for the full PR strategy and `gh pr create` commands.
+The branch status below reflects optional upstream export scaffolding, not the canonical fork execution workflow. See `.planning/prs/README.md` only when there is an explicit decision to export work upstream.
 
 | Branch | Covers | Status |
 |--------|--------|--------|

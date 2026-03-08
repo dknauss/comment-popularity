@@ -4,10 +4,30 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// Remove plugin settings
-delete_option( 'comment_popularity_prefs' );
-delete_option( 'hmn_cp_plugin_version' );
-delete_option( 'hmn_cp_guests_logged_votes' );
+// Remove plugin settings.
+$plugin_options = array(
+	'comment_popularity_prefs',
+	'hmn_cp_plugin_version',
+	'hmn_cp_guests_logged_votes',
+);
+
+foreach ( $plugin_options as $plugin_option ) {
+	delete_option( $plugin_option );
+}
+
+if ( is_multisite() ) {
+	$site_ids = get_sites(
+		array(
+			'fields' => 'ids',
+		)
+	);
+
+	foreach ( $site_ids as $site_id ) {
+		foreach ( $plugin_options as $plugin_option ) {
+			delete_blog_option( (int) $site_id, $plugin_option );
+		}
+	}
+}
 
 global $wpdb;
 
