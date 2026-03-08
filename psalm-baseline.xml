@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.15.1@28dc127af1b5aecd52314f6f645bafc10d0e11f9">
+  <file src="admin/class-comment-popularity-admin.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HMN_Comment_Popularity_Admin]]></code>
+    </ClassMustBeFinal>
+    <InvalidArgument>
+      <code><![CDATA[array( $this, 'validate_settings' )]]></code>
+    </InvalidArgument>
+    <MissingParamType>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$column_name]]></code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$comment_ID]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$user_id]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$instance]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[get_instance]]></code>
+      <code><![CDATA[make_karma_column_sortable]]></code>
+      <code><![CDATA[populate_comment_column]]></code>
+      <code><![CDATA[register_plugin_settings]]></code>
+      <code><![CDATA[render_expert_karma_input]]></code>
+      <code><![CDATA[render_ranking_mode_input]]></code>
+      <code><![CDATA[render_user_karma_field]]></code>
+      <code><![CDATA[save_user_meta]]></code>
+    </MissingReturnType>
+    <MixedArgument>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$comment_ID]]></code>
+      <code><![CDATA[$default_expert_karma]]></code>
+      <code><![CDATA[$input['default_expert_karma']]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$user_karma]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$input['default_expert_karma']]]></code>
+      <code><![CDATA[$prefs['default_expert_karma']]]></code>
+      <code><![CDATA[$prefs['default_expert_karma']]]></code>
+      <code><![CDATA[$prefs['ranking_mode']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$columns['comment_karma']]]></code>
+      <code><![CDATA[$columns['user_karma']]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$current_karma]]></code>
+      <code><![CDATA[$default_expert_karma]]></code>
+      <code><![CDATA[$default_karma]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$prefs]]></code>
+      <code><![CDATA[$ranking_mode]]></code>
+      <code><![CDATA[$user_expert_status]]></code>
+      <code><![CDATA[$user_karma]]></code>
+      <code><![CDATA[$user_karma]]></code>
+      <code><![CDATA[$valid['default_expert_karma']]]></code>
+      <code><![CDATA[$valid['ranking_mode']]]></code>
+    </MixedAssignment>
+    <MixedPropertyFetch>
+      <code><![CDATA[$comment->comment_karma]]></code>
+      <code><![CDATA[$user->ID]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[get_user_option( 'hmn_user_karma', $user_id )]]></code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$default_expert_karma]]></code>
+      <code><![CDATA[wp_unslash( $_POST['hmn_cp_user_meta_nonce'] )]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="comment-popularity.php">
+    <MissingReturnType>
+      <code><![CDATA[hmn_cp_init]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[array( 'CommentPopularity\HMN_Comment_Popularity', 'activate' )]]></code>
+      <code><![CDATA[array( 'CommentPopularity\HMN_Comment_Popularity', 'deactivate' )]]></code>
+    </PossiblyInvalidArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$comment_popularity->is_guest_voting_allowed()]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnresolvableInclude>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'admin/class-comment-popularity-admin.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/class-comment-popularity.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/upgrade.php']]></code>
+    </UnresolvableInclude>
+  </file>
+  <file src="inc/class-comment-popularity.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA['CommentPopularity\HMN_CP_Widget_Experts']]></code>
+      <code><![CDATA['CommentPopularity\HMN_CP_Widget_Most_Voted']]></code>
+    </ArgumentTypeCoercion>
+    <ClassMustBeFinal>
+      <code><![CDATA[HMN_Comment_Popularity]]></code>
+    </ClassMustBeFinal>
+    <DocblockTypeContradiction>
+      <code><![CDATA[! $this->visitor]]></code>
+      <code><![CDATA[$this->visitor]]></code>
+      <code><![CDATA[in_array( 'manage_user_karma_settings', $role_obj->capabilities, true )]]></code>
+      <code><![CDATA[in_array( 'vote_on_comments', $role_obj->capabilities, true )]]></code>
+      <code><![CDATA[is_array( $args )]]></code>
+      <code><![CDATA[is_array( $legacy_args )]]></code>
+    </DocblockTypeContradiction>
+    <InvalidArgument>
+      <code><![CDATA[$comment_ids_voted_on]]></code>
+    </InvalidArgument>
+    <InvalidOperand>
+      <code><![CDATA[$phat * ( 1 - $phat )]]></code>
+      <code><![CDATA[$phat + $z2 / ( 2 * $total )]]></code>
+      <code><![CDATA[$z2 / $total]]></code>
+      <code><![CDATA[$z2 / ( 2 * $total )]]></code>
+      <code><![CDATA[$z2 / ( 4 * $total )]]></code>
+      <code><![CDATA[( $phat * ( 1 - $phat ) + $z2 / ( 4 * $total ) ) / $total]]></code>
+      <code><![CDATA[1 + $z2 / $total]]></code>
+      <code><![CDATA[1 - $phat]]></code>
+    </InvalidOperand>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[new \Twig_Environment( $loader )]]></code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$comments]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array|string]]></code>
+    </InvalidReturnType>
+    <MissingClassConstType>
+      <code><![CDATA[COMMENT_META_DOWNVOTES = '_hmn_cp_downvotes']]></code>
+      <code><![CDATA[COMMENT_META_TOTAL_VOTES = '_hmn_cp_total_votes']]></code>
+      <code><![CDATA[COMMENT_META_UPVOTES = '_hmn_cp_upvotes']]></code>
+      <code><![CDATA[COMMENT_META_WILSON_LOWER_BOUND = '_hmn_cp_wilson_lb']]></code>
+      <code><![CDATA[HMN_CP_PLUGIN_VERSION = '1.5.2-dev']]></code>
+      <code><![CDATA[HMN_CP_REQUIRED_PHP_VERSION = '5.3.2']]></code>
+      <code><![CDATA[HMN_CP_REQUIRED_WP_VERSION = '4.9']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$commenter_id]]></code>
+      <code><![CDATA[$depth]]></code>
+      <code><![CDATA[$error_code]]></code>
+      <code><![CDATA[$error_msg]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$vote]]></code>
+      <code><![CDATA[$weight_value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[activate]]></code>
+      <code><![CDATA[comment_callback]]></code>
+      <code><![CDATA[comment_vote_callback]]></code>
+      <code><![CDATA[deactivate]]></code>
+      <code><![CDATA[enqueue_scripts]]></code>
+      <code><![CDATA[includes]]></code>
+      <code><![CDATA[init_twig]]></code>
+      <code><![CDATA[insert_comment_callback]]></code>
+      <code><![CDATA[register_widgets]]></code>
+      <code><![CDATA[render_ui]]></code>
+      <code><![CDATA[send_error]]></code>
+      <code><![CDATA[set_comment_vote_counts]]></code>
+      <code><![CDATA[set_permissions]]></code>
+      <code><![CDATA[set_visitor]]></code>
+      <code><![CDATA[styles]]></code>
+    </MissingReturnType>
+    <MixedArgument>
+      <code><![CDATA[$comment->user_id]]></code>
+      <code><![CDATA[$comment_arr]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$commenter_id]]></code>
+      <code><![CDATA[$commenter_id]]></code>
+      <code><![CDATA[$counts['downvotes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$hmn_cp_lang_dir]]></code>
+      <code><![CDATA[$locale]]></code>
+      <code><![CDATA[$next_vote]]></code>
+      <code><![CDATA[$next_vote]]></code>
+      <code><![CDATA[$previous_vote]]></code>
+      <code><![CDATA[$previous_vote]]></code>
+      <code><![CDATA[$role]]></code>
+      <code><![CDATA[$role['name']]]></code>
+      <code><![CDATA[$template_path]]></code>
+      <code><![CDATA[$this->twig->render( 'voting-system.html', $vars )]]></code>
+      <code><![CDATA[$user_id]]></code>
+      <code><![CDATA[$vote]]></code>
+      <code><![CDATA[$wp_version]]></code>
+      <code><![CDATA[ARRAY_A]]></code>
+      <code><![CDATA[ARRAY_A]]></code>
+      <code><![CDATA[apply_filters( 'hmn_cp_inline_styles', $styles )]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$comments]]></code>
+      <code><![CDATA[$key]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$vote['last_action']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+    </MixedArrayAssignment>
+    <MixedArrayOffset>
+      <code><![CDATA[$labels[ $vote ]]]></code>
+      <code><![CDATA[$labels[ $vote ]]]></code>
+    </MixedArrayOffset>
+    <MixedArrayTypeCoercion>
+      <code><![CDATA[$labels[ $vote ]]]></code>
+      <code><![CDATA[$labels[ $vote ]]]></code>
+    </MixedArrayTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$admin_roles]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comment_arr]]></code>
+      <code><![CDATA[$comment_arr]]></code>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_ids_voted_on[ str_replace( 'comment_id_', '', $key ) ]]]></code>
+      <code><![CDATA[$counts['downvotes']]]></code>
+      <code><![CDATA[$counts['downvotes']]]></code>
+      <code><![CDATA[$counts['total_votes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$hmn_cp_lang_dir]]></code>
+      <code><![CDATA[$locale]]></code>
+      <code><![CDATA[$mode]]></code>
+      <code><![CDATA[$mode]]></code>
+      <code><![CDATA[$next_vote]]></code>
+      <code><![CDATA[$previous_vote]]></code>
+      <code><![CDATA[$role]]></code>
+      <code><![CDATA[$role]]></code>
+      <code><![CDATA[$state['last_action']]]></code>
+      <code><![CDATA[$template_path]]></code>
+      <code><![CDATA[$user_can_vote]]></code>
+      <code><![CDATA[$user_karma]]></code>
+      <code><![CDATA[$user_karma]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$vote]]></code>
+      <code><![CDATA[$votes]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[add_cap]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$counts['downvotes']]]></code>
+      <code><![CDATA[$counts['downvotes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$counts['upvotes']]]></code>
+      <code><![CDATA[$hmn_cp_lang_dir]]></code>
+      <code><![CDATA[$this->get_vote_value( 'downvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'downvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$comment->comment_karma]]></code>
+      <code><![CDATA[$comment->comment_karma]]></code>
+      <code><![CDATA[$comment->user_id]]></code>
+      <code><![CDATA[$comment->user_id]]></code>
+      <code><![CDATA[$post->comment_status]]></code>
+      <code><![CDATA[$wp_roles->role_objects]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[$comment_arr['comment_karma']]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$delta]]></code>
+      <code><![CDATA[$this->send_error( $result['error_code'], $result['error_msg'], $comment_id )]]></code>
+      <code><![CDATA[$this->send_error( 'invalid_action', __( 'There is no previous vote to undo.', 'comment-popularity' ), $comment_id )]]></code>
+      <code><![CDATA[$this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id )]]></code>
+      <code><![CDATA[apply_filters( 'hmn_cp_comments_template_path', plugin_dir_path( __FILE__ ) . 'templates/comments.php' )]]></code>
+      <code><![CDATA[get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults )]]></code>
+      <code><![CDATA[get_option( 'comment_popularity_prefs', $defaults )]]></code>
+    </MixedReturnStatement>
+    <NullReference>
+      <code><![CDATA[render]]></code>
+    </NullReference>
+    <NullableReturnStatement>
+      <code><![CDATA[wp_list_comments( $args, $comments )]]></code>
+    </NullableReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[wp_unslash( $_POST['vote'] )]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullOperand>
+      <code><![CDATA[$this->get_vote_value( 'downvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'downvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
+      <code><![CDATA[$this->get_vote_value( 'upvote' )]]></code>
+    </PossiblyNullOperand>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$visitor]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $author->ID]]></code>
+      <code><![CDATA[(int) $downvotes]]></code>
+      <code><![CDATA[(int) $upvotes]]></code>
+    </RedundantCastGivenDocblockType>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[array()]]></code>
+      <code><![CDATA[null !== $this->visitor]]></code>
+    </RedundantConditionGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $this->is_negative_comment_weight_allowed()]]></code>
+      <code><![CDATA[! $this->is_negative_comment_weight_allowed()]]></code>
+      <code><![CDATA[$this->is_guest_voting_allowed()]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UndefinedConstant>
+      <code><![CDATA[ARRAY_A]]></code>
+      <code><![CDATA[ARRAY_A]]></code>
+      <code><![CDATA[WP_LANG_DIR]]></code>
+    </UndefinedConstant>
+    <UndefinedMethod>
+      <code><![CDATA[retrieve_logged_votes]]></code>
+      <code><![CDATA[retrieve_logged_votes]]></code>
+      <code><![CDATA[unlog_vote]]></code>
+    </UndefinedMethod>
+    <UnresolvableInclude>
+      <code><![CDATA[include apply_filters( 'hmn_cp_single_comment_template_path', plugin_dir_path( __FILE__ ) . 'templates/comment.php' )]]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'class-visitor.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'lib/autoload.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'widgets/class-widget-most-voted.php']]></code>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'widgets/experts/class-widget-experts.php']]></code>
+    </UnresolvableInclude>
+  </file>
+  <file src="inc/class-visitor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HMN_CP_Visitor_Guest]]></code>
+      <code><![CDATA[HMN_CP_Visitor_Member]]></code>
+    </ClassMustBeFinal>
+    <DocblockTypeContradiction>
+      <code><![CDATA[$this->get_id() === (int) $comment->user_id]]></code>
+    </DocblockTypeContradiction>
+    <InvalidArgument>
+      <code><![CDATA[$this->get_id()]]></code>
+      <code><![CDATA[$this->get_id()]]></code>
+      <code><![CDATA[wp_unslash( $_COOKIE['hmn_cp_visitor'] )]]></code>
+    </InvalidArgument>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->visitor_id]]></code>
+      <code><![CDATA[new \WP_Error( 'insufficient_permissions', __( 'You lack sufficient permissions to vote on comments', 'comment-popularity' ) )]]></code>
+      <code><![CDATA[new \WP_Error( 'invalid_comment_id', __( 'Invalid comment ID', 'comment-popularity' ) )]]></code>
+      <code><![CDATA[new \WP_Error( 'not_logged_in', __( 'You must be logged in to vote on comments', 'comment-popularity' ) )]]></code>
+      <code><![CDATA[new \WP_Error( 'upvote_own_comment', sprintf( __( 'You cannot %s your own comments.', 'comment-popularity' ), $action ) )]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[bool|WP_Error]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <InvalidScalarArgument>
+      <code><![CDATA[$this->visitor_id]]></code>
+      <code><![CDATA[$this->visitor_id]]></code>
+    </InvalidScalarArgument>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function is_vote_valid( $comment_id, $action = '' ) {]]></code>
+      <code><![CDATA[public function is_vote_valid( $comment_id, $action = '' ) {]]></code>
+      <code><![CDATA[public function log_vote( $comment_id, $action ) {]]></code>
+      <code><![CDATA[public function log_vote( $comment_id, $action ) {]]></code>
+    </MissingOverrideAttribute>
+    <MissingParamType>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$visitor_id]]></code>
+      <code><![CDATA[$votes]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$logged_votes]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[is_vote_valid]]></code>
+      <code><![CDATA[save_logged_votes]]></code>
+      <code><![CDATA[set_cookie]]></code>
+      <code><![CDATA[unlog_vote]]></code>
+      <code><![CDATA[unlog_vote]]></code>
+    </MissingReturnType>
+    <MixedArgument>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$expiry]]></code>
+      <code><![CDATA[$expiry]]></code>
+      <code><![CDATA[$visitor_id]]></code>
+      <code><![CDATA[COOKIEPATH]]></code>
+      <code><![CDATA[COOKIE_DOMAIN]]></code>
+      <code><![CDATA[COOKIE_DOMAIN]]></code>
+      <code><![CDATA[SITECOOKIEPATH]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$comments_voted_on[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$comments_voted_on[ 'comment_id_' . $comment_id ]['last_action']]]></code>
+      <code><![CDATA[$comments_voted_on[ 'comment_id_' . $comment_id ]['vote_time']]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]['last_action']]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]['vote_time']]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$comments_voted_on]]></code>
+      <code><![CDATA[$comments_voted_on[ 'comment_id_' . $comment_id ]['last_action']]]></code>
+      <code><![CDATA[$expiry]]></code>
+      <code><![CDATA[$hmn_cp_guests_logged_votes]]></code>
+      <code><![CDATA[$logged_votes]]></code>
+      <code><![CDATA[$logged_votes]]></code>
+      <code><![CDATA[$logged_votes]]></code>
+      <code><![CDATA[$logged_votes]]></code>
+      <code><![CDATA[$logged_votes]]></code>
+      <code><![CDATA[$logged_votes[ $this->visitor_id ]]]></code>
+      <code><![CDATA[$logged_votes[ $this->visitor_id ]]]></code>
+      <code><![CDATA[$logged_votes[ 'comment_id_' . $comment_id ]['last_action']]]></code>
+      <code><![CDATA[$updated]]></code>
+      <code><![CDATA[$updated]]></code>
+      <code><![CDATA[$votes]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$comment->user_id]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[! empty( $votes ) ? $votes : array()]]></code>
+      <code><![CDATA[! empty( $votes ) ? $votes : array()]]></code>
+    </MixedReturnStatement>
+    <UndefinedConstant>
+      <code><![CDATA[COOKIEPATH]]></code>
+      <code><![CDATA[COOKIEPATH]]></code>
+      <code><![CDATA[COOKIE_DOMAIN]]></code>
+      <code><![CDATA[COOKIE_DOMAIN]]></code>
+      <code><![CDATA[DAY_IN_SECONDS]]></code>
+      <code><![CDATA[MINUTE_IN_SECONDS]]></code>
+      <code><![CDATA[SITECOOKIEPATH]]></code>
+      <code><![CDATA[SITECOOKIEPATH]]></code>
+    </UndefinedConstant>
+    <UndefinedDocblockClass>
+      <code><![CDATA[bool|WP_Error]]></code>
+      <code><![CDATA[bool|WP_Error]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="inc/helpers.php">
+    <InvalidArgument>
+      <code><![CDATA[$author_karma]]></code>
+      <code><![CDATA[get_comment_ID()]]></code>
+      <code><![CDATA[get_comment_ID()]]></code>
+    </InvalidArgument>
+    <InvalidGlobal>
+      <code><![CDATA[global $post;]]></code>
+    </InvalidGlobal>
+    <MissingReturnType>
+      <code><![CDATA[hmn_cp_the_comment_author_karma]]></code>
+      <code><![CDATA[hmn_cp_the_comment_upvote_form]]></code>
+      <code><![CDATA[hmn_cp_the_sorted_comments]]></code>
+    </MissingReturnType>
+    <MixedAssignment>
+      <code><![CDATA[$args['post_id']]]></code>
+    </MixedAssignment>
+    <MixedPropertyFetch>
+      <code><![CDATA[$post->ID]]></code>
+    </MixedPropertyFetch>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[null !== $author_karma]]></code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="inc/upgrade.php">
+    <MissingReturnType>
+      <code><![CDATA[hmn_cp_trigger_upgrades]]></code>
+      <code><![CDATA[hmn_cp_v121_upgrade]]></code>
+    </MissingReturnType>
+    <MixedArgument>
+      <code><![CDATA[$hmn_cp_plugin_version]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$hmn_cp_plugin_version]]></code>
+      <code><![CDATA[$old_option]]></code>
+      <code><![CDATA[$user]]></code>
+    </MixedAssignment>
+    <MixedPropertyFetch>
+      <code><![CDATA[$user->ID]]></code>
+    </MixedPropertyFetch>
+  </file>
+  <file src="inc/widgets/class-widget-most-voted.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function form( $instance ) {]]></code>
+      <code><![CDATA[public function update( $new_instance, $old_instance ) {]]></code>
+      <code><![CDATA[public function widget( $args, $instance ) {]]></code>
+    </MissingOverrideAttribute>
+    <MissingReturnType>
+      <code><![CDATA[flush_widget_cache]]></code>
+      <code><![CDATA[widget]]></code>
+    </MissingReturnType>
+    <MissingTemplateParam>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+    </MissingTemplateParam>
+    <MixedArgument>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$comment->comment_ID]]></code>
+      <code><![CDATA[$comment->comment_ID]]></code>
+      <code><![CDATA[$comment->comment_post_ID]]></code>
+      <code><![CDATA[$instance['number']]]></code>
+      <code><![CDATA[$instance['number']]]></code>
+      <code><![CDATA[$instance['title']]]></code>
+      <code><![CDATA[$new_instance['number']]]></code>
+      <code><![CDATA[$new_instance['title']]]></code>
+      <code><![CDATA[$number]]></code>
+      <code><![CDATA[get_option( 'permalink_structure' )]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$post_ids]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayOffset>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+    </MixedArrayOffset>
+    <MixedArrayTypeCoercion>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+    </MixedArrayTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$alloptions]]></code>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$comment]]></code>
+      <code><![CDATA[$instance['number']]]></code>
+      <code><![CDATA[$number]]></code>
+      <code><![CDATA[$number]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$title]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$args['after_title']]]></code>
+      <code><![CDATA[$args['after_widget']]]></code>
+      <code><![CDATA[$args['before_title']]]></code>
+      <code><![CDATA[$args['before_widget']]]></code>
+      <code><![CDATA[$comment->comment_karma]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$comment->comment_ID]]></code>
+      <code><![CDATA[$comment->comment_karma]]></code>
+      <code><![CDATA[$comment->comment_post_ID]]></code>
+    </MixedPropertyFetch>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$comments]]></code>
+      <code><![CDATA[strpos( get_option( 'permalink_structure' ), '%category%' )]]></code>
+    </PossiblyInvalidArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+      <code><![CDATA[HMN_CP_Widget_Most_Voted]]></code>
+    </PropertyNotSetInConstructor>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $number]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="inc/widgets/experts/class-widget-experts.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+    </ClassMustBeFinal>
+    <InvalidArgument>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$this->get_widget_slug()]]></code>
+      <code><![CDATA[$this->get_widget_slug()]]></code>
+      <code><![CDATA[$this->get_widget_slug()]]></code>
+      <code><![CDATA[$this->get_widget_slug()]]></code>
+    </InvalidArgument>
+    <InvalidOperand>
+      <code><![CDATA[$this->get_widget_slug()]]></code>
+    </InvalidOperand>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->widget_slug]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Plugin]]></code>
+    </InvalidReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function form( $instance ) {]]></code>
+      <code><![CDATA[public function update( $new_instance, $old_instance ) {]]></code>
+      <code><![CDATA[public function widget( $args, $instance ) {]]></code>
+    </MissingOverrideAttribute>
+    <MissingParamType>
+      <code><![CDATA[$email]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$defaults]]></code>
+      <code><![CDATA[$twig]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[flush_widget_cache]]></code>
+      <code><![CDATA[get_gravatar_url]]></code>
+      <code><![CDATA[init_twig]]></code>
+      <code><![CDATA[widget]]></code>
+    </MissingReturnType>
+    <MissingTemplateParam>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+    </MissingTemplateParam>
+    <MixedArgument>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$expert->ID]]></code>
+      <code><![CDATA[$new_instance['number']]]></code>
+      <code><![CDATA[$new_instance['title']]]></code>
+      <code><![CDATA[$template_path]]></code>
+      <code><![CDATA[$this->defaults]]></code>
+      <code><![CDATA[$this->defaults]]></code>
+      <code><![CDATA[$this->twig->render( 'experts-widget.html', $vars )]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$return[ $key ]]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$return[ $key ]]]></code>
+      <code><![CDATA[$return[ $key ]]]></code>
+      <code><![CDATA[$return[ $key ]]]></code>
+      <code><![CDATA[$return[ $key ]]]></code>
+      <code><![CDATA[$return[ $key ]]]></code>
+      <code><![CDATA[$return[ $key ]['avatar']]]></code>
+      <code><![CDATA[$return[ $key ]['karma']]]></code>
+      <code><![CDATA[$return[ $key ]['name']]]></code>
+      <code><![CDATA[$return[ $key ]['name']]]></code>
+      <code><![CDATA[$return[ $key ]['name']]]></code>
+    </MixedArrayAssignment>
+    <MixedArrayOffset>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+    </MixedArrayOffset>
+    <MixedArrayTypeCoercion>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+      <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
+    </MixedArrayTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$after_widget]]></code>
+      <code><![CDATA[$before_widget]]></code>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$expert]]></code>
+      <code><![CDATA[$experts]]></code>
+      <code><![CDATA[$instance['number']]]></code>
+      <code><![CDATA[$return[ $key ]['avatar']]]></code>
+      <code><![CDATA[$return[ $key ]['karma']]]></code>
+      <code><![CDATA[$return[ $key ]['name']]]></code>
+      <code><![CDATA[$return[ $key ]['name']]]></code>
+      <code><![CDATA[$template_path]]></code>
+      <code><![CDATA[$widget_string]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[render]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$after_widget]]></code>
+      <code><![CDATA[$args['after_title']]]></code>
+      <code><![CDATA[$args['before_title']]]></code>
+      <code><![CDATA[$expert->first_name]]></code>
+      <code><![CDATA[$expert->last_name]]></code>
+      <code><![CDATA[$widget_string]]></code>
+      <code><![CDATA[$widget_string]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$expert->ID]]></code>
+      <code><![CDATA[$expert->display_name]]></code>
+      <code><![CDATA[$expert->first_name]]></code>
+      <code><![CDATA[$expert->last_name]]></code>
+      <code><![CDATA[$expert->user_email]]></code>
+      <code><![CDATA[$expert->user_login]]></code>
+    </MixedPropertyFetch>
+    <PossiblyUndefinedVariable>
+      <code><![CDATA[$return]]></code>
+      <code><![CDATA[$return]]></code>
+    </PossiblyUndefinedVariable>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+      <code><![CDATA[HMN_CP_Widget_Experts]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(array) $instance]]></code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Plugin]]></code>
+    </UndefinedDocblockClass>
+    <UnresolvableInclude>
+      <code><![CDATA[include plugin_dir_path( __FILE__ ) . 'views/admin.php']]></code>
+    </UnresolvableInclude>
+  </file>
+  <file src="uninstall.php">
+    <InvalidGlobal>
+      <code><![CDATA[global $wpdb;]]></code>
+    </InvalidGlobal>
+    <MixedArgument>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[get_blog_prefix]]></code>
+      <code><![CDATA[get_blog_prefix]]></code>
+      <code><![CDATA[get_blog_prefix]]></code>
+      <code><![CDATA[prepare]]></code>
+      <code><![CDATA[query]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
+      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
+      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+      <code><![CDATA[$user->ID]]></code>
+    </MixedPropertyFetch>
+    <UnresolvableInclude>
+      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/class-comment-popularity.php']]></code>
+    </UnresolvableInclude>
+  </file>
+</files>

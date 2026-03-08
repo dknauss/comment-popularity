@@ -31,18 +31,33 @@
 		"wp-coding-standards/wpcs": "^3",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1",
 		"phpunit/phpunit": "^9.6",
-		"yoast/phpunit-polyfills": "^2.0"
+		"yoast/phpunit-polyfills": "^2.0",
+		"php-stubs/wordpress-stubs": "^6.8",
+		"phpstan/phpstan": "^1.12",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"vimeo/psalm": "^6.15"
 	},
 	"scripts": {
+		"analyse:phpstan": [
+			"@test:phpstan"
+		],
+		"analyse:psalm": [
+			"@test:psalm"
+		],
+		"analyse:psalm:baseline": [
+			"./inc/lib/bin/psalm --output-format=console --no-progress --show-info=false --no-cache --threads=1 --set-baseline=psalm-baseline.xml"
+		],
 		"lint": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist",
 		"lint:full-report": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist --report=summary",
 		"test:setup": "bash bin/test-setup.sh",
 		"test": "./inc/lib/bin/phpunit --configuration phpunit.xml",
+		"test:phpstan": "php -d memory_limit=1G ./inc/lib/bin/phpstan analyse --configuration=phpstan.neon.dist",
+		"test:psalm": "./inc/lib/bin/psalm --output-format=console --no-progress --show-info=false --no-cache --threads=1 --use-baseline=psalm-baseline.xml",
 		"test:coverage": [
 			"@test:setup",
 			"mkdir -p tests/cache/coverage",
 			"WP_TESTS_DIR=/tmp/wordpress-tests-lib phpdbg -qrr ./inc/lib/bin/phpunit --configuration phpunit.xml --coverage-clover=tests/cache/coverage/clover.xml",
-			"php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 23"
+			"php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 25"
 		],
 		"test:local-smoke": "bash bin/local-smoke-test.sh",
 		"qa": [

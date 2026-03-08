@@ -2,7 +2,12 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
-- No unreleased changes yet.
+- Tests: added upgrade routine regression coverage for new install, legacy option migration, and current-version no-op paths.
+- CI: raised coverage gate threshold from `23%` to `25%` after increasing measured statement coverage to `26.37%`.
+- CI: added blocking `phpstan` quality check with committed level-5 baseline (`phpstan-baseline.neon`).
+- CI: added phase-1 non-blocking `psalm` quality check with committed baseline (`psalm-baseline.xml`).
+- Tooling: added Composer scripts for `analyse:phpstan`, `analyse:psalm`, `test:phpstan`, and `test:psalm`.
+- Docs: updated contributing and fork-first quality baselines to include static analysis gates.
 
 1.5.1 - 2026-03-08
 ==================

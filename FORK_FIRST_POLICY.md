@@ -34,8 +34,11 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 - Required checks on `develop`:
   - `phpcs-changed`
   - `phpcs-report`
+  - `phpstan`
   - `phpunit (8.1, 6.4)`
   - `coverage-gate`
+- Advisory check (phase 1 hardening):
+  - `psalm`
 - Treat failing run `22812182249` as historical pre-fix noise.
 - Use run `22812774619` and newer successful `develop` runs as baseline.
 
@@ -51,7 +54,9 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 2. Run `composer lint:full-report`.
 3. Run `WP_VERSION=6.4 composer test:setup` and `composer test`.
 4. Run `composer test:coverage`.
-5. Run `composer test:local-smoke`.
-6. Push to fork `develop`.
-7. Verify `Quality` workflow passes.
-8. Prune temporary branches/worktrees.
+5. Run `composer test:phpstan`.
+6. Run `composer test:psalm` (advisory in CI phase 1; still run locally).
+7. Run `composer test:local-smoke`.
+8. Push to fork `develop`.
+9. Verify `Quality` workflow passes.
+10. Prune temporary branches/worktrees.
