@@ -2,6 +2,9 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
+- Compat: explicit PHP floor alignment is still pending; the current bootstrap and class constant still declare PHP `5.3.2`, and `composer.json` does not yet set a PHP requirement.
+- Tooling: `bin/php-runtime.sh` currently prefers a Local PHP `8.4`/`8.3` binary when the host `php` is `8.5+`; follow-up triage is still needed to determine whether the wrapper remains necessary after the Twig 3 upgrade.
+- Docs: runtime-floor and wrapper guidance still needs reconciliation across the README, contributing guide, roadmap, and changelog.
 - Tests: added uninstall regression coverage for option/meta cleanup, comment karma reset, and capability teardown.
 - Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
 - Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
@@ -19,7 +22,7 @@ Unreleased
 - CI: raised coverage gate threshold from `25%` to `27%` after increasing measured statement coverage to `43.68%` (`401/918`).
 - CI: raised coverage gate threshold from `27%` to `29%` after increasing measured statement coverage to `44.99%` (`413/918`).
 - Static analysis: reduced PHPStan baseline entries and updated Psalm baseline after helper-path cleanup.
-- Tooling: added `bin/php-runtime.sh` and routed Composer quality commands through it to prefer a compatible local PHP runtime on PHP 8.5+ hosts.
+- Tooling: added `bin/php-runtime.sh` and routed Composer quality commands through it to prefer a compatible local PHP runtime.
 
 1.5.1 - 2026-03-08
 ==================

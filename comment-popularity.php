@@ -4,6 +4,7 @@ Plugin Name: Comment Popularity
 Plugin URI: https://github.com/humanmade/comment-popularity
 Description: Allow visitors to vote on comments.
 Version: 1.5.2-dev
+Requires PHP: 8.1
 Author: Human Made Limited
 Author URI: http://humanmade.co.uk
 Text Domain: comment-popularity
@@ -14,11 +15,11 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) || exit;
 
-// Check PHP version. We need at least 5.3.2.
-if ( version_compare( PHP_VERSION, '5.3.2', '<' ) ) {
+// Check PHP version. We need at least 8.1.
+if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
 	/* translators: %s: minimum supported PHP version. */
-	wp_die( sprintf( esc_html__( 'This plugin requires PHP Version %s. Sorry about that.', 'comment-popularity' ), '5.3.2' ), 'Comment Popularity', array( 'back_link' => true ) );
+	wp_die( sprintf( esc_html__( 'This plugin requires PHP Version %s. Sorry about that.', 'comment-popularity' ), '8.1' ), 'Comment Popularity', array( 'back_link' => true ) );
 }
 
 // Main plugin class
