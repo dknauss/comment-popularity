@@ -14,7 +14,7 @@ echo "[smoke] Checking local site availability: ${WP_URL}"
 curl -k -fsS "${WP_URL}/wp-json/" >/dev/null
 
 echo "[smoke] Checking plugin activation/version"
-plugin_line="$("$WP_LOCAL" plugin list --fields=name,status,version --format=csv | rg '^comment-popularity,')"
+plugin_line="$("$WP_LOCAL" plugin list --fields=name,status,version --format=csv | grep '^comment-popularity,')"
 
 if [[ -z "$plugin_line" ]]; then
 	echo "local-smoke-test: comment-popularity is not installed in the local site." >&2
