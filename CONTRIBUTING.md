@@ -17,8 +17,30 @@ From a clean checkout:
 2. `composer lint`
 3. `WP_VERSION=6.4 composer test:setup`
 4. `composer test`
+5. `composer test:coverage`
+6. `composer test:local-smoke`
 
 CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
+`composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
+
+Coverage and hardening notes
+----------------------------
+
+- Coverage scope excludes vendored dependencies under `inc/lib`.
+- `composer test:coverage` uses `phpdbg`, so no Xdebug/PCOV setup is required.
+- Coverage threshold is enforced from Clover output (`tests/cache/coverage/clover.xml`) via `tests/check-coverage-threshold.php`.
+- Current statement coverage threshold is `23%` (baseline from measured `24.18%` signal on 2026-03-08).
+- Threshold ratcheting policy:
+  - Raise only after at least 3 consecutive green CI coverage runs and 1 local confirmation run.
+  - Raise in small increments (normally 1-2 points).
+  - Do not lower threshold for feature work. If rollback is required (environment drift or confirmed flake), limit to 1 point and document follow-up.
+
+Local development smoke testing
+-------------------------------
+
+- Use `composer test:local-smoke` for deterministic local validation against `single-site-local.local`.
+- Use `bin/wp-local-single-site.sh` for WP-CLI commands in Local where default DB host routing fails.
+- Full local checklist: `docs/manual-testing-checklist.md`.
 
 Current CI baseline
 -------------------

@@ -36,8 +36,15 @@
 	"scripts": {
 		"lint": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist",
 		"lint:full-report": "php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist --report=summary",
-		"test:setup": "bash bin/install-wp-tests.sh wp_tests root root 127.0.0.1:3306 ${WP_VERSION:-6.4}",
+		"test:setup": "bash bin/test-setup.sh",
 		"test": "./inc/lib/bin/phpunit --configuration phpunit.xml",
+		"test:coverage": [
+			"@test:setup",
+			"mkdir -p tests/cache/coverage",
+			"WP_TESTS_DIR=/tmp/wordpress-tests-lib phpdbg -qrr ./inc/lib/bin/phpunit --configuration phpunit.xml --coverage-clover=tests/cache/coverage/clover.xml",
+			"php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 23"
+		],
+		"test:local-smoke": "bash bin/local-smoke-test.sh",
 		"qa": [
 			"@lint",
 			"@test"
