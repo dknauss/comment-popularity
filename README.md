@@ -71,8 +71,8 @@ composer test:local-smoke
 
 Notes:
 
-- PHP `8.1+` is required for both runtime and local quality tooling.
-- CLI quality commands use `bin/php-runtime.sh` to enforce a compatible PHP runtime and prefer Local PHP `8.4`/`8.3`/`8.2`/`8.1` when the host `php` is older (override with `CP_PHP_BIN` when needed).
+- PHP `8.2+` is required for both runtime and local quality tooling.
+- CLI quality commands use `bin/php-runtime.sh` to enforce a compatible PHP runtime and prefer Local PHP `8.4`/`8.3`/`8.2` when the host `php` is older (override with `CP_PHP_BIN` when needed).
 - Coverage artifacts are written to `tests/cache/coverage`.
 - `composer test:local-smoke` targets `https://single-site-local.local`.
 
@@ -83,7 +83,7 @@ Required checks on `develop`:
 - `phpcs-changed`
 - `phpcs-report`
 - `phpstan`
-- `phpunit (8.1, 6.4)`
+- `phpunit (8.2, 6.4)`
 - `coverage-gate`
 
 Advisory check:

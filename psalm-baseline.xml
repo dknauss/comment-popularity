@@ -141,15 +141,6 @@
     <InvalidReturnType>
       <code><![CDATA[array|string]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[COMMENT_META_DOWNVOTES = '_hmn_cp_downvotes']]></code>
-      <code><![CDATA[COMMENT_META_TOTAL_VOTES = '_hmn_cp_total_votes']]></code>
-      <code><![CDATA[COMMENT_META_UPVOTES = '_hmn_cp_upvotes']]></code>
-      <code><![CDATA[COMMENT_META_WILSON_LOWER_BOUND = '_hmn_cp_wilson_lb']]></code>
-      <code><![CDATA[HMN_CP_PLUGIN_VERSION = '1.5.2-dev']]></code>
-      <code><![CDATA[HMN_CP_REQUIRED_PHP_VERSION = '8.1']]></code>
-      <code><![CDATA[HMN_CP_REQUIRED_WP_VERSION = '4.9']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$args]]></code>
       <code><![CDATA[$comment]]></code>

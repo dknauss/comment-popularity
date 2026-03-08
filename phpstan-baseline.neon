@@ -7,6 +7,12 @@ parameters:
 			path: comment-popularity.php
 
 		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: comment-popularity.php
+
+		-
 			message: '#^Instanceof between CommentPopularity\\HMN_CP_Visitor and CommentPopularity\\HMN_CP_Visitor will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1

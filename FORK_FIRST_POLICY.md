@@ -35,7 +35,7 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
   - `phpcs-changed`
   - `phpcs-report`
   - `phpstan`
-  - `phpunit (8.1, 6.4)`
+  - `phpunit (8.2, 6.4)`
   - `coverage-gate`
 - Advisory check (phase 1 hardening):
   - `psalm`

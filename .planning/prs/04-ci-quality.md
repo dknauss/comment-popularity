@@ -9,7 +9,7 @@ This PR adds a project-aware quality workflow and updates the PHPUnit configurat
 - Add `.github/workflows/quality.yml` with:
   - PHPCS using `phpcs.xml.dist`
   - PHPUnit against a MySQL-backed WordPress test install
-  - PHP `8.1`
+  - PHP `8.2`
   - WordPress `6.4`
 - Update `phpunit.xml` to:
   - fail on risky tests and warnings

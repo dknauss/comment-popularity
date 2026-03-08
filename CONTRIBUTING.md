@@ -24,9 +24,9 @@ From a clean checkout:
 9. `composer test:psalm`
 10. `composer test:local-smoke`
 
-CI uses the same Composer scripts for consistency. PHP `8.1+` is required for this repository.
+CI uses the same Composer scripts for consistency. PHP `8.2+` is required for this repository.
 `composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
-`bin/php-runtime.sh` now routes local CLI quality commands to a compatible PHP runtime and enforces `8.1+` (prefers Local PHP `8.4`/`8.3`/`8.2`/`8.1` when host `php` is older). Override with `CP_PHP_BIN=/path/to/php` if needed.
+`bin/php-runtime.sh` now routes local CLI quality commands to a compatible PHP runtime and enforces `8.2+` (prefers Local PHP `8.4`/`8.3`/`8.2` when host `php` is older). Override with `CP_PHP_BIN=/path/to/php` if needed.
 
 Coverage and hardening notes
 ----------------------------

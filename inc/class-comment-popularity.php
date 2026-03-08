@@ -15,7 +15,7 @@ class HMN_Comment_Popularity {
 	/**
 	 * The minimum PHP version compatibility.
 	 */
-	const HMN_CP_REQUIRED_PHP_VERSION = '8.1';
+	const HMN_CP_REQUIRED_PHP_VERSION = '8.2';
 
 	/**
 	 *

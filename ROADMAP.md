@@ -22,7 +22,7 @@ WordPress.org distribution is currently closed for this plugin (closed on March 
 - This repository is a traditional WordPress plugin, not a block plugin or modern JS app.
 - The most urgent problems are correctness and data integrity, not feature expansion.
 - The current fork checkout does implement Wilson scoring, ranking-mode settings, and a GitHub Actions quality workflow, so roadmap items should treat those as existing fork behavior.
-- Runtime support declarations are still inconsistent: the plugin bootstrap and class constant still advertise PHP `5.3.2`, `composer.json` does not declare a PHP requirement, and fork docs/plans discuss higher floors that are not yet enforced in code.
+- Runtime support declarations are aligned on PHP `8.2`: the plugin bootstrap, class constant, `composer.json`, CI workflow, and fork docs all describe the same floor.
 - The PHPUnit suite depends on the WordPress test library bootstrap in `/tmp/wordpress-tests-lib`, which must be installed before tests can run.
 
 ## Phase 1: Correctness And Data Integrity
@@ -83,7 +83,7 @@ Reduce avoidable warnings, deprecations, and standards drift without changing th
 
 ### Backlog
 
-1. Reconcile the declared PHP support floor across `comment-popularity.php`, `HMN_CP_REQUIRED_PHP_VERSION`, `composer.json`, CI, and release docs before raising the minimum.
+1. Keep the declared PHP support floor reconciled across `comment-popularity.php`, `HMN_CP_REQUIRED_PHP_VERSION`, `composer.json`, CI, and release docs as modernization continues.
 2. Fix PHP 8+ deprecations such as optional parameters preceding required parameters.
 3. Sanitize and unslash request data consistently in AJAX and admin save handlers.
 4. Clean up rendering issues such as misused escaping helpers and null-unsafe array access.
@@ -187,16 +187,16 @@ Close the loop after the code and tests are credible.
 
 ## Phase 7: Fork-Specific Modernization (Explicit PHP Floor, PSR-4, PHPStan)
 
-This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. It is where the fork would make an explicit higher PHP floor decision, introduce PSR-4 autoloading under the `CommentPopularity` namespace, and add PHPStan static analysis. The current `develop` branch has not yet enforced that higher PHP floor in code, so this phase should be treated as prospective work rather than current state. It also picks up two small bug fixes in the experts widget that were identified during quality review but are not on any existing branch.
+This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. The fork now explicitly targets PHP `8.2`, so this phase is about sustaining that baseline while continuing PSR-4 autoloading work and finishing the remaining experts widget cleanup.
 
 ### Backlog
 
 1. Fix the experts widget Gravatar URL to use HTTPS instead of HTTP.
 2. Initialize `$return = array()` in `get_experts()` before population to prevent undefined-variable notices.
-3. Declare PHP 8.2 as the minimum in `composer.json` (`"php": "^8.2"`) and update the CI matrix.
+3. Keep PHP `8.2` as the enforced minimum in `composer.json`, runtime guards, and the CI matrix.
 4. Add PSR-4 autoload mapping for the `CommentPopularity` namespace in `composer.json`.
 5. Add namespace declarations to class files and update the bootstrap to use the Composer autoloader.
-6. Install PHPStan with WordPress stubs, create `phpstan.neon` with a baseline, and add a PHPStan job to the CI workflow.
+6. Maintain PHPStan with WordPress stubs and keep the baseline/CI job aligned with the fork runtime floor.
 
 ### Acceptance Criteria
 
@@ -205,7 +205,7 @@ This phase is fork-only work that goes beyond the upstream-friendly scope of Pha
 - `composer.json` requires `"php": "^8.2"` and CI only tests PHP 8.2+.
 - `composer dump-autoload` generates working PSR-4 autoloading for `CommentPopularity\` classes.
 - The plugin boots and passes all existing tests using the Composer autoloader.
-- PHPStan runs at level 5+ with a committed baseline; CI fails on new errors above baseline.
+- PHPStan runs at level 5+ with a committed baseline; CI fails on new errors above baseline while staying aligned to PHP `8.2`.
 
 ### Likely File Scope
 

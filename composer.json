@@ -24,6 +24,7 @@
 		"classmap": ["comment-popularity.php"]
 	},
 	"require": {
+		"php": "^8.2",
 		"twig/twig": "^3.0"
 	},
 	"require-dev": {

@@ -20,11 +20,11 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           tools: composer
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Determine changed PHP files
         id: changed-php
@@ -72,11 +72,11 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           tools: composer
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPCS full report
         run: composer lint:full-report
@@ -91,12 +91,12 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           tools: composer
           coverage: none
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPStan
         run: composer test:phpstan
@@ -112,12 +112,12 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: "8.2"
           tools: composer
           coverage: none
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run Psalm (phase 1, non-blocking)
         run: composer test:psalm
@@ -141,7 +141,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.1"]
+        php-version: ["8.2"]
         wp-version: ["6.4"]
 
     steps:
@@ -155,7 +155,7 @@ jobs:
           tools: composer
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Install WordPress test suite
         env:
@@ -190,12 +190,12 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           tools: composer
           coverage: none
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run coverage gate
         run: composer test:coverage
