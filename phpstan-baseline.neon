@@ -21,11 +21,6 @@ parameters:
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Cannot call method render\\(\\) on null\\.$#"
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
 			message: "#^Comparison operation \"\\>\\=\" between 0 and \\(array\\|float\\|int\\) results in an error\\.$#"
 			count: 1
 			path: inc/class-comment-popularity.php
@@ -37,11 +32,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
-			message: "#^Property CommentPopularity\\\\HMN_Comment_Popularity\\:\\:\\$twig \\(null\\) does not accept Twig_Environment\\.$#"
 			count: 1
 			path: inc/class-comment-popularity.php
 
