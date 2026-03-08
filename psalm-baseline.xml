@@ -119,8 +119,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[! $this->visitor]]></code>
       <code><![CDATA[$this->visitor]]></code>
-      <code><![CDATA[in_array( 'manage_user_karma_settings', $role_obj->capabilities, true )]]></code>
-      <code><![CDATA[in_array( 'vote_on_comments', $role_obj->capabilities, true )]]></code>
       <code><![CDATA[is_array( $args )]]></code>
       <code><![CDATA[is_array( $legacy_args )]]></code>
     </DocblockTypeContradiction>
@@ -771,18 +769,6 @@
       <code><![CDATA[$user]]></code>
       <code><![CDATA[$user]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[get_blog_prefix]]></code>
-      <code><![CDATA[get_blog_prefix]]></code>
-      <code><![CDATA[get_blog_prefix]]></code>
-      <code><![CDATA[prepare]]></code>
-      <code><![CDATA[query]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
-      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
-      <code><![CDATA[$wpdb->get_blog_prefix()]]></code>
-    </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$user->ID]]></code>
       <code><![CDATA[$user->ID]]></code>

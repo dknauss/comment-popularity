@@ -52,6 +52,10 @@ class Test_HMN_Comment_Popularity_Admin extends \WP_UnitTestCase {
 			)
 		);
 
+		if ( is_multisite() ) {
+			grant_super_admin( $this->admin_user_id );
+		}
+
 		$this->author_user_id = $this->factory->user->create(
 			array(
 				'role'       => 'author',
@@ -93,6 +97,11 @@ class Test_HMN_Comment_Popularity_Admin extends \WP_UnitTestCase {
 		wp_delete_comment( $this->comment_id, true );
 		wp_delete_post( $this->post_id, true );
 		wp_delete_user( $this->author_user_id );
+
+		if ( is_multisite() ) {
+			revoke_super_admin( $this->admin_user_id );
+		}
+
 		wp_delete_user( $this->admin_user_id );
 
 		parent::tearDown();

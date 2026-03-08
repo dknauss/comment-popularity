@@ -32,6 +32,11 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 				'email'      => 'admin@kgb.ru',
 			)
 		);
+
+		if ( is_multisite() ) {
+			grant_super_admin( $this->test_admin_id );
+		}
+
 		wp_set_current_user( $this->test_admin_id );
 
 		$this->plugin::activate();
@@ -94,6 +99,11 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 
 		wp_delete_user( $this->test_voter_id );
 		wp_delete_user( $this->test_commenter_id );
+
+		if ( is_multisite() ) {
+			revoke_super_admin( $this->test_admin_id );
+		}
+
 		wp_delete_user( $this->test_admin_id );
 	}
 

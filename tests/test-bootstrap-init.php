@@ -86,4 +86,31 @@ class Test_HMN_CP_Bootstrap_Init extends \WP_UnitTestCase {
 
 		$this->assertNull( $this->plugin->get_visitor() );
 	}
+
+	public function test_hmn_cp_init_does_not_overwrite_existing_visitor_instance() {
+		$first_user_id  = $this->factory->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'existing_visitor_user',
+				'email'      => 'existing-visitor@example.com',
+			)
+		);
+		$second_user_id = $this->factory->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'new_login_user',
+				'email'      => 'new-login@example.com',
+			)
+		);
+
+		$this->plugin->set_visitor( new HMN_CP_Visitor_Member( $first_user_id ) );
+		wp_set_current_user( $second_user_id );
+
+		\hmn_cp_init();
+
+		$this->assertSame( $first_user_id, (int) $this->plugin->get_visitor()->get_id() );
+
+		wp_delete_user( $first_user_id );
+		wp_delete_user( $second_user_id );
+	}
 }

@@ -51,13 +51,16 @@
 		"lint:full-report": "bash bin/php-runtime.sh php -d memory_limit=1G ./inc/lib/bin/phpcs --standard=phpcs.xml.dist --report=summary",
 		"test:setup": "bash bin/test-setup.sh",
 		"test": "bash bin/php-runtime.sh php ./inc/lib/bin/phpunit --configuration phpunit.xml",
+		"test:integration": [
+			"@test"
+		],
 		"test:phpstan": "bash bin/php-runtime.sh php -d memory_limit=1G ./inc/lib/bin/phpstan analyse --configuration=phpstan.neon.dist",
 		"test:psalm": "bash bin/php-runtime.sh php ./inc/lib/bin/psalm --output-format=console --no-progress --show-info=false --no-cache --threads=1 --use-baseline=psalm-baseline.xml",
 		"test:coverage": [
 			"@test:setup",
 			"mkdir -p tests/cache/coverage",
 			"WP_TESTS_DIR=/tmp/wordpress-tests-lib bash bin/php-runtime.sh phpdbg -qrr ./inc/lib/bin/phpunit --configuration phpunit.xml --coverage-clover=tests/cache/coverage/clover.xml",
-			"bash bin/php-runtime.sh php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 29"
+			"bash bin/php-runtime.sh php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 35"
 		],
 		"test:local-smoke": "bash bin/local-smoke-test.sh",
 		"qa": [
