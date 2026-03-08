@@ -1,7 +1,8 @@
 Unreleased
 ==========
 
-- No unreleased changes.
+- Target version: 1.5.2-dev.
+- No unreleased changes yet.
 
 1.5.1 - 2026-03-08
 ==================
