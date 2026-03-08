@@ -2,9 +2,9 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
-- Compat: explicit PHP floor alignment is still pending; the current bootstrap and class constant still declare PHP `5.3.2`, and `composer.json` does not yet set a PHP requirement.
-- Tooling: `bin/php-runtime.sh` currently prefers a Local PHP `8.4`/`8.3` binary when the host `php` is `8.5+`; follow-up triage is still needed to determine whether the wrapper remains necessary after the Twig 3 upgrade.
-- Docs: runtime-floor and wrapper guidance still needs reconciliation across the README, contributing guide, roadmap, and changelog.
+- Compat: aligned plugin metadata and runtime guard to PHP `8.1+` to match the current dependency floor.
+- Tooling: `bin/php-runtime.sh` now enforces PHP `8.1+` and falls back to Local PHP `8.4`/`8.3`/`8.2`/`8.1` when host `php` is older.
+- Docs: removed stale `--ignore-platform-reqs` guidance and documented PHP `8.1+` as the baseline.
 - Tests: added uninstall regression coverage for option/meta cleanup, comment karma reset, and capability teardown.
 - Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
 - Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
