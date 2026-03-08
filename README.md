@@ -11,6 +11,11 @@
 
 Comment Popularity adds the ability for visitors to vote on comments.
 
+## Maintainer Workflow ##
+
+This repository follows a fork-first workflow for active development.
+See `FORK_FIRST_POLICY.md` for the canonical branch strategy, quality gates, and branch cleanup process.
+
 ## Description ##
 
 With this plugin, members of your site will be able to vote comments up or down. Think Reddit comments.

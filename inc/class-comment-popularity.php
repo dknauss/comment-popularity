@@ -2,6 +2,7 @@
 
 /**
  * Class HMN_Comment_Popularity
+ *
  * @package CommentPopularity
  */
 class HMN_Comment_Popularity {
@@ -20,6 +21,14 @@ class HMN_Comment_Popularity {
 	 *
 	 */
 	const HMN_CP_REQUIRED_WP_VERSION = '4.9';
+
+	const COMMENT_META_UPVOTES = '_hmn_cp_upvotes';
+
+	const COMMENT_META_DOWNVOTES = '_hmn_cp_downvotes';
+
+	const COMMENT_META_WILSON_LOWER_BOUND = '_hmn_cp_wilson_lb';
+
+	const COMMENT_META_TOTAL_VOTES = '_hmn_cp_total_votes';
 
 	/**
 	 * The instance of HMN_Comment_Popularity.
@@ -93,11 +102,11 @@ class HMN_Comment_Popularity {
 		add_action( 'wp_head', array( $this, 'styles' ) );
 
 		$this->init_twig();
-
 	}
 
 	public function styles() {
 		$styles = '<style>.comment-weight-container .upvote a, .comment-weight-container .downvote a, .comment-weight-container span.upvote, .comment-weight-container span.downvote {color:red !important;}</style>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Filtered CSS output is intentionally emitted as HTML.
 		echo apply_filters( 'hmn_cp_inline_styles', $styles );
 	}
 
@@ -143,7 +152,6 @@ class HMN_Comment_Popularity {
 
 		register_widget( 'CommentPopularity\HMN_CP_Widget_Most_Voted' );
 		register_widget( 'CommentPopularity\HMN_CP_Widget_Experts' );
-
 	}
 
 	/**
@@ -199,7 +207,7 @@ class HMN_Comment_Popularity {
 		if ( ! current_user_can( 'activate_plugins' ) || version_compare( $wp_version, self::HMN_CP_REQUIRED_WP_VERSION, '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
 			/* translators: the plugin version number */
-			wp_die( sprintf( __( 'This plugin requires WordPress version %s. Sorry about that.', 'comment-popularity' ), self::HMN_CP_REQUIRED_WP_VERSION ), 'Comment Popularity', array( 'back_link' => true ) );
+			wp_die( sprintf( esc_html__( 'This plugin requires WordPress version %s. Sorry about that.', 'comment-popularity' ), esc_html( self::HMN_CP_REQUIRED_WP_VERSION ) ), 'Comment Popularity', array( 'back_link' => true ) );
 		}
 
 		self::set_permissions();
@@ -225,7 +233,6 @@ class HMN_Comment_Popularity {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -237,7 +244,6 @@ class HMN_Comment_Popularity {
 
 		$loader     = new \Twig_Loader_Filesystem( $template_path );
 		$this->twig = new \Twig_Environment( $loader );
-
 	}
 
 	/**
@@ -256,7 +262,6 @@ class HMN_Comment_Popularity {
 				$role->add_cap( 'manage_user_karma_settings' );
 
 			}
-
 		}
 
 		// Allow all user roles to vote.
@@ -268,7 +273,6 @@ class HMN_Comment_Popularity {
 				$role->add_cap( 'vote_on_comments' );
 			}
 		}
-
 	}
 
 	/**
@@ -287,11 +291,16 @@ class HMN_Comment_Popularity {
 		wp_enqueue_script( 'growl', plugins_url( '../js/jquery.growl.min.js', __FILE__ ), array( 'jquery' ), self::HMN_CP_PLUGIN_VERSION, true );
 
 		$js_file = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? '../js/voting.js' : '../js/voting.min.js';
-		wp_register_script( 'comment-popularity', plugins_url( $js_file, __FILE__ ), array(
-			'jquery',
-			'underscore',
-			'growl',
-		), self::HMN_CP_PLUGIN_VERSION );
+		wp_register_script(
+			'comment-popularity',
+			plugins_url( $js_file, __FILE__ ),
+			array(
+				'jquery',
+				'underscore',
+				'growl',
+			),
+			self::HMN_CP_PLUGIN_VERSION
+		);
 
 		$args = array(
 			'hmn_vote_nonce' => wp_create_nonce( 'hmn_vote_submit' ),
@@ -301,7 +310,6 @@ class HMN_Comment_Popularity {
 		wp_localize_script( 'comment-popularity', 'comment_popularity', $args );
 
 		wp_enqueue_script( 'comment-popularity' );
-
 	}
 
 	/**
@@ -320,7 +328,6 @@ class HMN_Comment_Popularity {
 		}
 
 		return apply_filters( 'hmn_cp_comments_template_path', plugin_dir_path( __FILE__ ) . 'templates/comments.php' );
-
 	}
 
 	/**
@@ -334,7 +341,6 @@ class HMN_Comment_Popularity {
 	public function comment_callback( $comment, $args, $depth ) {
 
 		include apply_filters( 'hmn_cp_single_comment_template_path', plugin_dir_path( __FILE__ ) . 'templates/comment.php' );
-
 	}
 
 	/**
@@ -350,6 +356,9 @@ class HMN_Comment_Popularity {
 			return;
 		}
 		$votes = $this->visitor->retrieve_logged_votes();
+		if ( ! is_array( $votes ) ) {
+			$votes = array();
+		}
 
 		$comment_ids_voted_on = array();
 
@@ -361,10 +370,13 @@ class HMN_Comment_Popularity {
 			'container_classes' => $container_classes,
 			'comment_id'        => $comment_id,
 			'comment_weight'    => $this->get_comment_weight( $comment_id ),
+			'comment_wilson'    => $this->get_comment_wilson_score( $comment_id ),
 			'enable_voting'     => $this->visitor_can_vote(),
+			'ranking_mode'      => $this->get_comment_ranking_mode(),
 			'vote_type'         => array_key_exists( $comment_id, $comment_ids_voted_on ) ? $comment_ids_voted_on[ $comment_id ] : '',
 		);
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Twig template handles output escaping.
 		echo $this->twig->render( 'voting-system.html', $vars );
 	}
 
@@ -374,7 +386,7 @@ class HMN_Comment_Popularity {
 	protected function visitor_can_vote() {
 
 		// Visitor can vote if guest voting is enabled, if user is logged in and has correct permission
-		return ( null !== $this->visitor  ) && ( $this->is_guest_voting_allowed() || ( is_user_logged_in() && current_user_can( 'vote_on_comments' ) ) );
+		return ( null !== $this->visitor ) && ( $this->is_guest_voting_allowed() || ( is_user_logged_in() && current_user_can( 'vote_on_comments' ) ) );
 	}
 
 	/**
@@ -389,7 +401,6 @@ class HMN_Comment_Popularity {
 		$comment = get_comment( $comment_id );
 
 		return (int) $comment->comment_karma;
-
 	}
 
 	/**
@@ -437,7 +448,8 @@ class HMN_Comment_Popularity {
 			return;
 		}
 
-		if ( ! $user = get_userdata( $comment->user_id ) ) {
+		$user = get_userdata( $comment->user_id );
+		if ( ! $user ) {
 			return;
 		}
 
@@ -448,7 +460,6 @@ class HMN_Comment_Popularity {
 		if ( $is_expert && ( 0 < $user_karma ) ) {
 			$this->update_comment_weight( $comment_id, $user_karma );
 		}
-
 	}
 
 	/**
@@ -464,26 +475,285 @@ class HMN_Comment_Popularity {
 	}
 
 	/**
-	 * Sorts the comments by weight and returns them.
-	 *
-	 * @param array $args
+	 * Get ranking mode for comment ordering.
 	 *
 	 * @return string
 	 */
-	public function get_comments_sorted_by_weight( $html = false, array $args ) {
+	public function get_comment_ranking_mode() {
+		$prefs = $this->get_plugin_prefs();
+		$mode  = array_key_exists( 'ranking_mode', $prefs ) ? $prefs['ranking_mode'] : 'karma';
+		$mode  = apply_filters( 'hmn_cp_comment_ranking_mode', $mode );
+
+		return in_array( $mode, array( 'karma', 'wilson' ), true ) ? $mode : 'karma';
+	}
+
+	/**
+	 * Read plugin preferences.
+	 *
+	 * @return array
+	 */
+	protected function get_plugin_prefs() {
+		$defaults = array(
+			'default_expert_karma' => 0,
+			'ranking_mode'         => 'karma',
+		);
+
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			return get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults );
+		}
+
+		return get_option( 'comment_popularity_prefs', $defaults );
+	}
+
+	/**
+	 * Get stored Wilson score for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return float
+	 */
+	public function get_comment_wilson_score( $comment_id ) {
+		return (float) get_comment_meta( $comment_id, self::COMMENT_META_WILSON_LOWER_BOUND, true );
+	}
+
+	/**
+	 * Read Wilson vote counters for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return array
+	 */
+	protected function get_comment_vote_counts( $comment_id ) {
+
+		$upvotes     = (int) get_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, true );
+		$downvotes   = (int) get_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, true );
+		$total_votes = (int) get_comment_meta( $comment_id, self::COMMENT_META_TOTAL_VOTES, true );
+
+		if ( 0 === $total_votes ) {
+			$total_votes = $upvotes + $downvotes;
+		}
+
+		return array(
+			'upvotes'     => max( 0, $upvotes ),
+			'downvotes'   => max( 0, $downvotes ),
+			'total_votes' => max( 0, $total_votes ),
+		);
+	}
+
+	/**
+	 * Persist Wilson vote counters for a comment.
+	 *
+	 * @param int   $comment_id Comment ID.
+	 * @param array $counts Vote counts.
+	 */
+	protected function set_comment_vote_counts( $comment_id, array $counts ) {
+
+		update_comment_meta( $comment_id, self::COMMENT_META_UPVOTES, (int) $counts['upvotes'] );
+		update_comment_meta( $comment_id, self::COMMENT_META_DOWNVOTES, (int) $counts['downvotes'] );
+		update_comment_meta( $comment_id, self::COMMENT_META_TOTAL_VOTES, (int) $counts['total_votes'] );
+	}
+
+	/**
+	 * Update vote counters from previous/current vote action.
+	 *
+	 * @param int    $comment_id Comment ID.
+	 * @param string $previous_vote Previous vote action.
+	 * @param string $vote Current vote action.
+	 *
+	 * @return array
+	 */
+	protected function update_comment_vote_counts( $comment_id, $previous_vote, $vote ) {
+
+		$counts = $this->get_comment_vote_counts( $comment_id );
+
+		if ( 'upvote' === $previous_vote ) {
+			$counts['upvotes'] = max( 0, $counts['upvotes'] - 1 );
+		}
+
+		if ( 'downvote' === $previous_vote ) {
+			$counts['downvotes'] = max( 0, $counts['downvotes'] - 1 );
+		}
+
+		if ( 'upvote' === $vote ) {
+			++$counts['upvotes'];
+		}
+
+		if ( 'downvote' === $vote ) {
+			++$counts['downvotes'];
+		}
+
+		$counts['total_votes'] = $counts['upvotes'] + $counts['downvotes'];
+
+		$this->set_comment_vote_counts( $comment_id, $counts );
+
+		return $counts;
+	}
+
+	/**
+	 * Calculate Wilson lower bound score.
+	 *
+	 * @param int   $upvotes Upvotes.
+	 * @param int   $downvotes Downvotes.
+	 * @param float $z Wilson confidence z-score.
+	 *
+	 * @return float
+	 */
+	protected function calculate_wilson_lower_bound( $upvotes, $downvotes, $z ) {
+
+		$total = (int) $upvotes + (int) $downvotes;
+
+		if ( $total <= 0 ) {
+			return 0;
+		}
+
+		$phat = $upvotes / $total;
+		$z2   = $z * $z;
+
+		$numerator   = $phat + $z2 / ( 2 * $total ) - $z * sqrt( ( $phat * ( 1 - $phat ) + $z2 / ( 4 * $total ) ) / $total );
+		$denominator = 1 + $z2 / $total;
+
+		return $numerator / $denominator;
+	}
+
+	/**
+	 * Update Wilson rank metadata for a comment.
+	 *
+	 * @param int   $comment_id Comment ID.
+	 * @param array $counts Vote counts.
+	 *
+	 * @return float
+	 */
+	protected function update_comment_wilson_rank( $comment_id, array $counts ) {
+
+		$z     = (float) apply_filters( 'hmn_cp_wilson_z_score', 1.96 );
+		$score = $this->calculate_wilson_lower_bound( $counts['upvotes'], $counts['downvotes'], $z );
+
+		update_comment_meta( $comment_id, self::COMMENT_META_WILSON_LOWER_BOUND, $score );
+
+		return $score;
+	}
+
+	/**
+	 * Get the current visitor vote state for a comment.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return array
+	 */
+	protected function get_logged_vote_state( $comment_id ) {
+
+		$state = array(
+			'last_action' => '',
+			'vote_time'   => 0,
+		);
+
+		$logged_votes = $this->get_visitor()->retrieve_logged_votes();
+		$key          = 'comment_id_' . $comment_id;
+
+		if ( ! is_array( $logged_votes ) || ! isset( $logged_votes[ $key ] ) || ! is_array( $logged_votes[ $key ] ) ) {
+			return $state;
+		}
+
+		$logged_vote = $logged_votes[ $key ];
+
+		$state['last_action'] = isset( $logged_vote['last_action'] ) ? $logged_vote['last_action'] : '';
+		$state['vote_time']   = isset( $logged_vote['vote_time'] ) ? (int) $logged_vote['vote_time'] : 0;
+
+		return $state;
+	}
+
+	/**
+	 * Calculate the net legacy karma delta for a vote transition.
+	 *
+	 * @param string $previous_vote Previous visitor vote.
+	 * @param string $next_vote Next visitor vote.
+	 *
+	 * @return int
+	 */
+	protected function get_vote_delta_from_transition( $previous_vote, $next_vote ) {
+
+		$delta = 0;
+
+		if ( 'upvote' === $previous_vote ) {
+			$delta += $this->get_vote_value( 'downvote' );
+		} elseif ( 'downvote' === $previous_vote ) {
+			$delta += $this->get_vote_value( 'upvote' );
+		}
+
+		if ( 'upvote' === $next_vote ) {
+			$delta += $this->get_vote_value( 'upvote' );
+		} elseif ( 'downvote' === $next_vote ) {
+			$delta += $this->get_vote_value( 'downvote' );
+		}
+
+		return $delta;
+	}
+
+	/**
+	 * Resolve the registered user ID for a comment author when possible.
+	 *
+	 * @param int $comment_id Comment ID.
+	 *
+	 * @return int
+	 */
+	protected function get_comment_author_id( $comment_id ) {
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			return 0;
+		}
+
+		if ( ! empty( $comment->user_id ) ) {
+			return (int) $comment->user_id;
+		}
+
+		$email  = get_comment_author_email( $comment_id );
+		$author = get_user_by( 'email', $email );
+
+		return ( false !== $author ) ? (int) $author->ID : 0;
+	}
+
+	/**
+	 * Sorts the comments by weight and returns them.
+	 *
+	 * @param array|bool $args Query args, or legacy html flag.
+	 * @param bool       $html Return html if true.
+	 *
+	 * @return array|string
+	 */
+	public function get_comments_sorted_by_weight( $args = array(), $html = false ) {
+
+		// Backward-compatibility: older integrations passed $html first and $args second.
+		if ( is_bool( $args ) ) {
+			$legacy_html = $args;
+			$legacy_args = $html;
+			$html        = $legacy_html;
+			$args        = is_array( $legacy_args ) ? $legacy_args : array();
+		}
+
+		if ( ! is_array( $args ) ) {
+			$args = array();
+		}
+
+		$ranking_mode = $this->get_comment_ranking_mode();
 
 		// WP_Comment_Query arguments
 		$defaults = array(
 			'status'  => 'approve',
 			'type'    => 'comment',
 			'order'   => 'DESC',
-			'orderby' => 'comment_karma',
+			'orderby' => ( 'wilson' === $ranking_mode ) ? 'meta_value_num' : 'comment_karma',
 		);
+
+		if ( 'wilson' === $ranking_mode ) {
+			$defaults['meta_key'] = self::COMMENT_META_WILSON_LOWER_BOUND;
+		}
 
 		$get_comments_args = wp_parse_args( $args, $defaults );
 
 		// The Comment Query
-		$comment_query = new \WP_Comment_Query;
+		$comment_query = new \WP_Comment_Query();
 		$comments      = $comment_query->query( $get_comments_args );
 
 		if ( $html ) {
@@ -500,11 +770,25 @@ class HMN_Comment_Popularity {
 
 		check_ajax_referer( 'hmn_vote_submit', 'hmn_vote_nonce' );
 
-		$comment_id = absint( $_POST['comment_id'] );
+		$comment_id = 0;
+		if ( isset( $_POST['comment_id'] ) ) {
+			$comment_id = absint( wp_unslash( $_POST['comment_id'] ) );
+		}
 
-		$vote = $_POST['vote'];
+		$vote = '';
+		if ( isset( $_POST['vote'] ) ) {
+			$vote = sanitize_key( wp_unslash( $_POST['vote'] ) );
+		}
 
-		if ( ! in_array( $vote, array( 'upvote', 'downvote', 'undo' ) ) ) {
+		if ( 0 === $comment_id ) {
+			wp_send_json_error( $this->send_error( 'invalid_comment_id', __( 'Invalid comment ID', 'comment-popularity' ), 0 ) );
+		}
+
+		if ( ! ( $this->get_visitor() instanceof HMN_CP_Visitor ) ) {
+			wp_send_json_error( $this->send_error( 'invalid_visitor', __( 'Voting is unavailable for this user', 'comment-popularity' ), $comment_id ) );
+		}
+
+		if ( ! in_array( $vote, array( 'upvote', 'downvote', 'undo' ), true ) ) {
 
 			$return = array(
 				'error_code'    => 'invalid_action',
@@ -526,7 +810,6 @@ class HMN_Comment_Popularity {
 			wp_send_json_success( $result );
 
 		}
-
 	}
 
 	/**
@@ -554,10 +837,15 @@ class HMN_Comment_Popularity {
 	 */
 	public function update_comment_author_karma( $commenter_id, $value ) {
 
+		if ( is_string( $value ) && in_array( $value, array( 'upvote', 'downvote' ), true ) ) {
+			$value = $this->get_vote_value( $value );
+		}
+		$value = (int) $value;
+
 		$user_karma = $this->get_comment_author_karma( $commenter_id );
 
 		// Do not allow negative karma
-		if ( $user_karma === 0 && $value < 0 ) {
+		if ( 0 === $user_karma && 0 > $value ) {
 			return $user_karma;
 		}
 
@@ -592,38 +880,42 @@ class HMN_Comment_Popularity {
 
 		$labels = $this->get_vote_labels();
 
-		$vote_value = $this->get_vote_value( $vote );
-
 		$result = $this->is_vote_valid( $comment_id, $labels, $vote );
 		if ( ! empty( $result ) ) {
 			return $this->send_error( $result['error_code'], $result['error_msg'], $comment_id );
 		}
 
-		// see if user has already voted
-		$logged_votes = $this->get_visitor()->retrieve_logged_votes();
-		if ( is_array( $logged_votes ) && array_key_exists( 'comment_id_' . $comment_id, $logged_votes ) ) {
-			$last_action = $logged_votes[ 'comment_id_' . $comment_id ]['last_action'];
+		$logged_vote   = $this->get_logged_vote_state( $comment_id );
+		$previous_vote = $logged_vote['last_action'];
+		$next_vote     = ( 'undo' === $vote ) ? '' : $vote;
 
-			if ( 'undo' === $labels [ $vote ] ) {
-				// undo the previous action
-				$this->get_visitor()->unlog_vote( $comment_id, $last_action );
-
-				$vote_value = ( 'upvote' === $last_action ) ? $this->get_vote_value( 'downvote' ) : $this->get_vote_value( 'upvote' );
-			}
+		if ( '' !== $previous_vote && $previous_vote === $vote ) {
+			return $this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id );
 		}
+
+		if ( 'undo' === $vote && '' === $previous_vote ) {
+			return $this->send_error( 'invalid_action', __( 'There is no previous vote to undo.', 'comment-popularity' ), $comment_id );
+		}
+
+		$vote_value = $this->get_vote_delta_from_transition( $previous_vote, $next_vote );
 
 		$this->update_comment_weight( $comment_id, $vote_value );
 
-		// Get the comment author object.
-		$email  = get_comment_author_email( $comment_id );
-		$author = get_user_by( 'email', $email );
+		$author_id = $this->get_comment_author_id( $comment_id );
 
 		// update comment author karma if registered user.
-		if ( false !== $author ) {
-			$this->update_comment_author_karma( $author->ID, $vote_value );
+		if ( 0 !== $author_id ) {
+			$this->update_comment_author_karma( $author_id, $vote_value );
 		}
 
-		$this->get_visitor()->log_vote( $comment_id, $vote );
+		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
+		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
+
+		if ( '' === $next_vote ) {
+			$this->get_visitor()->unlog_vote( $comment_id );
+		} else {
+			$this->get_visitor()->log_vote( $comment_id, $next_vote );
+		}
 
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
@@ -632,6 +924,11 @@ class HMN_Comment_Popularity {
 			'weight'          => $this->get_comment_weight( $comment_id ),
 			'comment_id'      => $comment_id,
 			'vote_type'       => $labels[ $vote ],
+			'ranking_mode'    => $this->get_comment_ranking_mode(),
+			'upvotes'         => $counts['upvotes'],
+			'downvotes'       => $counts['downvotes'],
+			'total_votes'     => $counts['total_votes'],
+			'wilson_lb'       => $wilson_score,
 		);
 
 		return $return;
@@ -656,9 +953,16 @@ class HMN_Comment_Popularity {
 			);
 		}
 
-		// Prevent negative weight if not allowed.
 		$comment = get_comment( $comment_id );
-		if ( ( $action === 'downvote' && ! $this->is_negative_comment_weight_allowed() ) && 0 >= $comment->comment_karma ) {
+		if ( ! $comment ) {
+			return array(
+				'error_code' => 'invalid_comment_id',
+				'error_msg'  => __( 'Invalid comment ID', 'comment-popularity' ),
+			);
+		}
+
+		// Prevent negative weight if not allowed.
+		if ( ( 'downvote' === $action && ! $this->is_negative_comment_weight_allowed() ) && 0 >= $comment->comment_karma ) {
 			$error_code = 'downvote_zero_karma';
 			$error_msg  = __( 'Unable to downvote a comment with no karma', 'comment-popularity' );
 
@@ -745,5 +1049,4 @@ class HMN_Comment_Popularity {
 	public function is_negative_comment_weight_allowed() {
 		return apply_filters( 'hmn_cp_allow_negative_comment_weight', $this->allow_negative_comment_weight );
 	}
-
 }

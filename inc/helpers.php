@@ -16,7 +16,6 @@ function hmn_cp_the_comment_upvote_form() {
 		$hmn_cp_obj->render_ui( get_comment_ID() );
 
 	}
-
 }
 
 /**
@@ -33,9 +32,7 @@ function hmn_cp_the_comment_author_karma() {
 		if ( null !== $author_karma ) {
 			echo '<small class="user-karma">(User Karma: ' . esc_html( $author_karma ) . ')</small>';
 		}
-
 	}
-
 }
 
 /**
@@ -59,8 +56,7 @@ function hmn_cp_the_sorted_comments( array $args ) {
 			$args['callback'] = array( $hmn_cp_obj, 'comment_callback' );
 		}
 
-		echo $hmn_cp_obj->get_comments_sorted_by_weight( true, $args );
+		$hmn_cp_obj->get_comments_sorted_by_weight( $args, true );
 
 	}
-
 }

@@ -49,11 +49,11 @@ abstract class HMN_CP_Visitor {
 	public function get_id() {
 		return $this->visitor_id;
 	}
-
 }
 
 /**
  * Class HMN_CP_Visitor_Guest
+ *
  * @package CommentPopularity
  */
 class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
@@ -87,8 +87,8 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		// Set a cookie with the visitor IP address that expires in a week.
 		$expiry = apply_filters( 'hmn_cp_cookie_expiry', time() + ( 7 * DAY_IN_SECONDS ) );
 
-		//Set a cookie now to see if they are supported by the browser.
-		$secure = ( 'https' === parse_url( site_url(), PHP_URL_SCHEME ) && 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
+		// Set a cookie now to see if they are supported by the browser.
+		$secure = ( 'https' === wp_parse_url( site_url(), PHP_URL_SCHEME ) && 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) );
 
 		setcookie( 'hmn_cp_visitor', $this->visitor_id, $expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
 		if ( SITECOOKIEPATH !== COOKIEPATH ) {
@@ -140,7 +140,6 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		do_action( 'hmn_cp_logged_guest_vote', $this->visitor_id, $comment_id, $updated );
 
 		return $updated;
-
 	}
 
 	/**
@@ -164,16 +163,20 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 
 		if ( is_multisite() ) {
 
-			$blog_id = get_current_blog_id();
-			$hmn_cp_guests_logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes' );
+			$blog_id                    = get_current_blog_id();
+			$hmn_cp_guests_logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
 
 		} else {
 
-			$hmn_cp_guests_logged_votes = get_option( 'hmn_cp_guests_logged_votes' );
+			$hmn_cp_guests_logged_votes = get_option( 'hmn_cp_guests_logged_votes', array() );
 
 		}
 
-		return $hmn_cp_guests_logged_votes[ $this->cookie ];
+		if ( ! is_array( $hmn_cp_guests_logged_votes ) ) {
+			return array();
+		}
+
+		return ( isset( $hmn_cp_guests_logged_votes[ $this->cookie ] ) && is_array( $hmn_cp_guests_logged_votes[ $this->cookie ] ) ) ? $hmn_cp_guests_logged_votes[ $this->cookie ] : array();
 	}
 
 	/**
@@ -186,11 +189,18 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 		$logged_votes = array();
 
 		if ( is_multisite() ) {
-			$blog_id                           = get_current_blog_id();
-			$logged_votes                      = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes' );
+			$blog_id      = get_current_blog_id();
+			$logged_votes = get_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', array() );
+			if ( ! is_array( $logged_votes ) ) {
+				$logged_votes = array();
+			}
 			$logged_votes[ $this->visitor_id ] = $votes;
 			update_blog_option( $blog_id, 'hmn_cp_guests_logged_votes', $logged_votes );
 		} else {
+			$logged_votes = get_option( 'hmn_cp_guests_logged_votes', array() );
+			if ( ! is_array( $logged_votes ) ) {
+				$logged_votes = array();
+			}
 			$logged_votes[ $this->visitor_id ] = $votes;
 			update_option( 'hmn_cp_guests_logged_votes', $logged_votes );
 		}
@@ -208,9 +218,7 @@ class HMN_CP_Visitor_Guest extends HMN_CP_Visitor {
 
 		// For now, all votes are valid.
 		return true;
-
 	}
-
 }
 
 /**
@@ -232,6 +240,10 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		$comment = get_comment( $comment_id );
 
+		if ( ! $comment ) {
+			return new \WP_Error( 'invalid_comment_id', __( 'Invalid comment ID', 'comment-popularity' ) );
+		}
+
 		if ( ! current_user_can( 'vote_on_comments' ) ) {
 			return new \WP_Error( 'insufficient_permissions', __( 'You lack sufficient permissions to vote on comments', 'comment-popularity' ) );
 		}
@@ -247,7 +259,6 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		// Vote is valid.
 		return true;
-
 	}
 
 	/**
@@ -293,9 +304,7 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		unset( $comments_voted_on[ 'comment_id_' . $comment_id ] );
 
-		if ( ! empty( $comments_voted_on ) ) {
-			update_user_option( $this->get_id(), 'hmn_comments_voted_on', $comments_voted_on );
-		}
+		update_user_option( $this->get_id(), 'hmn_comments_voted_on', $comments_voted_on );
 	}
 
 	/**
@@ -309,5 +318,4 @@ class HMN_CP_Visitor_Member extends HMN_CP_Visitor {
 
 		return ! empty( $votes ) ? $votes : array();
 	}
-
 }
