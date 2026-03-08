@@ -16,16 +16,6 @@ parameters:
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Call to function in_array\\(\\) with arguments 'manage_user_karma…', array\\<bool\\> and true will always evaluate to false\\.$#"
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
-			message: "#^Call to function in_array\\(\\) with arguments 'vote_on_comments', array\\<bool\\> and true will always evaluate to false\\.$#"
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with bool will always evaluate to false\\.$#"
 			count: 1
 			path: inc/class-comment-popularity.php

@@ -17,10 +17,12 @@ From a clean checkout:
 2. `composer lint`
 3. `WP_VERSION=6.4 composer test:setup`
 4. `composer test`
-5. `composer test:coverage`
-6. `composer test:phpstan`
-7. `composer test:psalm`
-8. `composer test:local-smoke`
+5. `composer test:integration`
+6. `WP_MULTISITE=1 composer test:integration`
+7. `composer test:coverage`
+8. `composer test:phpstan`
+9. `composer test:psalm`
+10. `composer test:local-smoke`
 
 CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
 `composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
@@ -32,7 +34,7 @@ Coverage and hardening notes
 - Coverage scope excludes vendored dependencies under `inc/lib`.
 - `composer test:coverage` uses `phpdbg`, so no Xdebug/PCOV setup is required.
 - Coverage threshold is enforced from Clover output (`tests/cache/coverage/clover.xml`) via `tests/check-coverage-threshold.php`.
-- Current statement coverage threshold is `29%` (raised from measured `44.99%` signal on 2026-03-08).
+- Current statement coverage threshold is `35%` (raised from measured `51.58%` signal on 2026-03-08).
 - Threshold ratcheting policy:
   - Raise only after at least 3 consecutive green CI coverage runs and 1 local confirmation run.
   - Raise in small increments (normally 1-2 points).

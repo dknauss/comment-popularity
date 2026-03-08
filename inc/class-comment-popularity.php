@@ -224,11 +224,11 @@ class HMN_Comment_Popularity {
 
 			if ( ! empty( $role_obj ) ) {
 
-				if ( in_array( 'manage_user_karma_settings', $role_obj->capabilities, true ) ) {
+				if ( $role_obj->has_cap( 'manage_user_karma_settings' ) ) {
 					$role_obj->remove_cap( 'manage_user_karma_settings' );
 				}
 
-				if ( in_array( 'vote_on_comments', $role_obj->capabilities, true ) ) {
+				if ( $role_obj->has_cap( 'vote_on_comments' ) ) {
 					$role_obj->remove_cap( 'vote_on_comments' );
 				}
 			}

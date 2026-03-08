@@ -2,6 +2,11 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
+- Tests: added uninstall regression coverage for option/meta cleanup, comment karma reset, and capability teardown.
+- Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
+- Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
+- CI: added `composer test:integration` baseline command (aliases current PHPUnit integration suite).
+- CI: raised coverage gate threshold from `29%` to `35%` after increasing measured statement coverage to `51.58%` (`474/919`).
 - Tests: added upgrade routine regression coverage for new install, legacy option migration, and current-version no-op paths.
 - CI: raised coverage gate threshold from `23%` to `25%` after increasing measured statement coverage to `26.37%`.
 - CI: added blocking `phpstan` quality check with committed level-5 baseline (`phpstan-baseline.neon`).
