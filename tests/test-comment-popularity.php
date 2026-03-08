@@ -19,11 +19,20 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 
 	protected $plugin;
 
-	public function setUp() {
+	public function setUp(): void {
 
 		parent::setUp();
 
 		$this->plugin = HMN_Comment_Popularity::get_instance();
+
+		$this->test_admin_id = $this->factory->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => 'test_admin',
+				'email'      => 'admin@kgb.ru',
+			)
+		);
+		wp_set_current_user( $this->test_admin_id );
 
 		$this->plugin::activate();
 
@@ -48,18 +57,13 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 			)
 		);
 
-		$this->test_admin_id = $this->factory->user->create(
-			array(
-				'role'       => 'administrator',
-				'user_login' => 'test_admin',
-				'email'      => 'admin@kgb.ru',
-			)
-		);
-
 		// set interval to 5 seconds
-		add_filter( 'hmn_cp_interval', function(){
-			return 5;
-		});
+		add_filter(
+			'hmn_cp_interval',
+			function () {
+				return 5;
+			}
+		);
 
 		// insert a post
 		$this->test_post_id = $this->factory->post->create();
@@ -67,15 +71,16 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		// insert a comment on our test post
 		$comment_date = current_time( 'mysql' );
 
-		$this->test_comment_id = $this->factory->comment->create( array(
-			'comment_date'    => $comment_date,
-			'comment_post_ID' => $this->test_post_id,
-			'comment_author_email' => 'commenter@kgb.ru',
-		) );
-
+		$this->test_comment_id = $this->factory->comment->create(
+			array(
+				'comment_date'         => $comment_date,
+				'comment_post_ID'      => $this->test_post_id,
+				'comment_author_email' => 'commenter@kgb.ru',
+			)
+		);
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 
 		parent::tearDown();
 
@@ -112,19 +117,18 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 			$role->remove_cap( 'vote_on_comments' );
 
 		}
-
 	}
 
 	public function test_too_soon_to_vote_again() {
 
-		$this->plugin->comment_vote( $this->test_voter_id,  $this->test_comment_id, 'upvote' );
+		$first_vote = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 
 		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 
 		$this->assertArrayHasKey( 'error_code', $ret );
-
 		$this->assertEquals( 'voting_flood', $ret['error_code'] );
-
+		$this->assertEquals( $first_vote['weight'], $this->plugin->get_comment_weight( $this->test_comment_id ) );
+		$this->assertEquals( 1, (int) get_comment_meta( $this->test_comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 	}
 
 	public function test_upvote_comment_saves_action_to_user_meta() {
@@ -136,13 +140,12 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$result = $this->plugin->get_visitor()->log_vote( $this->test_comment_id, $action );
 
 		$expected = array(
-			'vote_time' => $vote_time,
+			'vote_time'   => $vote_time,
 			'last_action' => $action,
 		);
 
 		$this->assertEquals( $expected['vote_time'], $result['vote_time'], 30 );
 		$this->assertEquals( $expected['last_action'], $result['last_action'] );
-
 	}
 
 	public function test_comment_author_karma_increases_on_upvote() {
@@ -225,9 +228,8 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 
 	public function test_downvoting_comment_not_negative() {
 
-		$vote = 'downvote';
+		$vote        = 'downvote';
 		$comment_arr = get_comment( $this->test_comment_id, ARRAY_A );
-
 
 		$comment_arr['comment_karma'] = 0;
 
@@ -242,11 +244,12 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 	}
 
 	public function test_undo_vote() {
-		 // do an upvote
-		// do a second upvote
-		// check that comment weight is same as it was before
-		// check user karma is same as before
-		// ex
-   }
 
+		$this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
+		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'undo' );
+
+		$this->assertArrayNotHasKey( 'error_code', $ret );
+		$this->assertEquals( 'undo', $ret['vote_type'] );
+		$this->assertEquals( 0, $this->plugin->get_comment_weight( $this->test_comment_id ) );
+	}
 }

@@ -23,11 +23,13 @@ function hmn_cp_trigger_upgrades() {
 	}
 
 	// Do we have users with the old option key? Upgrade in batches of 100.
-	$user_query = new WP_User_Query( array(
-		'number'   => 100,
-		'meta_key' => 'comments_voted_on',
-	) );
-	$users = $user_query->get_results();
+	$user_query = new WP_User_Query(
+		array(
+			'number'   => 100,
+			'meta_key' => 'comments_voted_on',
+		)
+	);
+	$users      = $user_query->get_results();
 	if ( ! empty( $users ) ) {
 		hmn_cp_v121_upgrade( $users );
 	}
@@ -54,5 +56,4 @@ function hmn_cp_v121_upgrade( array $users ) {
 		delete_user_option( $user->ID, 'comments_voted_on', true );
 
 	}
-
 }

@@ -33,7 +33,6 @@ if ( ! empty( $user_query->results ) ) {
 		delete_user_option( $user->ID, 'hmn_user_expert_status' );
 
 	}
-
 }
 
 $args = array(
@@ -56,13 +55,12 @@ if ( ! empty( $user_query->results ) ) {
 		delete_user_option( $user->ID, 'hmn_user_karma' );
 
 	}
-
 }
 
 $args = array(
 	'meta_query' => array(
 		array(
-			'key'     => $wpdb->get_blog_prefix() .  'hmn_comments_voted_on',
+			'key'     => $wpdb->get_blog_prefix() . 'hmn_comments_voted_on',
 			'compare' => 'EXISTS',
 		),
 	),
@@ -77,14 +75,14 @@ if ( ! empty( $user_query->results ) ) {
 
 		delete_user_option( $user->ID, 'hmn_comments_voted_on' );
 	}
-
 }
 
 // Select all comments with karma > 0, and reset value to zero.
 
 $wpdb->query(
 	$wpdb->prepare(
-		"UPDATE wp_comments SET comment_karma=0 WHERE comment_karma > %d", 0
+		'UPDATE wp_comments SET comment_karma=0 WHERE comment_karma > %d',
+		0
 	)
 );
 
