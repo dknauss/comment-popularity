@@ -2,6 +2,9 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
+- Compat: aligned plugin metadata and runtime guard to PHP `8.1+` to match the current dependency floor.
+- Tooling: `bin/php-runtime.sh` now enforces PHP `8.1+` and falls back to Local PHP `8.4`/`8.3`/`8.2`/`8.1` when host `php` is older.
+- Docs: removed stale `--ignore-platform-reqs` guidance and documented PHP `8.1+` as the baseline.
 - Tests: added uninstall regression coverage for option/meta cleanup, comment karma reset, and capability teardown.
 - Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
 - Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
@@ -19,7 +22,7 @@ Unreleased
 - CI: raised coverage gate threshold from `25%` to `27%` after increasing measured statement coverage to `43.68%` (`401/918`).
 - CI: raised coverage gate threshold from `27%` to `29%` after increasing measured statement coverage to `44.99%` (`413/918`).
 - Static analysis: reduced PHPStan baseline entries and updated Psalm baseline after helper-path cleanup.
-- Tooling: added `bin/php-runtime.sh` and routed Composer quality commands through it to prefer a compatible local PHP runtime on PHP 8.5+ hosts.
+- Tooling: added `bin/php-runtime.sh` and routed Composer quality commands through it to prefer a compatible local PHP runtime.
 
 1.5.1 - 2026-03-08
 ==================

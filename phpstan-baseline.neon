@@ -1,171 +1,217 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$visitor_id of class CommentPopularity\\\\HMN_CP_Visitor_Guest constructor expects int, string given\\.$#"
+			message: '#^Found usage of constant DOING_AJAX\. Use wp_doing_ajax\(\) instead\.$#'
+			identifier: phpstanWP.wpConstant.fetch
 			count: 1
 			path: comment-popularity.php
 
 		-
-			message: "#^Call to an undefined method CommentPopularity\\\\HMN_CP_Visitor\\:\\:retrieve_logged_votes\\(\\)\\.$#"
+			message: '#^Instanceof between CommentPopularity\\HMN_CP_Visitor and CommentPopularity\\HMN_CP_Visitor will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: comment-popularity.php
+
+		-
+			message: '#^Parameter \#1 \$visitor_id of class CommentPopularity\\HMN_CP_Visitor_Guest constructor expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: comment-popularity.php
+
+		-
+			message: '#^Call to an undefined method CommentPopularity\\HMN_CP_Visitor\:\:retrieve_logged_votes\(\)\.$#'
+			identifier: method.notFound
 			count: 2
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Call to an undefined method CommentPopularity\\\\HMN_CP_Visitor\\:\\:unlog_vote\\(\\)\\.$#"
+			message: '#^Call to an undefined method CommentPopularity\\HMN_CP_Visitor\:\:unlog_vote\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with bool will always evaluate to false\\.$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Cannot call method render\\(\\) on null\\.$#"
+			message: '#^Call to function is_array\(\) with bool will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Comparison operation \"\\>\\=\" between 0 and \\(array\\|float\\|int\\) results in an error\\.$#"
+			message: '#^Instanceof between CommentPopularity\\HMN_CP_Visitor and CommentPopularity\\HMN_CP_Visitor will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_Comment_Popularity\\:\\:custom_comments_template\\(\\) should return string but empty return statement found\\.$#"
+			message: '#^Instanceof between CommentPopularity\\HMN_Comment_Popularity and CommentPopularity\\HMN_Comment_Popularity will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
+			message: '#^Method CommentPopularity\\HMN_Comment_Popularity\:\:custom_comments_template\(\) should return string but empty return statement found\.$#'
+			identifier: return.empty
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^Property CommentPopularity\\\\HMN_Comment_Popularity\\:\\:\\$twig \\(null\\) does not accept Twig_Environment\\.$#"
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: inc/class-comment-popularity.php
 
 		-
-			message: "#^@param int \\$visitor_id does not accept actual type of parameter\\: string\\.$#"
+			message: '#^@param int \$visitor_id does not accept actual type of parameter\: string\.$#'
+			identifier: parameter.phpDocType
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Constant COOKIEPATH not found\\.$#"
+			message: '#^Constant COOKIEPATH not found\.$#'
+			identifier: constant.notFound
 			count: 2
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Constant COOKIE_DOMAIN not found\\.$#"
+			message: '#^Constant SITECOOKIEPATH not found\.$#'
+			identifier: constant.notFound
 			count: 2
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Constant SITECOOKIEPATH not found\\.$#"
-			count: 2
-			path: inc/class-visitor.php
-
-		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Visitor\\:\\:get_id\\(\\) should return string but returns int\\.$#"
+			message: '#^Method CommentPopularity\\HMN_CP_Visitor\:\:get_id\(\) should return string but returns int\.$#'
+			identifier: return.type
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Visitor_Guest\\:\\:is_vote_valid\\(\\) has invalid return type CommentPopularity\\\\WP_Error\\.$#"
+			message: '#^Method CommentPopularity\\HMN_CP_Visitor_Guest\:\:is_vote_valid\(\) has invalid return type CommentPopularity\\WP_Error\.$#'
+			identifier: class.notFound
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Visitor_Member\\:\\:is_vote_valid\\(\\) has invalid return type CommentPopularity\\\\WP_Error\\.$#"
+			message: '#^Method CommentPopularity\\HMN_CP_Visitor_Member\:\:is_vote_valid\(\) has invalid return type CommentPopularity\\WP_Error\.$#'
+			identifier: class.notFound
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Visitor_Member\\:\\:is_vote_valid\\(\\) should return bool\\|CommentPopularity\\\\WP_Error but returns WP_Error\\.$#"
+			message: '#^Method CommentPopularity\\HMN_CP_Visitor_Member\:\:is_vote_valid\(\) should return bool\|CommentPopularity\\WP_Error but returns WP_Error\.$#'
+			identifier: return.type
 			count: 4
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, int given\\.$#"
+			message: '#^Parameter \#1 \$str of function sanitize_text_field expects string, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of function update_user_option expects int, string given\\.$#"
+			message: '#^Parameter \#1 \$user_id of function update_user_option expects int, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#2 \\$user of function get_user_option expects int, string given\\.$#"
+			message: '#^Parameter \#2 \$user of function get_user_option expects int, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of function setcookie expects string, int given\\.$#"
+			message: '#^Parameter \#2 \$value of function setcookie expects string, int given\.$#'
+			identifier: argument.type
 			count: 2
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Result of && is always false\\.$#"
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between string and int will always evaluate to false\\.$#"
+			message: '#^Strict comparison using \=\=\= between string and int will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
 			count: 1
 			path: inc/class-visitor.php
 
 		-
-			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int given\\.$#"
+			message: '#^Parameter \#1 \$text of function esc_html expects string, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/helpers.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Widget_Experts\\:\\:get_widget_slug\\(\\) has invalid return type CommentPopularity\\\\Plugin\\.$#"
+			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: inc/helpers.php
+
+		-
+			message: '#^Method CommentPopularity\\HMN_CP_Widget_Experts\:\:get_widget_slug\(\) has invalid return type CommentPopularity\\Plugin\.$#'
+			identifier: class.notFound
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Method CommentPopularity\\\\HMN_CP_Widget_Experts\\:\\:get_widget_slug\\(\\) should return CommentPopularity\\\\Plugin but returns string\\.$#"
+			message: '#^Method CommentPopularity\\HMN_CP_Widget_Experts\:\:get_widget_slug\(\) should return CommentPopularity\\Plugin but returns string\.$#'
+			identifier: return.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Offset 'widget_id' on array in isset\\(\\) always exists and is not nullable\\.$#"
+			message: '#^Offset ''widget_id'' on non\-empty\-array in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$args$#"
+			message: '#^PHPDoc tag @param references unknown parameter\: \$args$#'
+			identifier: parameter.notFound
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Parameter \\#1 \\$args of function get_users expects array\\{blog_id\\?\\: int, role\\?\\: array\\<string\\>\\|string, role__in\\?\\: array\\<string\\>, role__not_in\\?\\: array\\<string\\>, meta_key\\?\\: array\\<string\\>\\|string, meta_value\\?\\: array\\<string\\>\\|string, meta_compare\\?\\: string, meta_compare_key\\?\\: string, \\.\\.\\.\\}, array\\{number\\: '5', meta_query\\: array\\{array\\{key\\: 'hmn_user_expert…', value\\: '1', compare\\: '\\=', type\\: 'NUMERIC'\\}\\}, orderby\\: 'meta_value', order\\: 'DESC', meta_key\\: 'hmn_user_karma'\\} given\\.$#"
+			message: '#^Parameter \#1 \$args of function get_users expects array\{blog_id\?\: int, role\?\: array\<string\>\|string, role__in\?\: array\<string\>, role__not_in\?\: array\<string\>, meta_key\?\: array\<string\>\|string, meta_value\?\: array\<string\>\|string, meta_compare\?\: string, meta_compare_key\?\: string, \.\.\.\}, array\{number\: ''5'', meta_query\: array\{array\{key\: ''hmn_user_expert…'', value\: ''1'', compare\: ''\='', type\: ''NUMERIC''\}\}, orderby\: ''meta_value'', order\: ''DESC'', meta_key\: ''hmn_user_karma''\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Parameter \\#1 \\$id_base of method WP_Widget\\<array\\<string, mixed\\>\\>\\:\\:__construct\\(\\) expects string, CommentPopularity\\\\Plugin given\\.$#"
+			message: '#^Parameter \#1 \$id_base of method WP_Widget\<array\<string, mixed\>\>\:\:__construct\(\) expects string, CommentPopularity\\Plugin given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of function wp_cache_delete expects int\\|string, CommentPopularity\\\\Plugin given\\.$#"
+			message: '#^Parameter \#1 \$key of function wp_cache_delete expects int\|string, CommentPopularity\\Plugin given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of function wp_cache_get expects int\\|string, CommentPopularity\\\\Plugin given\\.$#"
+			message: '#^Parameter \#1 \$key of function wp_cache_get expects int\|string, CommentPopularity\\Plugin given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of function wp_cache_set expects int\\|string, CommentPopularity\\\\Plugin given\\.$#"
+			message: '#^Parameter \#1 \$key of function wp_cache_set expects int\|string, CommentPopularity\\Plugin given\.$#'
+			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
 
 		-
-			message: "#^Variable \\$return might not be defined\\.$#"
+			message: '#^Variable \$return might not be defined\.$#'
+			identifier: variable.undefined
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
