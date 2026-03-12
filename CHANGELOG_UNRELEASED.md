@@ -1,7 +1,7 @@
 Unreleased
 ==========
 
-- Target version: 1.5.2-dev.
+- Target version: 1.5.2.
 - Compat: aligned plugin metadata, Composer requirement, and runtime guard to PHP `8.2+`.
 - Tooling: `bin/php-runtime.sh` now enforces PHP `8.2+` and falls back to Local PHP `8.4`/`8.3`/`8.2` when host `php` is older.
 - Docs: removed stale `--ignore-platform-reqs` guidance and documented PHP `8.2+` as the baseline.
