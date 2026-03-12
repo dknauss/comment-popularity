@@ -5,7 +5,7 @@
 Phase: 8 (Remediation)
 Plan: 0 of 2 executed
 Status: In progress — Phase 8 work on branch `codex/testing-related-fixes-isolated`
-Last activity: 2026-03-09
+Last activity: 2026-03-12
 
 ## Project Reference
 
@@ -39,10 +39,12 @@ Two plans:
 ### Blockers/Concerns
 
 - Phase 8 branch has uncommitted work (12 modified files + 1 new test file).
-- Stash entry exists from prior session (`stash@{0}` from PHP 8.1+ alignment).
+- Two stash entries:
+  - `stash@{0}`: Phase 8 Task 4 work (from `codex/testing-related-fixes-isolated`)
+  - `stash@{1}`: PHP 8.1+ alignment edits (from `codex/php81-docs-tooling-alignment`)
 
 ## Session Continuity
 
-Last session: 2026-03-09
-Stopped at: Phase 8 work in progress on isolated branch
+Last session: 2026-03-12
+Stopped at: Metrics verification pass on `develop`; Phase 8 work still in progress on isolated branch
 Current metrics: See `docs/current-metrics.md`
