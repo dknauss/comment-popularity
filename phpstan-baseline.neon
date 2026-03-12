@@ -215,9 +215,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php
-
-		-
-			message: '#^Variable \$return might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: inc/widgets/experts/class-widget-experts.php

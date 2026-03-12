@@ -290,7 +290,7 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 	}
 
 	public function test_callback_returns_success_for_upvote_downvote_and_undo_sequence() {
-		$upvote_result = $this->run_callback(
+		$upvote_result   = $this->run_callback(
 			$this->build_payload(
 				array(
 					'vote' => 'upvote',
@@ -304,7 +304,7 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 				)
 			)
 		);
-		$undo_result = $this->run_callback(
+		$undo_result     = $this->run_callback(
 			$this->build_payload(
 				array(
 					'vote' => 'undo',

@@ -146,9 +146,9 @@ class Test_HMN_CP_Visitor extends \WP_UnitTestCase {
 		$guest_visitor = new HMN_CP_Test_Visitor_Guest( $guest_visitor_id );
 		$logged_vote   = $guest_visitor->log_vote( $this->comment_id, 'upvote' );
 
-		$guest_reader  = new HMN_CP_Test_Visitor_Guest( $guest_visitor_id );
-		$stored_votes  = $guest_reader->retrieve_logged_votes();
-		$comment_key   = 'comment_id_' . $this->comment_id;
+		$guest_reader = new HMN_CP_Test_Visitor_Guest( $guest_visitor_id );
+		$stored_votes = $guest_reader->retrieve_logged_votes();
+		$comment_key  = 'comment_id_' . $this->comment_id;
 
 		$this->assertSame( 'upvote', $logged_vote['last_action'] );
 		$this->assertArrayHasKey( $comment_key, $stored_votes );

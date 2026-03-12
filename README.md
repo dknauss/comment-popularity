@@ -20,6 +20,7 @@ For canonical branch/release policy, see [FORK_FIRST_POLICY.md](FORK_FIRST_POLIC
 - Enforced coverage gate (`composer test:coverage`) with current threshold at **35%**
 - Blocking PHPStan gate with committed baseline (`phpstan-baseline.neon`)
 - Phase-1 advisory Psalm analysis with committed baseline (`psalm-baseline.xml`)
+- Experts widget hardening (`get_experts()` empty-state safety and HTTPS Gravatar URLs)
 - Local smoke testing for Local site environment (`single-site-local.local`)
 
 ## Plugin Behavior

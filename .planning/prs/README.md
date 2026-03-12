@@ -1,6 +1,7 @@
 # Optional Upstream Export Draft Set
 
 Historical note: this file documents an older restacked upstream export sequence. It is not the canonical execution plan for the fork and should be treated as optional export scaffolding only.
+Status note: this queue snapshot was prepared on 2026-03-06 and may not match the current branch stack.
 
 Prepared on 2026-03-06 for `humanmade/comment-popularity`.
 

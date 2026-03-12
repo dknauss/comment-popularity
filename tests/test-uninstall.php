@@ -145,8 +145,8 @@ class Test_HMN_CP_Uninstall extends WP_UnitTestCase {
 			$this->markTestSkipped( 'Multisite only test.' );
 		}
 
-		$current_blog_id = get_current_blog_id();
-		$second_site_id  = self::factory()->blog->create();
+		$current_blog_id  = get_current_blog_id();
+		$second_site_id   = self::factory()->blog->create();
 		$this->site_ids[] = $second_site_id;
 
 		update_blog_option(

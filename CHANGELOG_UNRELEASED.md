@@ -9,9 +9,11 @@ Unreleased
 - Tests: added multisite uninstall regression coverage for blog-scoped option cleanup across network sites.
 - Tests: added direct `comment_vote_callback()` regression coverage for nonce failure, invalid comment/action, missing visitor, guest-voting-disabled, and success-path responses.
 - Tests: added guest visitor persistence coverage for single-site and multisite storage behavior.
+- Tests: added experts widget regression coverage for empty expert result sets and HTTPS Gravatar URL generation.
 - Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
 - Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
 - Fix: uninstall now removes blog-scoped plugin options (`comment_popularity_prefs`, `hmn_cp_plugin_version`, `hmn_cp_guests_logged_votes`) across all sites on multisite.
+- Fix: experts widget now initializes an empty return array in `get_experts()` and uses `https://gravatar.com` avatar URLs.
 - Fix: retired the unused `hmn_cp_interval` throttling hook; server-side vote integrity is now explicitly state-based (duplicate vote rejection plus transition normalization).
 - CI: added `composer test:integration` baseline command (aliases current PHPUnit integration suite).
 - CI: raised coverage gate threshold from `29%` to `35%` after increasing measured statement coverage to `51.58%` (`474/919`).

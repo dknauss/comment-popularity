@@ -24,7 +24,7 @@ if ( is_multisite() ) {
 
 	foreach ( $site_ids as $site_id ) {
 		foreach ( $plugin_options as $plugin_option ) {
-			delete_blog_option( (int) $site_id, $plugin_option );
+			delete_blog_option( $site_id, $plugin_option );
 		}
 	}
 }

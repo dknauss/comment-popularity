@@ -323,7 +323,6 @@
       <code><![CDATA[$visitor]]></code>
     </PropertyNotSetInConstructor>
     <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $author->ID]]></code>
       <code><![CDATA[(int) $downvotes]]></code>
       <code><![CDATA[(int) $upvotes]]></code>
     </RedundantCastGivenDocblockType>
@@ -479,7 +478,6 @@
       <code><![CDATA[COOKIE_DOMAIN]]></code>
       <code><![CDATA[COOKIE_DOMAIN]]></code>
       <code><![CDATA[DAY_IN_SECONDS]]></code>
-      <code><![CDATA[MINUTE_IN_SECONDS]]></code>
       <code><![CDATA[SITECOOKIEPATH]]></code>
       <code><![CDATA[SITECOOKIEPATH]]></code>
     </UndefinedConstant>
@@ -658,21 +656,6 @@
       <code><![CDATA[$this->defaults]]></code>
       <code><![CDATA[$this->defaults]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$return[ $key ]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]['avatar']]]></code>
-      <code><![CDATA[$return[ $key ]['karma']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-    </MixedArrayAssignment>
     <MixedArrayOffset>
       <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
       <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
@@ -716,10 +699,6 @@
     <PossiblyNullReference>
       <code><![CDATA[render]]></code>
     </PossiblyNullReference>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$return]]></code>
-      <code><![CDATA[$return]]></code>
-    </PossiblyUndefinedVariable>
     <PropertyNotSetInConstructor>
       <code><![CDATA[HMN_CP_Widget_Experts]]></code>
       <code><![CDATA[HMN_CP_Widget_Experts]]></code>
