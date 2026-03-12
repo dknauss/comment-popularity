@@ -1,0 +1,18 @@
+includes:
+  - inc/lib/szepeviktor/phpstan-wordpress/extension.neon
+  - phpstan-baseline.neon
+
+parameters:
+  phpVersion: 80200
+  level: 5
+  paths:
+    - comment-popularity.php
+    - admin
+    - inc
+    - uninstall.php
+  excludePaths:
+    analyse:
+      - inc/lib/*
+      - inc/templates/*
+      - inc/widgets/experts/views/*
+  tmpDir: tests/cache/phpstan

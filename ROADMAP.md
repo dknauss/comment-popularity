@@ -7,6 +7,7 @@ Define an upstream-friendly backlog for modernizing Comment Popularity without t
 ## Workflow Direction (Current)
 
 The active workflow for this repository is fork-first. `dknauss/comment-popularity` `develop` is the canonical integration branch, and upstream PRs are minimized. See `FORK_FIRST_POLICY.md` for the authoritative working process.
+WordPress.org distribution is currently closed for this plugin (closed on March 3, 2021), so roadmap execution does not include SVN/.org release steps.
 
 ## Guardrails
 
@@ -20,7 +21,9 @@ The active workflow for this repository is fork-first. `dknauss/comment-populari
 
 - This repository is a traditional WordPress plugin, not a block plugin or modern JS app.
 - The most urgent problems are correctness and data integrity, not feature expansion.
-- The current checkout does not implement Wilson scoring, ranking-mode settings, or a modern CI pipeline, so roadmap items should not assume those features already exist.
+- The current fork checkout does implement Wilson scoring, ranking-mode settings, and a GitHub Actions quality workflow, so roadmap items should treat those as existing fork behavior.
+- Wilson work in the fork is now primarily stabilization work: keep legacy weight, author karma, Wilson metadata, callback behavior, and tests in sync rather than reintroducing Wilson as a new feature.
+- Runtime support declarations are aligned on PHP `8.2`: the plugin bootstrap, class constant, `composer.json`, CI workflow, and fork docs all describe the same floor.
 - The PHPUnit suite depends on the WordPress test library bootstrap in `/tmp/wordpress-tests-lib`, which must be installed before tests can run.
 
 ## Phase 1: Correctness And Data Integrity
@@ -56,7 +59,7 @@ Move vote integrity checks out of the browser and into the backend so the plugin
 
 ### Backlog
 
-1. Enforce duplicate-vote and vote-interval rules on the server.
+1. Enforce duplicate-vote and vote-transition rules on the server.
 2. Normalize vote transitions so `upvote`, `downvote`, and `undo` update comment weight and author karma exactly once per state change.
 3. Return stable error codes and payloads for invalid transitions.
 4. Align guest and member validation paths where behavior should match.
@@ -81,15 +84,17 @@ Reduce avoidable warnings, deprecations, and standards drift without changing th
 
 ### Backlog
 
-1. Fix PHP 8+ deprecations such as optional parameters preceding required parameters.
-2. Sanitize and unslash request data consistently in AJAX and admin save handlers.
-3. Clean up rendering issues such as misused escaping helpers and null-unsafe array access.
-4. Fix the experts widget admin include path.
-5. Switch Gravatar URLs to HTTPS.
-6. Make uninstall routines prefix-safe and complete capability cleanup.
+1. Keep the declared PHP support floor reconciled across `comment-popularity.php`, `HMN_CP_REQUIRED_PHP_VERSION`, `composer.json`, CI, and release docs as modernization continues.
+2. Fix PHP 8+ deprecations such as optional parameters preceding required parameters.
+3. Sanitize and unslash request data consistently in AJAX and admin save handlers.
+4. Clean up rendering issues such as misused escaping helpers and null-unsafe array access.
+5. Fix the experts widget admin include path.
+6. Switch Gravatar URLs to HTTPS.
+7. Make uninstall routines prefix-safe and complete capability cleanup.
 
 ### Acceptance Criteria
 
+- Version declarations, Composer constraints, CI targets, and release notes agree on the supported PHP floor.
 - Core PHP files lint cleanly on a current PHP runtime without plugin-specific deprecation notices.
 - PHPCS findings move toward a clean WordPress-standard baseline.
 - Uninstall does not hardcode the comments table name.
@@ -98,9 +103,14 @@ Reduce avoidable warnings, deprecations, and standards drift without changing th
 
 - `comment-popularity.php`
 - `admin/class-comment-popularity-admin.php`
+- `composer.json`
 - `inc/class-comment-popularity.php`
 - `inc/helpers.php`
 - `inc/widgets/experts/class-widget-experts.php`
+- `.github/workflows/*`
+- `README.md`
+- `CONTRIBUTING.md`
+- `CHANGELOG_UNRELEASED.md`
 - `uninstall.php`
 
 ## Phase 4: Test Foundation
@@ -139,12 +149,14 @@ Add the smallest possible automation layer that supports upstream maintenance.
 2. Add Composer scripts for the supported local quality commands if upstream maintainers want them.
 3. Replace or supplement legacy Travis-only automation with a modest GitHub Actions workflow.
 4. Keep the matrix small and realistic for an upstream plugin: one modern PHP target first, then expand only if the suite is stable.
+5. Re-evaluate whether `bin/php-runtime.sh` is still needed after the Twig 3 upgrade; keep it only if it solves a reproducible host-runtime failure.
 
 ### Acceptance Criteria
 
 - A contributor can run lint and tests with documented commands.
 - CI uses the same commands documented in the repo.
 - CI introduction does not block upstream review with an oversized matrix or unrelated refactors.
+- Wrapper behavior and wrapper documentation match a reproducible local compatibility need.
 
 ### Likely File Scope
 
@@ -152,6 +164,10 @@ Add the smallest possible automation layer that supports upstream maintenance.
 - `phpunit.xml`
 - `.travis.yml`
 - `.github/workflows/*`
+- `bin/php-runtime.sh`
+- `README.md`
+- `CONTRIBUTING.md`
+- `CHANGELOG_UNRELEASED.md`
 
 ## Phase 6: Documentation And Release Readiness
 
@@ -170,31 +186,31 @@ Close the loop after the code and tests are credible.
 - Each upstream PR has a matching changelog or release-note decision.
 - The roadmap can be used as an issue and PR sequencing guide.
 
-## Phase 7: Fork-Specific Modernization (PHP 8.2, PSR-4, PHPStan)
+## Phase 7: Fork-Specific Modernization (Explicit PHP Floor, PSR-4, PHPStan)
 
-This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. It enforces a PHP 8.2 minimum, introduces PSR-4 autoloading under the `CommentPopularity` namespace, and adds PHPStan static analysis. It also picks up two small bug fixes in the experts widget that were identified during quality review but are not on any existing branch.
+This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. The fork now explicitly targets PHP `8.2`, so this phase is about sustaining that baseline while continuing PSR-4 autoloading work and static-analysis maintenance.
 
 ### Backlog
 
-1. Fix the experts widget Gravatar URL to use HTTPS instead of HTTP.
-2. Initialize `$return = array()` in `get_experts()` before population to prevent undefined-variable notices.
-3. Declare PHP 8.2 as the minimum in `composer.json` (`"php": "^8.2"`) and update the CI matrix.
-4. Add PSR-4 autoload mapping for the `CommentPopularity` namespace in `composer.json`.
-5. Add namespace declarations to class files and update the bootstrap to use the Composer autoloader.
-6. Install PHPStan with WordPress stubs, create `phpstan.neon` with a baseline, and add a PHPStan job to the CI workflow.
+1. Keep PHP `8.2` as the enforced minimum in `composer.json`, runtime guards, and the CI matrix.
+2. Add PSR-4 autoload mapping for the `CommentPopularity` namespace in `composer.json`.
+3. Add namespace declarations to class files and update the bootstrap to use the Composer autoloader.
+4. Maintain PHPStan with WordPress stubs and keep the baseline/CI job aligned with the fork runtime floor.
+
+### Completed In Phase 8
+
+- Experts widget Gravatar URLs now use HTTPS.
+- `get_experts()` now initializes and returns an empty array safely when no experts exist.
 
 ### Acceptance Criteria
 
-- Gravatar URLs in the experts widget use HTTPS; no mixed-content warnings on HTTPS sites.
-- `get_experts()` returns an empty array (not undefined) when no experts exist.
 - `composer.json` requires `"php": "^8.2"` and CI only tests PHP 8.2+.
 - `composer dump-autoload` generates working PSR-4 autoloading for `CommentPopularity\` classes.
 - The plugin boots and passes all existing tests using the Composer autoloader.
-- PHPStan runs at level 5+ with a committed baseline; CI fails on new errors above baseline.
+- PHPStan runs at level 5+ with a committed baseline; CI fails on new errors above baseline while staying aligned to PHP `8.2`.
 
 ### Likely File Scope
 
-- `inc/widgets/experts/class-widget-experts.php`
 - `composer.json`
 - `comment-popularity.php`
 - `inc/class-comment-popularity.php`
@@ -209,9 +225,36 @@ This phase is fork-only work that goes beyond the upstream-friendly scope of Pha
 - [ ] 07-02-PLAN.md — PHPStan setup and CI integration
 - [ ] 07-03-PLAN.md — PSR-4 autoloading migration
 
+## Phase 8: Post-Review Remediation
+
+This phase consolidates the remaining review findings into one fork-first execution plan. It does not add Wilson as new product work; it closes the remaining correctness, lifecycle, coverage, and planning gaps around the already-implemented fork baseline.
+
+### Backlog
+
+- [x] Remove email fallback from author-karma attribution so only registered comment `user_id` values can mutate user karma.
+- [x] Make uninstall cleanup multisite-safe for blog-scoped prefs and guest vote storage.
+- [x] Retire the unused vote-interval hook and keep duplicate-vote rejection/state-transition rules as the canonical server policy.
+- [x] Add direct callback-level regression coverage for the public vote AJAX endpoint and guest persistence paths.
+- [x] Fix the remaining experts widget defects: undefined empty-state return value and insecure Gravatar URL.
+- [x] Reconcile roadmap/export/release docs so they describe the fork's actual execution state instead of the old upstream queue.
+
+### Acceptance Criteria
+
+- Author karma, helper behavior, and tests all use `comment->user_id` consistently.
+- Multisite uninstall removes blog-scoped plugin state.
+- Public callback coverage is non-zero and guest persistence is tested.
+- Experts widget fixes are landed and covered.
+- Wilson remains documented as existing fork behavior.
+- The roadmap becomes the canonical remediation source for the fork.
+
+### Plans
+
+- [x] 08-01-PLAN.md — Comprehensive remediation backlog after full consistency review
+- [x] 08-02-PLAN.md — TDD coverage matrix and execution order for Phase 8 remediation
+
 ## Branch Status (Phases 1–5)
 
-Phases 1–5 are largely implemented on restacked `codex/*` branches awaiting upstream merge. See `.planning/prs/README.md` for the full PR strategy and `gh pr create` commands.
+The branch status below reflects optional upstream export scaffolding, not the canonical fork execution workflow. See `.planning/prs/README.md` only when there is an explicit decision to export work upstream.
 
 | Branch | Covers | Status |
 |--------|--------|--------|

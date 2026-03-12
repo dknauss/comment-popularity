@@ -23,5 +23,8 @@
 			<file>./comment-popularity.php</file>
 			<file>./uninstall.php</file>
 		</include>
+		<exclude>
+			<directory suffix=".php">./inc/lib</directory>
+		</exclude>
 	</coverage>
 </phpunit>

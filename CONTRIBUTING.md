@@ -13,12 +13,46 @@ Quality baseline (local + CI)
 
 From a clean checkout:
 
-1. `composer install --no-interaction --prefer-dist --ignore-platform-reqs`
+1. `composer install --no-interaction --prefer-dist`
 2. `composer lint`
 3. `WP_VERSION=6.4 composer test:setup`
 4. `composer test`
+5. `composer test:integration`
+6. `WP_MULTISITE=1 composer test:integration`
+7. `composer test:coverage`
+8. `composer test:phpstan`
+9. `composer test:psalm`
+10. `composer test:local-smoke`
 
-CI uses the same Composer scripts for consistency. The `--ignore-platform-reqs` flag is currently required because the locked `twig/twig` version predates modern PHP runtime constraints.
+CI uses the same Composer scripts for consistency. PHP `8.2+` is required for this repository.
+`composer test:setup` now resets and recreates the test database each run to keep test state deterministic.
+`bin/php-runtime.sh` now routes local CLI quality commands to a compatible PHP runtime and enforces `8.2+` (prefers Local PHP `8.4`/`8.3`/`8.2` when host `php` is older). Override with `CP_PHP_BIN=/path/to/php` if needed.
+
+Coverage and hardening notes
+----------------------------
+
+- Coverage scope excludes vendored dependencies under `inc/lib`.
+- `composer test:coverage` uses `phpdbg`, so no Xdebug/PCOV setup is required.
+- Coverage threshold is enforced from Clover output (`tests/cache/coverage/clover.xml`) via `tests/check-coverage-threshold.php`.
+- Current statement coverage threshold is `35%` (raised from measured `51.58%` signal on 2026-03-08).
+- Threshold ratcheting policy:
+  - Raise only after at least 3 consecutive green CI coverage runs and 1 local confirmation run.
+  - Raise in small increments (normally 1-2 points).
+  - Do not lower threshold for feature work. If rollback is required (environment drift or confirmed flake), limit to 1 point and document follow-up.
+
+Static analysis baseline policy
+-------------------------------
+
+- `composer test:phpstan` is a blocking quality gate (level 5 with `phpstan-baseline.neon`).
+- `composer test:psalm` is currently advisory/non-blocking in CI phase 1 and uses `psalm-baseline.xml`.
+- New work should avoid adding fresh baseline entries; reduce baseline counts when touching related files.
+
+Local development smoke testing
+-------------------------------
+
+- Use `composer test:local-smoke` for deterministic local validation against `single-site-local.local`.
+- Use `bin/wp-local-single-site.sh` for WP-CLI commands in Local where default DB host routing fails.
+- Full local checklist: `docs/manual-testing-checklist.md`.
 
 Current CI baseline
 -------------------
@@ -42,9 +76,15 @@ Pull requests, reporting issues, feedback and ideas for new features and improve
 Releasing a new version
 -----------------------
 
-Obviously you'll need contributor access to the WordPress.org repository.
+WordPress.org distribution is not part of this project workflow right now. The plugin is closed on WordPress.org (closed on March 3, 2021), so do not use SVN deploy tooling for releases.
 
-Install and run [the deployment script as per instructions](https://github.com/GaryJones/wordpress-plugin-svn-deploy)
+Release from the fork instead:
+
+1. Merge release-ready changes to `develop`.
+2. Bump version metadata (`comment-popularity.php`, `README.txt`, and changelog files).
+3. Run the quality baseline commands in this document.
+4. Merge `develop` to `master` through a PR with green required checks.
+5. Create and push a Git tag, then publish a GitHub Release.
 
 Available Grunt tasks
 ---------------------

@@ -15,6 +15,13 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 - Open upstream PRs only when there is a clear external need.
 - Do not keep overlapping upstream PR stacks open.
 
+## Distribution Channel Policy
+
+- WordPress.org plugin distribution is currently closed for this plugin (closed on March 3, 2021).
+- Do not deploy releases to WordPress.org SVN.
+- The active release channel is this fork (`dknauss/comment-popularity`) using Git tags and GitHub Releases.
+- If WordPress.org distribution is ever reinstated, update this policy before adding any SVN deploy steps.
+
 ## Branch Lifecycle
 
 - Prefer direct work on `develop` for small changes.
@@ -27,7 +34,11 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 - Required checks on `develop`:
   - `phpcs-changed`
   - `phpcs-report`
-  - `phpunit (8.1, 6.4)`
+  - `phpstan`
+  - `phpunit (8.2, 6.4)`
+  - `coverage-gate`
+- Advisory check (phase 1 hardening):
+  - `psalm`
 - Treat failing run `22812182249` as historical pre-fix noise.
 - Use run `22812774619` and newer successful `develop` runs as baseline.
 
@@ -35,12 +46,17 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 
 - WordPress test suite setup must not depend on `svn`.
 - `bin/install-wp-tests.sh` uses `wordpress-develop` archives so CI works on standard GitHub runners without extra package installs.
+- `composer test:setup` performs a deterministic reset of the `wp_tests` database before reinstalling test fixtures.
 
 ## Working Checklist
 
 1. Start from fork `develop`.
 2. Run `composer lint:full-report`.
 3. Run `WP_VERSION=6.4 composer test:setup` and `composer test`.
-4. Push to fork `develop`.
-5. Verify `Quality` workflow passes.
-6. Prune temporary branches/worktrees.
+4. Run `composer test:coverage`.
+5. Run `composer test:phpstan`.
+6. Run `composer test:psalm` (advisory in CI phase 1; still run locally).
+7. Run `composer test:local-smoke`.
+8. Push to fork `develop`.
+9. Verify `Quality` workflow passes.
+10. Prune temporary branches/worktrees.

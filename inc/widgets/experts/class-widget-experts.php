@@ -21,6 +21,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 	protected $defaults = array();
 
+	/** @var \Twig\Environment|null */
 	protected $twig;
 
 	/*
@@ -62,8 +63,8 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 
 		$template_path = apply_filters( 'hmn_cp_experts_widget_template_path', plugin_dir_path( __FILE__ ) . '/views' );
 
-		$loader     = new \Twig_Loader_Filesystem( $template_path );
-		$this->twig = new \Twig_Environment( $loader );
+		$loader     = new \Twig\Loader\FilesystemLoader( $template_path );
+		$this->twig = new \Twig\Environment( $loader );
 	}
 
 
@@ -204,6 +205,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		);
 
 		$experts = get_users( $args );
+		$return  = array();
 
 		foreach ( $experts as $key => $expert ) {
 
@@ -226,6 +228,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 	public function get_gravatar_url( $email ) {
 
 		$hash = md5( strtolower( trim( $email ) ) );
-		return 'http://gravatar.com/avatar/' . $hash;
+		return 'https://gravatar.com/avatar/' . $hash;
 	}
 } // end class
