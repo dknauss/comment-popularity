@@ -15,7 +15,7 @@ class HMN_Comment_Popularity {
 	/**
 	 * The minimum PHP version compatibility.
 	 */
-	const HMN_CP_REQUIRED_PHP_VERSION = '8.1';
+	const HMN_CP_REQUIRED_PHP_VERSION = '8.2';
 
 	/**
 	 *
@@ -708,10 +708,7 @@ class HMN_Comment_Popularity {
 			return (int) $comment->user_id;
 		}
 
-		$email  = get_comment_author_email( $comment_id );
-		$author = get_user_by( 'email', $email );
-
-		return ( false !== $author ) ? (int) $author->ID : 0;
+		return 0;
 	}
 
 	/**

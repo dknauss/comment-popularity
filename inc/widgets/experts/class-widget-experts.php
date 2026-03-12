@@ -205,6 +205,7 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 		);
 
 		$experts = get_users( $args );
+		$return  = array();
 
 		foreach ( $experts as $key => $expert ) {
 
@@ -227,6 +228,6 @@ class HMN_CP_Widget_Experts extends \WP_Widget {
 	public function get_gravatar_url( $email ) {
 
 		$hash = md5( strtolower( trim( $email ) ) );
-		return 'http://gravatar.com/avatar/' . $hash;
+		return 'https://gravatar.com/avatar/' . $hash;
 	}
 } // end class

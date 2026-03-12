@@ -3,9 +3,9 @@
 Contributors: pauldewouters,mattheu,humanmade,cfo-publishing
 Tags: comments,vote,upvote,karma,widget
 Requires at least: 4.9
-Tested up to: 4.9.3
+Tested up to: 6.4
 Stable tag: 1.5.2-dev
-Requires PHP: 5.3.2
+Requires PHP: 8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,16 +24,16 @@ Admin users can give users the "expert" label which will attribute more weight t
 
 You'll find an option under discussion for the default expert karma and it can also be changed on the user's profile.
 
-Follow development of this plugin on [Github](https://github.com/humanmade/comment-popularity/)
+Follow development of this plugin on [Github](https://github.com/dknauss/comment-popularity/)
 
-Requires PHP `5.3.2` or newer.
+Requires PHP `8.2` or newer.
 
 == Installation ==
 
 = Using The WordPress Dashboard =
 
 1. Navigate to the 'Add New' in the plugins dashboard
-2. Search for 'plugin-name'
+2. Search for 'Comment Popularity'
 3. Click 'Install Now'
 4. Activate the plugin on the Plugin dashboard
 
@@ -41,15 +41,15 @@ Requires PHP `5.3.2` or newer.
 
 1. Navigate to the 'Add New' in the plugins dashboard
 2. Navigate to the 'Upload' area
-3. Select `plugin-name.zip` from your computer
+3. Select `comment-popularity.zip` from your computer
 4. Click 'Install Now'
 5. Activate the plugin in the Plugin dashboard
 
 = Using FTP =
 
-1. Download `plugin-name.zip`
-2. Extract the `plugin-name` directory to your computer
-3. Upload the `plugin-name` directory to the `/wp-content/plugins/` directory
+1. Download `comment-popularity.zip`
+2. Extract the `comment-popularity` directory to your computer
+3. Upload the `comment-popularity` directory to the `/wp-content/plugins/` directory
 4. Activate the plugin in the Plugin dashboard
 
 == Frequently Asked Questions ==
@@ -83,7 +83,11 @@ Under Settings > Discussion, and Users > Profile
 First thing - you need to remove the default comments template added by the plugin.
 
 `add_action( 'plugins_loaded', function() {
-	remove_filter( 'comments_template', array( 'HMN_Comment_Popularity', 'custom_comments_template' ) );
+	global $comment_popularity;
+
+	if ( $comment_popularity instanceof CommentPopularity\HMN_Comment_Popularity ) {
+		remove_filter( 'comments_template', array( $comment_popularity, 'custom_comments_template' ) );
+	}
 }, 100 );`
 
 Secondly, you need to add replace the `wp_list_comments` call with the following code:

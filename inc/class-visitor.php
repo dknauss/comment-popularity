@@ -5,11 +5,6 @@
  *
  * @package CommentPopularity
  */
-/**
- * Class HMN_CP_Visitor
- *
- * @package CommentPopularity
- */
 abstract class HMN_CP_Visitor {
 
 	/**
@@ -20,20 +15,12 @@ abstract class HMN_CP_Visitor {
 	protected $visitor_id;
 
 	/**
-	 * Time needed between 2 votes by user on same comment.
-	 *
-	 * @var mixed|void
-	 */
-	protected $interval;
-
-	/**
 	 * Creates a new HMN_CP_Visitor object.
 	 *
 	 * @param int $visitor_id The visitor ID.
 	 */
 	public function __construct( $visitor_id ) {
 		$this->visitor_id = $visitor_id;
-		$this->interval   = apply_filters( 'hmn_cp_interval', 15 * MINUTE_IN_SECONDS );
 	}
 
 	/**

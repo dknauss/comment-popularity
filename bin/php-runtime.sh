@@ -17,7 +17,7 @@ fi
 
 is_php_compatible() {
 	local php_path="$1"
-	"${php_path}" -r 'exit(PHP_VERSION_ID >= 80100 ? 0 : 1);'
+	"${php_path}" -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);'
 }
 
 find_php_bin() {
@@ -28,7 +28,7 @@ find_php_bin() {
 		fi
 
 		if ! is_php_compatible "${CP_PHP_BIN}"; then
-			echo "Configured CP_PHP_BIN must point to PHP 8.1+." >&2
+			echo "Configured CP_PHP_BIN must point to PHP 8.2+." >&2
 			exit 2
 		fi
 
@@ -40,7 +40,7 @@ find_php_bin() {
 	default_php="$(command -v php)"
 	local selected_php="${default_php}"
 
-	# Keep the current runtime unless it is below the project floor (PHP 8.1+).
+	# Keep the current runtime unless it is below the project floor (PHP 8.2+).
 	if ! is_php_compatible "${default_php}"; then
 		shopt -s nullglob
 		local candidates=(
@@ -50,8 +50,6 @@ find_php_bin() {
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.3."*/bin/darwin/bin/php
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.2."*/bin/darwin-arm64/bin/php
 			"${HOME}/Library/Application Support/Local/lightning-services/php-8.2."*/bin/darwin/bin/php
-			"${HOME}/Library/Application Support/Local/lightning-services/php-8.1."*/bin/darwin-arm64/bin/php
-			"${HOME}/Library/Application Support/Local/lightning-services/php-8.1."*/bin/darwin/bin/php
 		)
 		shopt -u nullglob
 
@@ -65,7 +63,7 @@ find_php_bin() {
 	fi
 
 	if ! is_php_compatible "${selected_php}"; then
-		echo "Unable to find a PHP 8.1+ binary. Set CP_PHP_BIN to a compatible PHP executable." >&2
+		echo "Unable to find a PHP 8.2+ binary. Set CP_PHP_BIN to a compatible PHP executable." >&2
 		exit 2
 	fi
 

@@ -2,12 +2,19 @@ Unreleased
 ==========
 
 - Target version: 1.5.2-dev.
-- Compat: aligned plugin metadata and runtime guard to PHP `8.1+` to match the current dependency floor.
-- Tooling: `bin/php-runtime.sh` now enforces PHP `8.1+` and falls back to Local PHP `8.4`/`8.3`/`8.2`/`8.1` when host `php` is older.
-- Docs: removed stale `--ignore-platform-reqs` guidance and documented PHP `8.1+` as the baseline.
+- Compat: aligned plugin metadata, Composer requirement, and runtime guard to PHP `8.2+`.
+- Tooling: `bin/php-runtime.sh` now enforces PHP `8.2+` and falls back to Local PHP `8.4`/`8.3`/`8.2` when host `php` is older.
+- Docs: removed stale `--ignore-platform-reqs` guidance and documented PHP `8.2+` as the baseline.
 - Tests: added uninstall regression coverage for option/meta cleanup, comment karma reset, and capability teardown.
+- Tests: added multisite uninstall regression coverage for blog-scoped option cleanup across network sites.
+- Tests: added direct `comment_vote_callback()` regression coverage for nonce failure, invalid comment/action, missing visitor, guest-voting-disabled, and success-path responses.
+- Tests: added guest visitor persistence coverage for single-site and multisite storage behavior.
+- Tests: added experts widget regression coverage for empty expert result sets and HTTPS Gravatar URL generation.
 - Fix: `HMN_Comment_Popularity::deactivate()` now removes custom capabilities using `has_cap()` checks.
 - Fix: uninstall cleanup now targets the runtime comments table (`$wpdb->comments`) and executes capability cleanup via `deactivate()`.
+- Fix: uninstall now removes blog-scoped plugin options (`comment_popularity_prefs`, `hmn_cp_plugin_version`, `hmn_cp_guests_logged_votes`) across all sites on multisite.
+- Fix: experts widget now initializes an empty return array in `get_experts()` and uses `https://gravatar.com` avatar URLs.
+- Fix: retired the unused `hmn_cp_interval` throttling hook; server-side vote integrity is now explicitly state-based (duplicate vote rejection plus transition normalization).
 - CI: added `composer test:integration` baseline command (aliases current PHPUnit integration suite).
 - CI: raised coverage gate threshold from `29%` to `35%` after increasing measured statement coverage to `51.58%` (`474/919`).
 - Tests: added upgrade routine regression coverage for new install, legacy option migration, and current-version no-op paths.
@@ -18,7 +25,7 @@ Unreleased
 - Docs: updated contributing and fork-first quality baselines to include static analysis gates.
 - Tests: added admin settings/profile regression tests and helper regression tests.
 - Tests: added bootstrap init regression tests for logged-in and guest-voting-disabled paths (`hmn_cp_init`).
-- Fix: `hmn_cp_the_comment_author_karma()` now resolves commenter karma by registered comment `user_id` instead of email lookup.
+- Fix: author karma attribution now resolves by registered comment `user_id` only in both vote processing and `hmn_cp_the_comment_author_karma()` output (guest-email collisions no longer mutate registered user karma).
 - CI: raised coverage gate threshold from `25%` to `27%` after increasing measured statement coverage to `43.68%` (`401/918`).
 - CI: raised coverage gate threshold from `27%` to `29%` after increasing measured statement coverage to `44.99%` (`413/918`).
 - Static analysis: reduced PHPStan baseline entries and updated Psalm baseline after helper-path cleanup.

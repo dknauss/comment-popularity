@@ -7,6 +7,12 @@ parameters:
 			path: comment-popularity.php
 
 		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: comment-popularity.php
+
+		-
 			message: '#^Instanceof between CommentPopularity\\HMN_CP_Visitor and CommentPopularity\\HMN_CP_Visitor will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -207,11 +213,5 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$key of function wp_cache_set expects int\|string, CommentPopularity\\Plugin given\.$#'
 			identifier: argument.type
-			count: 1
-			path: inc/widgets/experts/class-widget-experts.php
-
-		-
-			message: '#^Variable \$return might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: inc/widgets/experts/class-widget-experts.php

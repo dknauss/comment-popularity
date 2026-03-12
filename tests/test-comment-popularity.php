@@ -62,14 +62,6 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 			)
 		);
 
-		// set interval to 5 seconds
-		add_filter(
-			'hmn_cp_interval',
-			function () {
-				return 5;
-			}
-		);
-
 		// insert a post
 		$this->test_post_id = $this->factory->post->create();
 
@@ -129,7 +121,7 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		}
 	}
 
-	public function test_too_soon_to_vote_again() {
+	public function test_duplicate_vote_is_rejected() {
 
 		$first_vote = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 
@@ -261,5 +253,61 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'error_code', $ret );
 		$this->assertEquals( 'undo', $ret['vote_type'] );
 		$this->assertEquals( 0, $this->plugin->get_comment_weight( $this->test_comment_id ) );
+	}
+
+	public function test_vote_does_not_mutate_registered_user_karma_for_guest_comment_with_matching_email() {
+		$collision_user_id = $this->factory->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'collision_user',
+				'user_email' => 'collision-user@example.com',
+			)
+		);
+
+		$guest_comment_id = $this->factory->comment->create(
+			array(
+				'comment_post_ID'      => $this->test_post_id,
+				'user_id'              => 0,
+				'comment_author_email' => 'collision-user@example.com',
+			)
+		);
+
+		update_user_option( $collision_user_id, 'hmn_user_karma', 4 );
+
+		$ret = $this->plugin->comment_vote( $this->test_voter_id, $guest_comment_id, 'upvote' );
+
+		$this->assertArrayNotHasKey( 'error_code', $ret );
+		$this->assertSame( 4, $this->plugin->get_comment_author_karma( $collision_user_id ) );
+
+		wp_delete_comment( $guest_comment_id, true );
+		wp_delete_user( $collision_user_id );
+	}
+
+	public function test_vote_mutates_registered_user_karma_for_registered_comment_author() {
+		$registered_author_id = $this->factory->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'registered_author_user',
+				'user_email' => 'registered-author@example.com',
+			)
+		);
+
+		$registered_comment_id = $this->factory->comment->create(
+			array(
+				'comment_post_ID'      => $this->test_post_id,
+				'user_id'              => $registered_author_id,
+				'comment_author_email' => 'registered-author@example.com',
+			)
+		);
+
+		update_user_option( $registered_author_id, 'hmn_user_karma', 0 );
+
+		$ret = $this->plugin->comment_vote( $this->test_voter_id, $registered_comment_id, 'upvote' );
+
+		$this->assertArrayNotHasKey( 'error_code', $ret );
+		$this->assertSame( 1, $this->plugin->get_comment_author_karma( $registered_author_id ) );
+
+		wp_delete_comment( $registered_comment_id, true );
+		wp_delete_user( $registered_author_id );
 	}
 }

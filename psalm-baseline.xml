@@ -141,15 +141,6 @@
     <InvalidReturnType>
       <code><![CDATA[array|string]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[COMMENT_META_DOWNVOTES = '_hmn_cp_downvotes']]></code>
-      <code><![CDATA[COMMENT_META_TOTAL_VOTES = '_hmn_cp_total_votes']]></code>
-      <code><![CDATA[COMMENT_META_UPVOTES = '_hmn_cp_upvotes']]></code>
-      <code><![CDATA[COMMENT_META_WILSON_LOWER_BOUND = '_hmn_cp_wilson_lb']]></code>
-      <code><![CDATA[HMN_CP_PLUGIN_VERSION = '1.5.2-dev']]></code>
-      <code><![CDATA[HMN_CP_REQUIRED_PHP_VERSION = '8.1']]></code>
-      <code><![CDATA[HMN_CP_REQUIRED_WP_VERSION = '4.9']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$args]]></code>
       <code><![CDATA[$comment]]></code>
@@ -332,7 +323,6 @@
       <code><![CDATA[$visitor]]></code>
     </PropertyNotSetInConstructor>
     <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $author->ID]]></code>
       <code><![CDATA[(int) $downvotes]]></code>
       <code><![CDATA[(int) $upvotes]]></code>
     </RedundantCastGivenDocblockType>
@@ -488,7 +478,6 @@
       <code><![CDATA[COOKIE_DOMAIN]]></code>
       <code><![CDATA[COOKIE_DOMAIN]]></code>
       <code><![CDATA[DAY_IN_SECONDS]]></code>
-      <code><![CDATA[MINUTE_IN_SECONDS]]></code>
       <code><![CDATA[SITECOOKIEPATH]]></code>
       <code><![CDATA[SITECOOKIEPATH]]></code>
     </UndefinedConstant>
@@ -667,21 +656,6 @@
       <code><![CDATA[$this->defaults]]></code>
       <code><![CDATA[$this->defaults]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$return[ $key ]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]]]></code>
-      <code><![CDATA[$return[ $key ]['avatar']]]></code>
-      <code><![CDATA[$return[ $key ]['karma']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-      <code><![CDATA[$return[ $key ]['name']]]></code>
-    </MixedArrayAssignment>
     <MixedArrayOffset>
       <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
       <code><![CDATA[$cache[ $args['widget_id'] ]]]></code>
@@ -725,10 +699,6 @@
     <PossiblyNullReference>
       <code><![CDATA[render]]></code>
     </PossiblyNullReference>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$return]]></code>
-      <code><![CDATA[$return]]></code>
-    </PossiblyUndefinedVariable>
     <PropertyNotSetInConstructor>
       <code><![CDATA[HMN_CP_Widget_Experts]]></code>
       <code><![CDATA[HMN_CP_Widget_Experts]]></code>
