@@ -1,5 +1,7 @@
 ## Summary
 
+Fork-first note: this repository ships from the fork. Use this PR body only when there is an explicit decision to export this branch upstream.
+
 This draft PR adds Wilson-score comment ranking groundwork, an admin-controlled ranking-mode setting, and the test coverage needed to keep Wilson metadata aligned with legacy comment karma behavior.
 
 ## Status

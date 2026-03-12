@@ -13,7 +13,7 @@ function hmn_cp_the_comment_upvote_form() {
 
 		$hmn_cp_obj = CommentPopularity\HMN_Comment_Popularity::get_instance();
 
-		$hmn_cp_obj->render_ui( get_comment_ID() );
+		$hmn_cp_obj->render_ui( (int) get_comment_ID() );
 
 	}
 }
@@ -27,7 +27,15 @@ function hmn_cp_the_comment_author_karma() {
 
 		$hmn_cp_obj = CommentPopularity\HMN_Comment_Popularity::get_instance();
 
-		$author_karma = $hmn_cp_obj->get_comment_author_karma( get_comment_author_email( get_comment_ID() ) );
+		$comment_id = (int) get_comment_ID();
+		/** @var WP_Comment|null $comment */
+		$comment = get_comment( $comment_id );
+
+		if ( ! $comment || empty( $comment->user_id ) ) {
+			return;
+		}
+
+		$author_karma = $hmn_cp_obj->get_comment_author_karma( (int) $comment->user_id );
 
 		if ( null !== $author_karma ) {
 			echo '<small class="user-karma">(User Karma: ' . esc_html( $author_karma ) . ')</small>';

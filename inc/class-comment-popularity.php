@@ -10,12 +10,12 @@ class HMN_Comment_Popularity {
 	/**
 	 * Plugin version number.
 	 */
-	const HMN_CP_PLUGIN_VERSION = '1.5';
+	const HMN_CP_PLUGIN_VERSION = '1.5.2';
 
 	/**
 	 * The minimum PHP version compatibility.
 	 */
-	const HMN_CP_REQUIRED_PHP_VERSION = '5.3.2';
+	const HMN_CP_REQUIRED_PHP_VERSION = '8.2';
 
 	/**
 	 *
@@ -38,9 +38,9 @@ class HMN_Comment_Popularity {
 	private static $instance;
 
 	/**
-	 * The instance of Twig_Environment
+	 * The instance of Twig\Environment
 	 *
-	 * @var null
+	 * @var \Twig\Environment|null
 	 */
 	protected $twig;
 
@@ -224,11 +224,11 @@ class HMN_Comment_Popularity {
 
 			if ( ! empty( $role_obj ) ) {
 
-				if ( in_array( 'manage_user_karma_settings', $role_obj->capabilities, true ) ) {
+				if ( $role_obj->has_cap( 'manage_user_karma_settings' ) ) {
 					$role_obj->remove_cap( 'manage_user_karma_settings' );
 				}
 
-				if ( in_array( 'vote_on_comments', $role_obj->capabilities, true ) ) {
+				if ( $role_obj->has_cap( 'vote_on_comments' ) ) {
 					$role_obj->remove_cap( 'vote_on_comments' );
 				}
 			}
@@ -242,8 +242,8 @@ class HMN_Comment_Popularity {
 
 		$template_path = apply_filters( 'hmn_cp_template_path', plugin_dir_path( __FILE__ ) . '/templates' );
 
-		$loader     = new \Twig_Loader_Filesystem( $template_path );
-		$this->twig = new \Twig_Environment( $loader );
+		$loader     = new \Twig\Loader\FilesystemLoader( $template_path );
+		$this->twig = new \Twig\Environment( $loader );
 	}
 
 	/**
@@ -708,10 +708,7 @@ class HMN_Comment_Popularity {
 			return (int) $comment->user_id;
 		}
 
-		$email  = get_comment_author_email( $comment_id );
-		$author = get_user_by( 'email', $email );
-
-		return ( false !== $author ) ? (int) $author->ID : 0;
+		return 0;
 	}
 
 	/**

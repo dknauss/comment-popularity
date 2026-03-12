@@ -1,5 +1,7 @@
 ## Summary
 
+Fork-first note: this repository ships from the fork. Use this PR body only when there is an explicit decision to export this branch upstream.
+
 This PR adds a project-aware quality workflow and updates the PHPUnit configuration so CI validates the plugin with the repository's own ruleset and a real WordPress test matrix.
 
 ## What Changed
@@ -7,8 +9,8 @@ This PR adds a project-aware quality workflow and updates the PHPUnit configurat
 - Add `.github/workflows/quality.yml` with:
   - PHPCS using `phpcs.xml.dist`
   - PHPUnit against a MySQL-backed WordPress test install
-  - PHP `7.4` and `8.1`
-  - WordPress `latest` and `6.4`
+  - PHP `8.2`
+  - WordPress `6.4`
 - Update `phpunit.xml` to:
   - fail on risky tests and warnings
   - name the test suite

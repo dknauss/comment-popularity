@@ -86,13 +86,9 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 				'ranking_mode'         => 'wilson',
 			)
 		);
-
-		add_filter( 'hmn_cp_interval', array( $this, 'disable_vote_interval' ) );
 	}
 
 	public function tearDown(): void {
-		remove_filter( 'hmn_cp_interval', array( $this, 'disable_vote_interval' ) );
-
 		delete_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES );
 		delete_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_DOWNVOTES );
 		delete_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES );
@@ -112,15 +108,6 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 		wp_delete_user( $this->commenter_id );
 
 		parent::tearDown();
-	}
-
-	/**
-	 * Remove vote throttling for deterministic tests.
-	 *
-	 * @return int
-	 */
-	public function disable_vote_interval() {
-		return 0;
 	}
 
 	public function test_upvote_persists_wilson_vote_counters() {

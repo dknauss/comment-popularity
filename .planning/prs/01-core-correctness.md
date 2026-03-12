@@ -1,5 +1,7 @@
 ## Summary
 
+Fork-first note: this repository ships from the fork. Use this PR body only when there is an explicit decision to export this branch upstream.
+
 This PR hardens the core voting flow and fixes vote-state persistence regressions that can desynchronize stored visitor state, comment karma, and author karma.
 
 ## What Changed

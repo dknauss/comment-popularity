@@ -4,12 +4,36 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// Remove plugin settings
-delete_option( 'comment_popularity_prefs' );
-delete_option( 'hmn_cp_plugin_version' );
-delete_option( 'hmn_cp_guests_logged_votes' );
+// Remove plugin settings.
+$plugin_options = array(
+	'comment_popularity_prefs',
+	'hmn_cp_plugin_version',
+	'hmn_cp_guests_logged_votes',
+);
+
+foreach ( $plugin_options as $plugin_option ) {
+	delete_option( $plugin_option );
+}
+
+if ( is_multisite() ) {
+	$site_ids = get_sites(
+		array(
+			'fields' => 'ids',
+		)
+	);
+
+	foreach ( $site_ids as $site_id ) {
+		foreach ( $plugin_options as $plugin_option ) {
+			delete_blog_option( $site_id, $plugin_option );
+		}
+	}
+}
 
 global $wpdb;
+
+if ( ! $wpdb instanceof wpdb ) {
+	return;
+}
 
 // Remove User meta
 $args = array(
@@ -80,12 +104,12 @@ if ( ! empty( $user_query->results ) ) {
 // Select all comments with karma > 0, and reset value to zero.
 
 $wpdb->query(
-	$wpdb->prepare(
-		'UPDATE wp_comments SET comment_karma=0 WHERE comment_karma > %d',
+	(string) $wpdb->prepare(
+		"UPDATE {$wpdb->comments} SET comment_karma=0 WHERE comment_karma > %d",
 		0
 	)
 );
 
 // Remove custom capabilities
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-comment-popularity.php';
-$cp_plugin = CommentPopularity\HMN_Comment_Popularity::get_instance();
+CommentPopularity\HMN_Comment_Popularity::deactivate();
