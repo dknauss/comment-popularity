@@ -43,7 +43,7 @@ Ship the smallest bug fixes that protect stored vote state and prevent user-faci
 
 - No fatal error when an unauthenticated request hits the vote endpoint while guest voting is disabled.
 - Guest voting does not erase other guests' recorded votes.
-- Undoing a user's last vote leaves stored state consistent.
+- Direct vote switching leaves stored state consistent without a neutral state.
 - Added regression tests cover each fixed bug.
 
 ### Likely File Scope
@@ -60,16 +60,16 @@ Move vote integrity checks out of the browser and into the backend so the plugin
 ### Backlog
 
 1. Enforce duplicate-vote and vote-transition rules on the server.
-2. Normalize vote transitions so `upvote`, `downvote`, and `undo` update comment weight and author karma exactly once per state change.
+2. Normalize vote transitions so `upvote` and `downvote` update comment weight and author karma exactly once per state change.
 3. Return stable error codes and payloads for invalid transitions.
 4. Align guest and member validation paths where behavior should match.
 
 ### Acceptance Criteria
 
 - Repeated identical votes do not keep increasing or decreasing karma.
-- `undo` reverses the previous vote cleanly.
+- Same-arrow duplicate clicks do not change stored state.
 - The existing client script remains compatible with the response contract.
-- Tests cover the full transition matrix: none to upvote, none to downvote, upvote to undo, downvote to undo, upvote to downvote, downvote to upvote.
+- Tests cover the full transition matrix: none to upvote, none to downvote, upvote to downvote, downvote to upvote, and duplicate same-vote rejection.
 
 ### Likely File Scope
 
@@ -121,13 +121,13 @@ Make the existing test suite credible before expanding the plugin's scope.
 
 1. Fill `tests/test-visitor.php` with member and guest persistence tests.
 2. Add AJAX regression tests for nonce failure, missing visitor, invalid comment ID, and invalid vote type.
-3. Add vote transition tests for duplicate votes and undo behavior.
-4. Document the local WordPress test bootstrap workflow in the repo.
+3. Add vote transition tests for duplicate votes and direct-switch behavior.
+4. Document the local WordPress test bootstrap and coverage workflow in the repo, including `composer test:setup`, `composer test:integration`, `composer test:coverage`, clover output, and the enforced threshold.
 5. Tighten PHPUnit configuration once the suite is stable enough to run cleanly.
 
 ### Acceptance Criteria
 
-- The repo documents how to install the WordPress test library and run PHPUnit locally.
+- The repo documents how to install the WordPress test library, run PHPUnit locally, and generate coverage locally.
 - The main bug fixes in Phases 1 and 2 are covered by automated tests.
 - Contributors can reproduce the test environment using the repo's own scripts.
 

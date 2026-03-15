@@ -90,11 +90,11 @@ if ( ! empty( $upvote['error_code'] ) ) {
 	exit( 1 );
 }
 
-$undo = $plugin->comment_vote( $admin_id, $comment_id, 'undo' );
-if ( ! empty( $undo['error_code'] ) ) {
+$downvote = $plugin->comment_vote( $admin_id, $comment_id, 'downvote' );
+if ( ! empty( $downvote['error_code'] ) ) {
 	wp_delete_comment( $comment_id, true );
 	wp_delete_post( $post_id, true );
-	fwrite( STDERR, "Smoke failure: undo failed (" . $undo['error_code'] . ").\n" );
+	fwrite( STDERR, "Smoke failure: direct switch to downvote failed (" . $downvote['error_code'] . ").\n" );
 	exit( 1 );
 }
 
@@ -102,7 +102,7 @@ $weight = (int) $plugin->get_comment_weight( $comment_id );
 if ( 0 !== $weight ) {
 	wp_delete_comment( $comment_id, true );
 	wp_delete_post( $post_id, true );
-	fwrite( STDERR, "Smoke failure: expected weight 0 after undo.\n" );
+	fwrite( STDERR, "Smoke failure: expected weight 0 after upvote -> downvote switch.\n" );
 	exit( 1 );
 }
 
@@ -112,7 +112,7 @@ wp_delete_post( $post_id, true );
 fwrite( STDOUT, "Smoke vote flow passed.\n" );
 PHP
 
-echo "[smoke] Running vote/undo flow via WP-CLI"
+echo "[smoke] Running vote switch flow via WP-CLI"
 "$WP_LOCAL" eval-file "$tmp_eval"
 
 echo "[smoke] Local smoke test passed."

@@ -28,7 +28,7 @@ For canonical branch/release policy, see [FORK_FIRST_POLICY.md](FORK_FIRST_POLIC
 Core behavior:
 
 - Logged-in users can upvote/downvote comments
-- Vote transitions (`upvote -> downvote`, `downvote -> upvote`, `undo`) are tracked consistently
+- Vote transitions (`upvote -> downvote`, `downvote -> upvote`) are tracked consistently, and duplicate same-arrow clicks are ignored/rejected
 - Commenters accrue karma from votes on their comments
 - Admins can mark users as experts and set default expert karma
 - Comment ordering supports:

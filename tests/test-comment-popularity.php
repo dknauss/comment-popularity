@@ -121,6 +121,20 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		}
 	}
 
+	protected function render_block_comment_content( array $context ) {
+		$parsed_block = array(
+			'blockName'    => 'core/comment-content',
+			'attrs'        => array(),
+			'innerBlocks'  => array(),
+			'innerHTML'    => '',
+			'innerContent' => array(),
+		);
+
+		$block = new \WP_Block( $parsed_block, $context );
+
+		return $block->render();
+	}
+
 	public function test_duplicate_vote_is_rejected() {
 
 		$first_vote = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
@@ -131,6 +145,52 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$this->assertEquals( 'voting_flood', $ret['error_code'] );
 		$this->assertEquals( $first_vote['weight'], $this->plugin->get_comment_weight( $this->test_comment_id ) );
 		$this->assertEquals( 1, (int) get_comment_meta( $this->test_comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
+	}
+
+	public function test_switching_to_opposite_vote_updates_existing_vote_state() {
+
+		$this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
+		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'downvote' );
+
+		$this->assertArrayNotHasKey( 'error_code', $ret );
+		$this->assertEquals( 'downvote', $ret['vote_type'] );
+		$this->assertEquals( 0, $this->plugin->get_comment_weight( $this->test_comment_id ) );
+		$this->assertEquals( 0, (int) get_comment_meta( $this->test_comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
+		$this->assertEquals( 1, (int) get_comment_meta( $this->test_comment_id, HMN_Comment_Popularity::COMMENT_META_DOWNVOTES, true ) );
+	}
+
+	public function test_block_theme_comment_content_renders_voting_ui_for_voting_members() {
+
+		$this->add_cap();
+
+		$output = $this->render_block_comment_content(
+			array(
+				'commentId' => $this->test_comment_id,
+				'postId'    => $this->test_post_id,
+				'postType'  => 'post',
+			)
+		);
+
+		$this->assertStringContainsString( 'comment-weight-container', $output );
+		$this->assertStringContainsString( 'vote-up', $output );
+		$this->assertStringContainsString( 'vote-down', $output );
+	}
+
+	public function test_block_theme_comment_content_renders_read_only_ui_when_visitor_cannot_vote() {
+
+		wp_set_current_user( 0 );
+
+		$output = $this->render_block_comment_content(
+			array(
+				'commentId' => $this->test_comment_id,
+				'postId'    => $this->test_post_id,
+				'postType'  => 'post',
+			)
+		);
+
+		$this->assertStringContainsString( 'comment-weight-container', $output );
+		$this->assertStringNotContainsString( 'vote-up', $output );
+		$this->assertStringNotContainsString( 'vote-down', $output );
 	}
 
 	public function test_upvote_comment_saves_action_to_user_meta() {
@@ -245,14 +305,13 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$this->assertEquals( 0, $new_value );
 	}
 
-	public function test_undo_vote() {
+	public function test_undo_vote_is_rejected_as_invalid_action() {
 
 		$this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'upvote' );
 		$ret = $this->plugin->comment_vote( $this->test_voter_id, $this->test_comment_id, 'undo' );
 
-		$this->assertArrayNotHasKey( 'error_code', $ret );
-		$this->assertEquals( 'undo', $ret['vote_type'] );
-		$this->assertEquals( 0, $this->plugin->get_comment_weight( $this->test_comment_id ) );
+		$this->assertArrayHasKey( 'error_code', $ret );
+		$this->assertEquals( 'invalid_action', $ret['error_code'] );
 	}
 
 	public function test_vote_does_not_mutate_registered_user_karma_for_guest_comment_with_matching_email() {

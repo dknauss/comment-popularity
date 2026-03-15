@@ -2,49 +2,49 @@
 
 ## Current Position
 
-Phase: 8 (Remediation) — complete
-Plan: 2 of 2 executed
-Status: Merged to `develop` via PR #22. Release prep branch `codex/release-1-5-2-prep` exists.
-Last activity: 2026-03-12
+Phase: Post-Phase 8 follow-up
+Status: Phase 8 remediation is complete on `develop`; current follow-up work is on branch `codex/block-theme-comment-voting`
+Last activity: 2026-03-15
 
 ## Project Reference
 
-See: `README.md`, `ROADMAP.md`
+See: `README.md`, `ROADMAP.md`, `FORK_FIRST_POLICY.md`
 
 **Core value:** Vote integrity — every vote is attributed to a verified identity (logged-in user or guest IP), stored consistently, and queryable via both legacy karma and Wilson confidence scoring.
-**Current focus:** Post-Phase-8 stabilization. Release 1.5.2 prep is next.
+**Current focus:** keep the fork coherent after Phase 8 by improving block-theme compatibility, simplifying vote UX, and keeping planning/docs aligned to the live repo.
 
 ## Accumulated Context
 
-### Completed Phases
+### Delivered Work
 
-- **Phase 7 (Modernization):** Twig 2→3, PHPStan 1→2, WPCS 2→3, PHP floor 8.2 aligned in code/CI/docs. Complete.
-- **Phase 8 (Remediation):** Widget TDD (experts widget fixes), docs sync, callback coverage, guest persistence coverage, multisite uninstall coverage, vote-interval retirement. Merged via PR #22 on 2026-03-12.
-- **PR series (01–05):** Core correctness fixes, sort signature, WPCS modernization, CI quality, Wilson activation draft.
-- **Fork-first policy:** WordPress.org listing closed March 3, 2021. `dknauss/comment-popularity` `develop` is canonical. Upstream PRs minimized per `FORK_FIRST_POLICY.md`.
+- **Phase 8 (Remediation):** complete. Author-karma identity, uninstall cleanup, callback coverage, guest persistence coverage, experts widget hardening, and fork-first doc reconciliation are landed.
+- **Phase 7 (Modernization):** partially complete in the live repo.
+- `07-01` outcomes are present: PHP `8.2` floor is aligned and experts widget defects are fixed.
+- `07-02` outcomes are present: PHPStan, CI quality gates, and baselines are active.
+- `07-03` remains deferred/incomplete: PSR-4/classmap cleanup and bootstrap autoload simplification are not fully landed.
+- **Fork-first policy:** WordPress.org listing closed March 3, 2021. `dknauss/comment-popularity` `develop` is canonical. Upstream PRs are optional and minimized.
 
 ### Key Decisions
 
 - Wilson ranking is implemented fork behavior — stabilization only, not feature reintroduction.
-- `hmn_cp_interval` filter retired as dead code (Phase 8 decision).
+- Neutral vote state is no longer a required UX. Active vote states are `upvote` or `downvote`; same-arrow repeat clicks are rejected/no-op and opposite-arrow clicks switch directly.
+- `hmn_cp_interval` filter is retired in the fork; vote integrity is enforced through explicit server-side state transition rules.
 - Composer vendor lives in `inc/lib/` (non-standard but inherited from upstream).
 - `bin/php-runtime.sh` cascades to Local PHP 8.4/8.3/8.2 for consistent runtime.
-- Coverage threshold is 35% (ratchet target after Phase 8 baseline settles).
+- Coverage workflow is part of the canonical contributor path:
+  - `composer test:setup`
+  - `composer test:integration`
+  - `composer test:coverage`
+- Coverage threshold is currently 35%; clover output under `tests/cache/coverage/` is the execution truth for triage.
 
-### Blockers/Concerns
+### Current Risks / Follow-Ups
 
-None. Phase 8 branch merged, stash entries dropped (all changes incorporated into develop).
-
-### Hygiene (2026-03-12)
-
-- Closed obsolete PR #21 (pre-Phase-8 metrics corrections).
-- Deleted 12 stale local branches (all merged into develop).
-- Pruned 5 stale remote tracking refs.
-- Dropped 2 obsolete stash entries (content already in develop).
-- Corrected test file count (11→10) and widget type count (1→2) in `docs/current-metrics.md`.
+- Local WP-CLI smoke checks depend on the Local MySQL socket path being live; when Local is stopped, `bin/wp-local-single-site.sh` will fail even if the site still answers cached HTTP requests.
+- Phase `07-03` PSR-4/autoload simplification is still available as future modernization work if the fork wants to reduce manual includes.
+- Coverage expansion can continue incrementally, but the highest-risk public-surface gaps from Phase 8 are closed.
 
 ## Session Continuity
 
-Last session: 2026-03-12
-Stopped at: Post-Phase-8 hygiene pass; release prep branch `codex/release-1-5-2-prep` exists on remote
+Current branch: `codex/block-theme-comment-voting`
+Next likely task: commit/open PR for block-theme support plus direct-switch voting UX
 Current metrics: See `docs/current-metrics.md`

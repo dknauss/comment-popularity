@@ -2,7 +2,8 @@ Unreleased
 ==========
 
 - Target version: 1.5.3-dev.
-- No unreleased entries yet.
+- UX: clicking the active vote arrow is now a no-op; switching requires clicking the opposite arrow directly.
+- Tests: local smoke/manual guidance and vote-transition regression coverage now track direct vote switching instead of `undo`.
 
 1.5.2 - 2026-03-12
 ==================

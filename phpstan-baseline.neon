@@ -31,12 +31,6 @@ parameters:
 			path: inc/class-comment-popularity.php
 
 		-
-			message: '#^Call to an undefined method CommentPopularity\\HMN_CP_Visitor\:\:unlog_vote\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1

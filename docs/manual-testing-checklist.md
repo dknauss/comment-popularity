@@ -35,7 +35,7 @@ Expected:
 
 - Site responds at `${WP_URL}/wp-json/`.
 - Plugin is active in local site.
-- Deterministic vote flow (`upvote -> undo`) passes and restores weight to `0`.
+- Deterministic vote flow (`upvote -> downvote`) passes and restores weight to `0`.
 
 ## UI checks (wp-admin + frontend)
 
@@ -50,17 +50,17 @@ Expected:
 - Voting controls are visible.
 - No JS errors or PHP warnings are displayed.
 
-### [ ] UI-02 Upvote, downvote, and undo behavior
+### [ ] UI-02 Upvote and direct-switch behavior
 
 Steps:
 1. Upvote a comment.
-2. Undo the same vote.
-3. Downvote the same comment.
+2. Click the same upvote arrow again.
+3. Click the downvote arrow to switch directly.
 
 Expected:
-- Weight changes exactly once per action.
-- Undo returns weight to expected prior state.
-- No duplicate increments/decrements occur.
+- The second click on the active arrow does not change the vote.
+- Clicking the opposite arrow switches vote state directly.
+- Weight changes exactly once per accepted action.
 
 ### [ ] UI-03 Guest voting toggle behavior
 
@@ -127,7 +127,7 @@ composer test:local-smoke
 ```
 
 Expected:
-- Vote transition checks pass (`upvote -> undo`, final weight `0`).
+- Vote transition checks pass (`upvote -> downvote`, final weight `0`).
 
 ## Release hardening gate
 
