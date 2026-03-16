@@ -33,10 +33,6 @@ class Test_HMN_Comment_Popularity_Admin extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'CommentPopularity\HMN_Comment_Popularity_Admin', false ) ) {
-			require_once dirname( __DIR__ ) . '/admin/class-comment-popularity-admin.php';
-		}
-
 		$this->admin = HMN_Comment_Popularity_Admin::get_instance();
 
 		$admin_role = get_role( 'administrator' );

@@ -3,7 +3,9 @@ Unreleased
 
 - Target version: 1.5.3-dev.
 - UX: clicking the active vote arrow is now a no-op; switching requires clicking the opposite arrow directly.
+- Tooling: namespaced plugin classes now bootstrap through Composer autoload instead of manual class includes.
 - Tests: local smoke/manual guidance and vote-transition regression coverage now track direct vote switching instead of `undo`.
+- Tests: bootstrap regression coverage now asserts Composer autoload resolves the admin class in frontend test context.
 
 1.5.2 - 2026-03-12
 ==================

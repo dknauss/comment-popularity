@@ -221,9 +221,9 @@ This phase is fork-only work that goes beyond the upstream-friendly scope of Pha
 
 ### Plans
 
-- [ ] 07-01-PLAN.md — Remaining bug fixes and PHP 8.2 minimum declaration
-- [ ] 07-02-PLAN.md — PHPStan setup and CI integration
-- [ ] 07-03-PLAN.md — PSR-4 autoloading migration
+- [x] 07-01-PLAN.md — Remaining bug fixes and PHP 8.2 minimum declaration
+- [x] 07-02-PLAN.md — PHPStan setup and CI integration
+- [x] 07-03-PLAN.md — PSR-4 autoloading migration
 
 ## Phase 8: Post-Review Remediation
 

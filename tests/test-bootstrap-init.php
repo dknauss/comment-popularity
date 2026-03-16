@@ -113,4 +113,8 @@ class Test_HMN_CP_Bootstrap_Init extends \WP_UnitTestCase {
 		wp_delete_user( $first_user_id );
 		wp_delete_user( $second_user_id );
 	}
+
+	public function test_admin_class_is_available_via_composer_autoload() {
+		$this->assertTrue( class_exists( HMN_Comment_Popularity_Admin::class ) );
+	}
 }

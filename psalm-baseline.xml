@@ -102,8 +102,6 @@
       <code><![CDATA[$comment_popularity->is_guest_voting_allowed()]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'admin/class-comment-popularity-admin.php']]></code>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/class-comment-popularity.php']]></code>
       <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/helpers.php']]></code>
       <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'inc/upgrade.php']]></code>
     </UnresolvableInclude>
@@ -167,7 +165,6 @@
       <code><![CDATA[comment_vote_callback]]></code>
       <code><![CDATA[deactivate]]></code>
       <code><![CDATA[enqueue_scripts]]></code>
-      <code><![CDATA[includes]]></code>
       <code><![CDATA[init_twig]]></code>
       <code><![CDATA[insert_comment_callback]]></code>
       <code><![CDATA[register_widgets]]></code>
@@ -339,10 +336,6 @@
     </UndefinedMethod>
     <UnresolvableInclude>
       <code><![CDATA[include apply_filters( 'hmn_cp_single_comment_template_path', plugin_dir_path( __FILE__ ) . 'templates/comment.php' )]]></code>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'class-visitor.php']]></code>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'lib/autoload.php']]></code>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'widgets/class-widget-most-voted.php']]></code>
-      <code><![CDATA[require_once plugin_dir_path( __FILE__ ) . 'widgets/experts/class-widget-experts.php']]></code>
     </UnresolvableInclude>
   </file>
   <file src="inc/class-visitor.php">
