@@ -262,13 +262,13 @@ The branch status below reflects optional upstream export scaffolding, not the c
 | `codex/fix-comment-sort-signature` | Phase 3 (sort signature) | Ready, stacked on above |
 | `codex/wpcs-modernization` | Phase 3 (WPCS cleanup) + Phase 5 (PHPCS config) | Ready, stacked |
 | `codex/ci-quality` | Phase 5 (GitHub Actions CI) | Ready, stacked |
-| `codex/wilson-activation` | Deferred (Wilson ranking) | Draft, stacked |
+| `codex/wilson-activation` | Historical draft only | Obsolete: Wilson already ships in the fork |
 
 ## Deferred Until Core Bugs Are Resolved
 
 These are not good first upstream targets for this codebase:
 
-- Wilson score or alternate ranking-mode work.
+- Reworking Wilson score or ranking-mode behavior that already ships in the fork.
 - Performance caching or async recalculation work.
 - REST API or block-editor rewrites.
 - Visual redesign of the voting UI.
