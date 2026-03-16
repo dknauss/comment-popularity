@@ -21,7 +21,16 @@
 		"issues": "https://github.com/humanmade/comment-popularity/issues"
 	},
 	"autoload"   : {
-		"classmap": ["comment-popularity.php"]
+		"psr-4": {
+			"CommentPopularity\\": "inc/"
+		},
+		"classmap": [
+			"admin/class-comment-popularity-admin.php",
+			"inc/class-comment-popularity.php",
+			"inc/class-visitor.php",
+			"inc/widgets/class-widget-most-voted.php",
+			"inc/widgets/experts/class-widget-experts.php"
+		]
 	},
 	"require": {
 		"php": "^8.2",

@@ -22,8 +22,8 @@ if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
 	wp_die( sprintf( esc_html__( 'This plugin requires PHP Version %s. Sorry about that.', 'comment-popularity' ), '8.2' ), 'Comment Popularity', array( 'back_link' => true ) );
 }
 
-// Main plugin class
-require_once plugin_dir_path( __FILE__ ) . 'inc/class-comment-popularity.php';
+/** @psalm-suppress UnresolvableInclude */
+require_once plugin_dir_path( __FILE__ ) . 'inc/lib/autoload.php';
 
 register_activation_hook( __FILE__, array( 'CommentPopularity\HMN_Comment_Popularity', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'CommentPopularity\HMN_Comment_Popularity', 'deactivate' ) );
@@ -60,7 +60,6 @@ add_action( 'plugins_loaded', 'hmn_cp_init' );
 // Admin class
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
-	require_once plugin_dir_path( __FILE__ ) . 'admin/class-comment-popularity-admin.php';
 	add_action( 'plugins_loaded', array( 'CommentPopularity\HMN_Comment_Popularity_Admin', 'get_instance' ) );
 
 }

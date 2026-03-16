@@ -83,9 +83,6 @@ class HMN_Comment_Popularity {
 	 * Creates a new HMN_Comment_Popularity object, and registers with WP hooks.
 	 */
 	private function __construct() {
-
-		$this->includes();
-
 		add_action( 'wp_insert_comment', array( $this, 'insert_comment_callback' ), 10, 2 );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -125,25 +122,6 @@ class HMN_Comment_Popularity {
 	 */
 	public function get_visitor() {
 		return $this->visitor;
-	}
-
-	/*
-	 * Include required files.
-	 */
-	/**
-	 *
-	 */
-	protected function includes() {
-
-		// Load our dependencies
-		require_once plugin_dir_path( __FILE__ ) . 'lib/autoload.php';
-
-		// Widgets
-		require_once plugin_dir_path( __FILE__ ) . 'widgets/class-widget-most-voted.php';
-		require_once plugin_dir_path( __FILE__ ) . 'widgets/experts/class-widget-experts.php';
-
-		// Visitor
-		require_once plugin_dir_path( __FILE__ ) . 'class-visitor.php';
 	}
 
 	/**

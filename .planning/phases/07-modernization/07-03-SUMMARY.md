@@ -1,17 +1,21 @@
 # 07-03 Summary
 
-Status: Deferred / not fully landed
+Status: Complete on `codex/phase-07-03-autoload`
 
-Current repo reality:
-- The repo does not yet use the full Phase 07-03 autoload target.
-- [composer.json](/Users/danknauss/Documents/GitHub/comment-popularity/composer.json) still uses the historical autoload configuration rather than the planned PSR-4/classmap expansion.
-- [comment-popularity.php](/Users/danknauss/Documents/GitHub/comment-popularity/comment-popularity.php) and [inc/class-comment-popularity.php](/Users/danknauss/Documents/GitHub/comment-popularity/inc/class-comment-popularity.php) still rely on manual includes for core class loading.
+Delivered:
+- [composer.json](/Users/danknauss/Documents/GitHub/comment-popularity/composer.json) now defines Composer autoloading for plugin classes with a `CommentPopularity\\` PSR-4 prefix plus explicit classmap entries for the legacy file names.
+- [comment-popularity.php](/Users/danknauss/Documents/GitHub/comment-popularity/comment-popularity.php) now requires [inc/lib/autoload.php](/Users/danknauss/Documents/GitHub/comment-popularity/inc/lib/autoload.php) in bootstrap and no longer manually requires class files.
+- [inc/class-comment-popularity.php](/Users/danknauss/Documents/GitHub/comment-popularity/inc/class-comment-popularity.php) no longer uses the old `includes()` loader for widgets, visitor classes, or Twig autoload bootstrap.
+- Bootstrap regression coverage now asserts admin-class autoload resolution in [tests/test-bootstrap-init.php](/Users/danknauss/Documents/GitHub/comment-popularity/tests/test-bootstrap-init.php).
 
-What remains if this plan is resumed:
-- add the intended Composer autoload mapping,
-- move bootstrap loading to the Composer autoloader path,
-- remove no-longer-needed manual requires for namespaced classes,
-- rerun full integration and static-analysis gates after autoload changes.
+Verification:
+- `composer dump-autoload --dev`
+- `WP_VERSION=6.4 composer test:integration`
+- `WP_VERSION=6.4 WP_MULTISITE=1 composer test:integration`
+- `composer lint`
+- `composer analyse:phpstan`
+- `composer analyse:psalm`
 
-Reason for documenting as deferred:
-- The repo state had drifted from `.planning/STATE.md`, which previously implied all of Phase 7 was complete. This summary records the actual partial-completion state instead of leaving the plan output missing.
+Notes:
+- The plugin still explicitly includes [inc/helpers.php](/Users/danknauss/Documents/GitHub/comment-popularity/inc/helpers.php) and [inc/upgrade.php](/Users/danknauss/Documents/GitHub/comment-popularity/inc/upgrade.php) because they are not namespaced class files.
+- The current file layout still needs classmap entries for legacy filenames such as `class-comment-popularity.php`; PSR-4 now provides the namespace path baseline for future standard-named classes.

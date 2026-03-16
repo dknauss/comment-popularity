@@ -27,10 +27,6 @@ class Test_HMN_CP_Widget_Experts extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'CommentPopularity\HMN_CP_Widget_Experts', false ) ) {
-			require_once dirname( __DIR__ ) . '/inc/widgets/experts/class-widget-experts.php';
-		}
-
 		$this->widget = new HMN_CP_Widget_Experts_Test_Double();
 	}
 
