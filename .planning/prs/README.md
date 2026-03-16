@@ -38,10 +38,9 @@ Use the drafts in this folder as export templates, not as the default developmen
    - Title: `Add project-aware quality checks in CI`
 
 5. `codex/wilson-activation`
-   - Keep draft until the lower queue merges
-   - Supersedes open `#136`
-   - Absorbs the closed, unmerged groundwork from `#134`
-   - Title: `Add admin-controlled Wilson ranking activation`
+   - Historical draft only; do not open as written
+   - Wilson ranking, ranking-mode settings, and metadata already ship in the fork
+   - Keep only as an archive of the old upstream export queue
 
 ## No Upstream PR Recommended
 
@@ -90,12 +89,4 @@ gh pr create \
   --body-file .planning/prs/04-ci-quality.md
 ```
 
-```bash
-gh pr create \
-  --repo humanmade/comment-popularity \
-  --base master \
-  --head dknauss:codex/wilson-activation \
-  --title "Add admin-controlled Wilson ranking activation" \
-  --body-file .planning/prs/05-wilson-activation-draft.md \
-  --draft
-```
+No create command is provided for `codex/wilson-activation` because that draft no longer matches current fork reality.
