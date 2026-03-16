@@ -6,7 +6,7 @@ This PR hardens the core voting flow and fixes vote-state persistence regression
 
 ## What Changed
 
-- Normalize vote transitions server-side for repeat, undo, and switch-vote requests.
+- Normalize vote transitions server-side for repeat and switch-vote requests.
 - Persist an empty member vote state when the last logged vote is removed.
 - Preserve guest vote storage on single-site installs instead of overwriting all prior guest state.
 - Guard invalid AJAX requests when `comment_id` is invalid or no visitor object exists.

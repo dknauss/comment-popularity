@@ -186,17 +186,12 @@
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$commenter_id]]></code>
       <code><![CDATA[$commenter_id]]></code>
       <code><![CDATA[$counts['downvotes']]]></code>
       <code><![CDATA[$counts['upvotes']]]></code>
       <code><![CDATA[$hmn_cp_lang_dir]]></code>
       <code><![CDATA[$locale]]></code>
-      <code><![CDATA[$next_vote]]></code>
-      <code><![CDATA[$next_vote]]></code>
       <code><![CDATA[$previous_vote]]></code>
       <code><![CDATA[$previous_vote]]></code>
       <code><![CDATA[$role]]></code>
@@ -204,6 +199,12 @@
       <code><![CDATA[$template_path]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$vote]]></code>
+      <code><![CDATA[$vote]]></code>
+      <code><![CDATA[$next_vote]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$comment_id]]></code>
+      <code><![CDATA[$next_vote]]></code>
+      <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$wp_version]]></code>
       <code><![CDATA[ARRAY_A]]></code>
       <code><![CDATA[ARRAY_A]]></code>
@@ -223,14 +224,6 @@
       <code><![CDATA[$comment_arr['comment_karma']]]></code>
       <code><![CDATA[$comment_arr['comment_karma']]]></code>
     </MixedArrayAssignment>
-    <MixedArrayOffset>
-      <code><![CDATA[$labels[ $vote ]]]></code>
-      <code><![CDATA[$labels[ $vote ]]]></code>
-    </MixedArrayOffset>
-    <MixedArrayTypeCoercion>
-      <code><![CDATA[$labels[ $vote ]]]></code>
-      <code><![CDATA[$labels[ $vote ]]]></code>
-    </MixedArrayTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$admin_roles]]></code>
       <code><![CDATA[$comment]]></code>
@@ -297,8 +290,8 @@
       <code><![CDATA[$comment_arr['comment_karma']]]></code>
       <code><![CDATA[$delta]]></code>
       <code><![CDATA[$delta]]></code>
-      <code><![CDATA[$this->send_error( $result['error_code'], $result['error_msg'], $comment_id )]]></code>
-      <code><![CDATA[$this->send_error( 'invalid_action', __( 'There is no previous vote to undo.', 'comment-popularity' ), $comment_id )]]></code>
+      <code><![CDATA[$this->send_error( 'invalid_action', __( 'Invalid action', 'comment-popularity' ), $comment_id )]]></code>
+      <code><![CDATA[$this->send_error( (string) $result['error_code'], (string) $result['error_msg'], $comment_id )]]></code>
       <code><![CDATA[$this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id )]]></code>
       <code><![CDATA[apply_filters( 'hmn_cp_comments_template_path', plugin_dir_path( __FILE__ ) . 'templates/comments.php' )]]></code>
       <code><![CDATA[get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults )]]></code>
@@ -343,7 +336,6 @@
     <UndefinedMethod>
       <code><![CDATA[retrieve_logged_votes]]></code>
       <code><![CDATA[retrieve_logged_votes]]></code>
-      <code><![CDATA[unlog_vote]]></code>
     </UndefinedMethod>
     <UnresolvableInclude>
       <code><![CDATA[include apply_filters( 'hmn_cp_single_comment_template_path', plugin_dir_path( __FILE__ ) . 'templates/comment.php' )]]></code>

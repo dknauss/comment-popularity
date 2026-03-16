@@ -120,14 +120,14 @@ class Test_HMN_CP_Wilson_Ranking extends \WP_UnitTestCase {
 		$this->assertGreaterThan( 0.0, (float) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_WILSON_LOWER_BOUND, true ) );
 	}
 
-	public function test_undo_removes_prior_vote_from_wilson_counts() {
+	public function test_duplicate_vote_leaves_wilson_counts_unchanged() {
 		$this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
-		$this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'undo' );
+		$this->plugin->comment_vote( $this->voter_id, $this->comment_id, 'upvote' );
 
-		$this->assertSame( 0, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
+		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_UPVOTES, true ) );
 		$this->assertSame( 0, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_DOWNVOTES, true ) );
-		$this->assertSame( 0, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES, true ) );
-		$this->assertSame( 0.0, (float) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_WILSON_LOWER_BOUND, true ) );
+		$this->assertSame( 1, (int) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_TOTAL_VOTES, true ) );
+		$this->assertGreaterThan( 0.0, (float) get_comment_meta( $this->comment_id, HMN_Comment_Popularity::COMMENT_META_WILSON_LOWER_BOUND, true ) );
 	}
 
 	public function test_switch_vote_updates_counter_distribution() {

@@ -63,6 +63,7 @@
 			"WP_TESTS_DIR=/tmp/wordpress-tests-lib bash bin/php-runtime.sh phpdbg -qrr ./inc/lib/bin/phpunit --configuration phpunit.xml --coverage-clover=tests/cache/coverage/clover.xml",
 			"bash bin/php-runtime.sh php tests/check-coverage-threshold.php tests/cache/coverage/clover.xml 35"
 		],
+		"test:local-reset": "bash bin/local-reset-vote-state.sh",
 		"test:local-smoke": "bash bin/local-smoke-test.sh",
 		"qa": [
 			"@lint",

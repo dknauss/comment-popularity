@@ -239,7 +239,7 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 		$result = $this->run_callback(
 			$this->build_payload(
 				array(
-					'vote' => 'invalid-vote',
+					'vote' => 'undo',
 				)
 			)
 		);
@@ -289,7 +289,7 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 		$this->assertSame( 'invalid_visitor', $response['data']['error_code'] );
 	}
 
-	public function test_callback_returns_success_for_upvote_downvote_and_undo_sequence() {
+	public function test_callback_returns_success_for_direct_vote_switch_sequence() {
 		$upvote_result   = $this->run_callback(
 			$this->build_payload(
 				array(
@@ -304,7 +304,52 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 				)
 			)
 		);
-		$undo_result     = $this->run_callback(
+
+		$upvote_response   = $this->decode_json_response( $upvote_result['output'] );
+		$downvote_response = $this->decode_json_response( $downvote_result['output'] );
+
+		$this->assertTrue( $upvote_response['success'] );
+		$this->assertSame( 'upvote', $upvote_response['data']['vote_type'] );
+		$this->assertTrue( $downvote_response['success'] );
+		$this->assertSame( 'downvote', $downvote_response['data']['vote_type'] );
+		$this->assertSame( 0, $downvote_response['data']['weight'] );
+		$this->assertSame( 0, $downvote_response['data']['upvotes'] );
+		$this->assertSame( 1, $downvote_response['data']['downvotes'] );
+	}
+
+	public function test_callback_rejects_duplicate_vote_without_mutating_state() {
+		$this->run_callback(
+			$this->build_payload(
+				array(
+					'vote' => 'upvote',
+				)
+			)
+		);
+
+		$duplicate_result = $this->run_callback(
+			$this->build_payload(
+				array(
+					'vote' => 'upvote',
+				)
+			)
+		);
+
+		$duplicate_response = $this->decode_json_response( $duplicate_result['output'] );
+
+		$this->assertFalse( $duplicate_response['success'] );
+		$this->assertSame( 'voting_flood', $duplicate_response['data']['error_code'] );
+	}
+
+	public function test_callback_rejects_undo_even_when_vote_history_exists() {
+		$this->run_callback(
+			$this->build_payload(
+				array(
+					'vote' => 'upvote',
+				)
+			)
+		);
+
+		$undo_result = $this->run_callback(
 			$this->build_payload(
 				array(
 					'vote' => 'undo',
@@ -312,15 +357,9 @@ class Test_HMN_CP_Comment_Vote_Callback extends \WP_UnitTestCase {
 			)
 		);
 
-		$upvote_response   = $this->decode_json_response( $upvote_result['output'] );
-		$downvote_response = $this->decode_json_response( $downvote_result['output'] );
-		$undo_response     = $this->decode_json_response( $undo_result['output'] );
+		$undo_response = $this->decode_json_response( $undo_result['output'] );
 
-		$this->assertTrue( $upvote_response['success'] );
-		$this->assertSame( 'upvote', $upvote_response['data']['vote_type'] );
-		$this->assertTrue( $downvote_response['success'] );
-		$this->assertSame( 'downvote', $downvote_response['data']['vote_type'] );
-		$this->assertTrue( $undo_response['success'] );
-		$this->assertSame( 'undo', $undo_response['data']['vote_type'] );
+		$this->assertFalse( $undo_response['success'] );
+		$this->assertSame( 'invalid_action', $undo_response['data']['error_code'] );
 	}
 }

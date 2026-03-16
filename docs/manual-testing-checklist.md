@@ -23,44 +23,53 @@ Recommended environment variable:
 export WP_URL="https://single-site-local.local"
 ```
 
+Recommended Local reset before manual UI checks:
+
+```bash
+composer test:local-reset
+```
+
 ## Automated local smoke gate
 
 Run:
 
 ```bash
+composer test:local-reset
 composer test:local-smoke
 ```
 
 Expected:
 
+- Demo comment vote state resets to a neutral baseline.
 - Site responds at `${WP_URL}/wp-json/`.
 - Plugin is active in local site.
-- Deterministic vote flow (`upvote -> undo`) passes and restores weight to `0`.
+- Deterministic vote flow (`upvote -> downvote`) passes and restores weight to `0`.
 
 ## UI checks (wp-admin + frontend)
 
 ### [ ] UI-01 Logged-in voting controls render
 
 Steps:
-1. Sign in as an administrator.
-2. Open a post with comments on the frontend.
-3. Confirm upvote/downvote controls render beside each comment.
+1. Reset local vote state with `composer test:local-reset`.
+2. Sign in as an administrator.
+3. Open a post with comments on the frontend.
+4. Confirm upvote/downvote controls render beside each comment.
 
 Expected:
 - Voting controls are visible.
 - No JS errors or PHP warnings are displayed.
 
-### [ ] UI-02 Upvote, downvote, and undo behavior
+### [ ] UI-02 Upvote and direct-switch behavior
 
 Steps:
 1. Upvote a comment.
-2. Undo the same vote.
-3. Downvote the same comment.
+2. Click the same upvote arrow again.
+3. Click the downvote arrow to switch directly.
 
 Expected:
-- Weight changes exactly once per action.
-- Undo returns weight to expected prior state.
-- No duplicate increments/decrements occur.
+- The second click on the active arrow does not change the vote.
+- Clicking the opposite arrow switches vote state directly.
+- Weight changes exactly once per accepted action.
 
 ### [ ] UI-03 Guest voting toggle behavior
 
@@ -123,11 +132,13 @@ Expected:
 Run:
 
 ```bash
+composer test:local-reset
 composer test:local-smoke
 ```
 
 Expected:
-- Vote transition checks pass (`upvote -> undo`, final weight `0`).
+- Reset helper clears stale member and guest vote state for the Local demo comment.
+- Vote transition checks pass (`upvote -> downvote`, final weight `0`).
 
 ## Release hardening gate
 

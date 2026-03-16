@@ -8,19 +8,21 @@
 		// catch the upvote/downvote action
 		$( 'div.comment-weight-container' ).on( 'click', 'span > a', _.throttle( function( e ){
 			e.preventDefault();
-			var value = 0,
+			var value = '',
 				comment_id = $(this).data( 'commentId' ),
 				containerClass = $(this).closest( 'span' ).attr( 'class' );
 
-			if ( containerClass !== 'upvote' && $(this).hasClass( 'vote-up' ) ) {
+			if ( containerClass === 'upvote' && $(this).hasClass( 'vote-up' ) ) {
+				return;
+			} else if ( containerClass === 'downvote' && $(this).hasClass( 'vote-down' ) ) {
+				return;
+			} else if ( $(this).hasClass( 'vote-up' ) ) {
 				value = 'upvote';
-			} else if( containerClass !== 'downvote' && $(this).hasClass( 'vote-down' ) ) {
+			} else if ( $(this).hasClass( 'vote-down' ) ) {
 				value = 'downvote';
-			} else if ( containerClass === 'downvote' && $(this).hasClass( 'vote-down' ) || containerClass === 'upvote' && $(this).hasClass( 'vote-up' ) ) {
-				value = 'undo';
 			}
 
-			if ( false === clicked ) {
+			if ( '' !== value && false === clicked ) {
 				clicked = true;
 				var post = $.post(
 					comment_popularity.ajaxurl, {
@@ -33,16 +35,14 @@
 
 				post.done( function( data ) {
 					var commentWeightContainer = $( '#comment-weight-value-' + data.data.comment_id );
-					if ( data.success === false ) {
-						$.growl.error({ message: data.data.error_message });
-					} else {
-						// update karma
-						commentWeightContainer.text( data.data.weight );
+						if ( data.success === false ) {
+							$.growl.error({ message: data.data.error_message });
+						} else {
+							// update karma
+							commentWeightContainer.text( data.data.weight );
 
-						// clear all classes
-						commentWeightContainer.closest( '.comment-weight-container ' ).children().removeClass();
-
-						if ( data.data.vote_type !== 'undo' ) {
+							// clear all classes
+							commentWeightContainer.closest( '.comment-weight-container ' ).children().removeClass();
 
 							commentWeightContainer.addClass(data.data.vote_type);
 							switch (data.data.vote_type) {
@@ -55,11 +55,8 @@
 								default:
 									break;
 							}
-
-
+							$.growl.notice({ message: data.data.success_message });
 						}
-						$.growl.notice({ message: data.data.success_message });
-					}
 
 					clicked = false;
 				});

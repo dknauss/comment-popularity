@@ -96,6 +96,7 @@ class HMN_Comment_Popularity {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
 		add_filter( 'comments_template', array( $this, 'custom_comments_template' ) );
+		add_filter( 'render_block_core/comment-content', array( $this, 'inject_block_theme_voting_ui' ), 10, 3 );
 
 		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
 
@@ -173,10 +174,6 @@ class HMN_Comment_Popularity {
 				$value = apply_filters( 'hmn_cp_downvote_value', - 1 );
 				break;
 
-			case 'undo':
-				$value = 0;
-				break;
-
 			default:
 				$value = new \WP_Error( 'invalid_vote_type', __( 'Sorry, invalid vote type', 'comment-popularity' ) );
 				break;
@@ -193,7 +190,6 @@ class HMN_Comment_Popularity {
 		return array(
 			'upvote'   => _x( 'upvote', 'verb', 'comment-popularity' ),
 			'downvote' => _x( 'downvote', 'verb', 'comment-popularity' ),
-			'undo'     => _x( 'undo', 'verb', 'comment-popularity' ),
 		);
 	}
 
@@ -378,6 +374,42 @@ class HMN_Comment_Popularity {
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Twig template handles output escaping.
 		echo $this->twig->render( 'voting-system.html', $vars );
+	}
+
+	/**
+	 * Inject the voting UI into block theme comment content output.
+	 *
+	 * @param string    $block_content Rendered block content.
+	 * @param array     $block Parsed block data.
+	 * @param \WP_Block $instance Block instance.
+	 *
+	 * @return string
+	 */
+	public function inject_block_theme_voting_ui( $block_content, $block, $instance ) {
+
+		if ( is_admin() || ! isset( $instance->context['commentId'] ) ) {
+			return $block_content;
+		}
+
+		if ( false !== strpos( $block_content, 'comment-weight-container' ) ) {
+			return $block_content;
+		}
+
+		$comment_id = (int) $instance->context['commentId'];
+
+		if ( 0 >= $comment_id ) {
+			return $block_content;
+		}
+
+		ob_start();
+		$this->render_ui( $comment_id );
+		$voting_ui = trim( (string) ob_get_clean() );
+
+		if ( '' === $voting_ui ) {
+			return $block_content;
+		}
+
+		return $voting_ui . $block_content;
 	}
 
 	/**
@@ -785,7 +817,7 @@ class HMN_Comment_Popularity {
 			wp_send_json_error( $this->send_error( 'invalid_visitor', __( 'Voting is unavailable for this user', 'comment-popularity' ), $comment_id ) );
 		}
 
-		if ( ! in_array( $vote, array( 'upvote', 'downvote', 'undo' ), true ) ) {
+		if ( ! in_array( $vote, array( 'upvote', 'downvote' ), true ) ) {
 
 			$return = array(
 				'error_code'    => 'invalid_action',
@@ -877,21 +909,21 @@ class HMN_Comment_Popularity {
 
 		$labels = $this->get_vote_labels();
 
+		if ( ! array_key_exists( $vote, $labels ) ) {
+			return $this->send_error( 'invalid_action', __( 'Invalid action', 'comment-popularity' ), $comment_id );
+		}
+
 		$result = $this->is_vote_valid( $comment_id, $labels, $vote );
 		if ( ! empty( $result ) ) {
-			return $this->send_error( $result['error_code'], $result['error_msg'], $comment_id );
+			return $this->send_error( (string) $result['error_code'], (string) $result['error_msg'], $comment_id );
 		}
 
 		$logged_vote   = $this->get_logged_vote_state( $comment_id );
 		$previous_vote = $logged_vote['last_action'];
-		$next_vote     = ( 'undo' === $vote ) ? '' : $vote;
+		$next_vote     = $vote;
 
 		if ( '' !== $previous_vote && $previous_vote === $vote ) {
 			return $this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id );
-		}
-
-		if ( 'undo' === $vote && '' === $previous_vote ) {
-			return $this->send_error( 'invalid_action', __( 'There is no previous vote to undo.', 'comment-popularity' ), $comment_id );
 		}
 
 		$vote_value = $this->get_vote_delta_from_transition( $previous_vote, $next_vote );
@@ -908,11 +940,7 @@ class HMN_Comment_Popularity {
 		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
 		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
 
-		if ( '' === $next_vote ) {
-			$this->get_visitor()->unlog_vote( $comment_id );
-		} else {
-			$this->get_visitor()->log_vote( $comment_id, $next_vote );
-		}
+		$this->get_visitor()->log_vote( $comment_id, $next_vote );
 
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
