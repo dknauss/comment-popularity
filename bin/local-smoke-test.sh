@@ -37,6 +37,19 @@ use CommentPopularity\HMN_CP_Visitor_Member;
 
 $admin_id = 1;
 
+function cleanup_smoke_entities( $admin_id, $comment_id, $post_id ) {
+	delete_user_option( $admin_id, 'hmn_comments_voted_on' );
+	delete_option( 'hmn_cp_guests_logged_votes' );
+
+	if ( $comment_id ) {
+		wp_delete_comment( $comment_id, true );
+	}
+
+	if ( $post_id ) {
+		wp_delete_post( $post_id, true );
+	}
+}
+
 if ( ! get_user_by( 'id', $admin_id ) ) {
 	fwrite( STDERR, "Smoke failure: user ID 1 is required in local site.\n" );
 	exit( 1 );
@@ -65,6 +78,8 @@ if ( is_wp_error( $post_id ) || ! $post_id ) {
 	exit( 1 );
 }
 
+$comment_id = 0;
+
 $comment_id = wp_insert_comment(
 	array(
 		'comment_post_ID'      => $post_id,
@@ -77,37 +92,33 @@ $comment_id = wp_insert_comment(
 );
 
 if ( ! $comment_id ) {
-	wp_delete_post( $post_id, true );
+	cleanup_smoke_entities( $admin_id, $comment_id, $post_id );
 	fwrite( STDERR, "Smoke failure: could not create test comment.\n" );
 	exit( 1 );
 }
 
 $upvote = $plugin->comment_vote( $admin_id, $comment_id, 'upvote' );
 if ( ! empty( $upvote['error_code'] ) ) {
-	wp_delete_comment( $comment_id, true );
-	wp_delete_post( $post_id, true );
+	cleanup_smoke_entities( $admin_id, $comment_id, $post_id );
 	fwrite( STDERR, "Smoke failure: upvote failed (" . $upvote['error_code'] . ").\n" );
 	exit( 1 );
 }
 
 $downvote = $plugin->comment_vote( $admin_id, $comment_id, 'downvote' );
 if ( ! empty( $downvote['error_code'] ) ) {
-	wp_delete_comment( $comment_id, true );
-	wp_delete_post( $post_id, true );
+	cleanup_smoke_entities( $admin_id, $comment_id, $post_id );
 	fwrite( STDERR, "Smoke failure: direct switch to downvote failed (" . $downvote['error_code'] . ").\n" );
 	exit( 1 );
 }
 
 $weight = (int) $plugin->get_comment_weight( $comment_id );
 if ( 0 !== $weight ) {
-	wp_delete_comment( $comment_id, true );
-	wp_delete_post( $post_id, true );
+	cleanup_smoke_entities( $admin_id, $comment_id, $post_id );
 	fwrite( STDERR, "Smoke failure: expected weight 0 after upvote -> downvote switch.\n" );
 	exit( 1 );
 }
 
-wp_delete_comment( $comment_id, true );
-wp_delete_post( $post_id, true );
+cleanup_smoke_entities( $admin_id, $comment_id, $post_id );
 
 fwrite( STDOUT, "Smoke vote flow passed.\n" );
 PHP

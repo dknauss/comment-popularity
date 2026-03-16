@@ -23,16 +23,24 @@ Recommended environment variable:
 export WP_URL="https://single-site-local.local"
 ```
 
+Recommended Local reset before manual UI checks:
+
+```bash
+composer test:local-reset
+```
+
 ## Automated local smoke gate
 
 Run:
 
 ```bash
+composer test:local-reset
 composer test:local-smoke
 ```
 
 Expected:
 
+- Demo comment vote state resets to a neutral baseline.
 - Site responds at `${WP_URL}/wp-json/`.
 - Plugin is active in local site.
 - Deterministic vote flow (`upvote -> downvote`) passes and restores weight to `0`.
@@ -42,9 +50,10 @@ Expected:
 ### [ ] UI-01 Logged-in voting controls render
 
 Steps:
-1. Sign in as an administrator.
-2. Open a post with comments on the frontend.
-3. Confirm upvote/downvote controls render beside each comment.
+1. Reset local vote state with `composer test:local-reset`.
+2. Sign in as an administrator.
+3. Open a post with comments on the frontend.
+4. Confirm upvote/downvote controls render beside each comment.
 
 Expected:
 - Voting controls are visible.
@@ -123,10 +132,12 @@ Expected:
 Run:
 
 ```bash
+composer test:local-reset
 composer test:local-smoke
 ```
 
 Expected:
+- Reset helper clears stale member and guest vote state for the Local demo comment.
 - Vote transition checks pass (`upvote -> downvote`, final weight `0`).
 
 ## Release hardening gate
