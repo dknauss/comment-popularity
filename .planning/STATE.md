@@ -2,26 +2,26 @@
 
 ## Current Position
 
-Phase: 07-modernization closeout
-Status: Phase 8 remediation is complete on `develop`; Phase 07-03 autoload cleanup is landed on branch `codex/phase-07-03-autoload` and ready for review
-Last activity: 2026-03-15
+Phase: Post-Phase 7/8 stabilization
+Status: Phase 8 remediation and Phase 07-03 autoload cleanup are both merged to `develop`
+Last activity: 2026-03-16
 
 ## Project Reference
 
 See: `README.md`, `ROADMAP.md`, `FORK_FIRST_POLICY.md`
 
 **Core value:** Vote integrity — every vote is attributed to a verified identity (logged-in user or guest IP), stored consistently, and queryable via both legacy karma and Wilson confidence scoring.
-**Current focus:** close Phase 7 by moving namespaced plugin classes to Composer autoload, then merge and resume post-Phase-8 stabilization work from `develop`.
+**Current focus:** continue fork stabilization from `develop`, especially coverage expansion and the next selected post-Phase-8 follow-up from the roadmap.
 
 ## Accumulated Context
 
 ### Delivered Work
 
 - **Phase 8 (Remediation):** complete. Author-karma identity, uninstall cleanup, callback coverage, guest persistence coverage, experts widget hardening, and fork-first doc reconciliation are landed.
-- **Phase 7 (Modernization):** complete on the current branch.
+- **Phase 7 (Modernization):** complete on `develop`.
 - `07-01` outcomes are present: PHP `8.2` floor is aligned and experts widget defects are fixed.
 - `07-02` outcomes are present: PHPStan, CI quality gates, and baselines are active.
-- `07-03` outcomes are now present on `codex/phase-07-03-autoload`: Composer classmap/PSR-4 autoload mapping is active, bootstrap loads `inc/lib/autoload.php`, and manual class includes are removed from plugin runtime.
+- `07-03` outcomes are now present on `develop`: Composer classmap/PSR-4 autoload mapping is active, bootstrap loads `inc/lib/autoload.php`, and manual class includes are removed from plugin runtime.
 - **Fork-first policy:** WordPress.org listing closed March 3, 2021. `dknauss/comment-popularity` `develop` is canonical. Upstream PRs are optional and minimized.
 
 ### Key Decisions
@@ -41,11 +41,11 @@ See: `README.md`, `ROADMAP.md`, `FORK_FIRST_POLICY.md`
 ### Current Risks / Follow-Ups
 
 - Local WP-CLI smoke checks depend on the Local MySQL socket path being live; when Local is stopped, `bin/wp-local-single-site.sh` will fail even if the site still answers cached HTTP requests.
-- The 07-03 autoload cleanup is currently branch-local until merged to `develop`.
+- The next meaningful work item is no longer Phase 7 completion; it is choosing the next stabilization or coverage-expansion slice from the roadmap.
 - Coverage expansion can continue incrementally, but the highest-risk public-surface gaps from Phase 8 are closed.
 
 ## Session Continuity
 
-Current branch: `codex/phase-07-03-autoload`
-Next likely task: commit/open PR for Phase 07-03 autoload cleanup
+Current branch: `develop`
+Next likely task: define the next stabilization or coverage-expansion branch from roadmap priorities
 Current metrics: See `docs/current-metrics.md`
