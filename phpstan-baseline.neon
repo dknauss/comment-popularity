@@ -13,12 +13,6 @@ parameters:
 			path: comment-popularity.php
 
 		-
-			message: '#^Instanceof between CommentPopularity\\HMN_CP_Visitor and CommentPopularity\\HMN_CP_Visitor will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: comment-popularity.php
-
-		-
 			message: '#^Parameter \#1 \$visitor_id of class CommentPopularity\\HMN_CP_Visitor_Guest constructor expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -51,18 +45,6 @@ parameters:
 		-
 			message: '#^Instanceof between CommentPopularity\\HMN_Comment_Popularity and CommentPopularity\\HMN_Comment_Popularity will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
-			message: '#^Method CommentPopularity\\HMN_Comment_Popularity\:\:custom_comments_template\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: inc/class-comment-popularity.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: inc/class-comment-popularity.php
 

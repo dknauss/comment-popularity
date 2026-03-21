@@ -2,15 +2,15 @@
 
 This file is the single source of truth for current repository counts.
 
-Last verified: 2026-03-15
-Verification environment: local repo checkout at `/Users/danknauss/Documents/GitHub/comment-popularity`
+Last verified: 2026-03-21
+Verification environment: local repo checkout at `/Users/danknauss/Developer/GitHub/comment-popularity`
 
 ## Test Metrics
 
 | Metric | Value | Verification |
 |---|---:|---|
-| PHPUnit tests | 63 tests | `composer test` |
-| PHPUnit assertions | 146 assertions | `composer test` |
+| PHPUnit tests | 68 tests | `composer test` |
+| PHPUnit assertions | 155 assertions | `composer test` |
 | Test files | 10 | `find ./tests -name "test-*.php" \| wc -l` |
 | Coverage threshold | 35% | `tests/check-coverage-threshold.php` |
 
@@ -18,9 +18,9 @@ Verification environment: local repo checkout at `/Users/danknauss/Documents/Git
 
 | Metric | Value | Verification |
 |---|---:|---|
-| Production PHP lines (`inc/`, `admin/`, entry, uninstall — excluding `inc/lib/`) | 2,416 | `find ./inc ./admin -type f -name "*.php" -not -path "*/lib/*" -not -path "*/templates/*" -print0 \| xargs -0 wc -l \| tail -1` + `wc -l comment-popularity.php uninstall.php` |
-| Test PHP lines (`tests/`) | 2,032 | `find ./tests -type f -name "*.php" -not -path "*/cache/*" -print0 \| xargs -0 wc -l \| tail -1` |
-| Test-to-production ratio | 0.84:1 | `2032 / 2416` |
+| Production PHP lines (`inc/`, `admin/`, entry, uninstall — excluding `inc/lib/`) | 2,439 | `find ./inc ./admin -type f -name "*.php" -not -path "*/lib/*" -not -path "*/templates/*" -print0 \| xargs -0 wc -l \| tail -1` + `wc -l comment-popularity.php uninstall.php` |
+| Test PHP lines (`tests/`) | 2,187 | `find ./tests -type f -name "*.php" -not -path "*/cache/*" -print0 \| xargs -0 wc -l \| tail -1` |
+| Test-to-production ratio | 0.90:1 | `2187 / 2439` |
 
 ## Architectural Facts
 
@@ -55,11 +55,11 @@ Source: `.github/workflows/quality.yml`
 
 ## Verification Notes
 
-- LOC and test file counts verified on `codex/phase-07-03-autoload` on 2026-03-15.
-- `composer test` passed on 2026-03-15 (63 tests, 146 assertions, 2 skipped).
-- `composer analyse:phpstan` passed on 2026-03-15.
-- `composer analyse:psalm` passed on 2026-03-15.
-- `composer lint` passed on 2026-03-15.
+- LOC and test file counts verified on `develop` on 2026-03-21.
+- `composer test` passed on 2026-03-21 (68 tests, 155 assertions, 3 skipped).
+- `composer analyse:phpstan` passed on 2026-03-21.
+- `composer analyse:psalm` passed on 2026-03-21.
+- `composer lint` passed on 2026-03-21.
 
 ## Verification Script
 

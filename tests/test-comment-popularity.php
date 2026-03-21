@@ -121,6 +121,11 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		}
 	}
 
+	protected function clear_visitor() {
+		$visitor_prop = new \ReflectionProperty( HMN_Comment_Popularity::class, 'visitor' );
+		$visitor_prop->setValue( $this->plugin, null );
+	}
+
 	protected function render_block_comment_content( array $context ) {
 		$parsed_block = array(
 			'blockName'    => 'core/comment-content',
@@ -179,6 +184,7 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 	public function test_block_theme_comment_content_renders_read_only_ui_when_visitor_cannot_vote() {
 
 		wp_set_current_user( 0 );
+		$this->clear_visitor();
 
 		$output = $this->render_block_comment_content(
 			array(
@@ -191,6 +197,20 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 		$this->assertStringContainsString( 'comment-weight-container', $output );
 		$this->assertStringNotContainsString( 'vote-up', $output );
 		$this->assertStringNotContainsString( 'vote-down', $output );
+	}
+
+	public function test_custom_comments_template_returns_original_template_when_not_overriding() {
+		$template = '/tmp/theme-comments.php';
+
+		$this->assertSame( $template, $this->plugin->custom_comments_template( $template ) );
+	}
+
+	public function test_custom_comments_template_overrides_for_open_singular_posts() {
+		$this->go_to( get_permalink( $this->test_post_id ) );
+
+		$template = $this->plugin->custom_comments_template( '/tmp/theme-comments.php' );
+
+		$this->assertStringEndsWith( 'inc/templates/comments.php', $template );
 	}
 
 	public function test_upvote_comment_saves_action_to_user_meta() {
@@ -368,5 +388,29 @@ class Test_HMN_Comment_Popularity extends \WP_UnitTestCase {
 
 		wp_delete_comment( $registered_comment_id, true );
 		wp_delete_user( $registered_author_id );
+	}
+
+	public function test_deactivate_removes_custom_capabilities_from_roles_by_slug() {
+		add_role(
+			'hmn_cp_moderador',
+			'Moderador',
+			array(
+				'read'                       => true,
+				'manage_user_karma_settings' => true,
+				'vote_on_comments'           => true,
+			)
+		);
+
+		$role = get_role( 'hmn_cp_moderador' );
+		$this->assertTrue( $role->has_cap( 'manage_user_karma_settings' ) );
+		$this->assertTrue( $role->has_cap( 'vote_on_comments' ) );
+
+		HMN_Comment_Popularity::deactivate();
+
+		$role = get_role( 'hmn_cp_moderador' );
+		$this->assertFalse( $role->has_cap( 'manage_user_karma_settings' ) );
+		$this->assertFalse( $role->has_cap( 'vote_on_comments' ) );
+
+		remove_role( 'hmn_cp_moderador' );
 	}
 }

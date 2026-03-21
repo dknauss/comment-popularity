@@ -1,6 +1,21 @@
 <?php namespace CommentPopularity;
 
 /**
+ * Callback-specific die handler for bootstrap tests.
+ *
+ * @param mixed $message wp_die() message.
+ */
+function hmn_cp_test_bootstrap_wp_die_handler( $message ) {
+	if ( is_scalar( $message ) || null === $message ) {
+		$message = (string) $message;
+	} else {
+		$message = wp_json_encode( $message );
+	}
+
+	throw new \RuntimeException( $message );
+}
+
+/**
  * Bootstrap init regression tests.
  */
 class Test_HMN_CP_Bootstrap_Init extends \WP_UnitTestCase {
@@ -47,6 +62,15 @@ class Test_HMN_CP_Bootstrap_Init extends \WP_UnitTestCase {
 	protected function clear_visitor() {
 		$visitor_prop = new \ReflectionProperty( $this->plugin, 'visitor' );
 		$visitor_prop->setValue( $this->plugin, null );
+	}
+
+	/**
+	 * Resolve custom wp_die handler callback.
+	 *
+	 * @return string
+	 */
+	public function filter_wp_die_handler() {
+		return __NAMESPACE__ . '\\hmn_cp_test_bootstrap_wp_die_handler';
 	}
 
 	public function test_hmn_cp_init_sets_member_visitor_for_logged_in_user() {
@@ -116,5 +140,48 @@ class Test_HMN_CP_Bootstrap_Init extends \WP_UnitTestCase {
 
 	public function test_admin_class_is_available_via_composer_autoload() {
 		$this->assertTrue( class_exists( HMN_Comment_Popularity_Admin::class ) );
+	}
+
+	public function test_activate_deactivates_main_plugin_when_wordpress_version_is_too_low() {
+		$admin_user_id = $this->factory->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => 'bootstrap_activation_admin',
+				'email'      => 'bootstrap-activation-admin@example.com',
+			)
+		);
+
+		if ( is_multisite() ) {
+			grant_super_admin( $admin_user_id );
+		}
+
+		wp_set_current_user( $admin_user_id );
+
+		$plugin_basename         = plugin_basename( dirname( __DIR__ ) . '/comment-popularity.php' );
+		$original_active_plugins = get_option( 'active_plugins', array() );
+		$original_wp_version     = $GLOBALS['wp_version'];
+		$GLOBALS['wp_version']   = '6.3';
+
+		update_option( 'active_plugins', array( $plugin_basename ) );
+		add_filter( 'wp_die_handler', array( $this, 'filter_wp_die_handler' ) );
+
+		try {
+			HMN_Comment_Popularity::activate();
+			$this->fail( 'Expected activation to abort on unsupported WordPress.' );
+		} catch ( \RuntimeException $exception ) {
+			$this->assertStringContainsString( 'requires WordPress version 6.4', $exception->getMessage() );
+		}
+
+		$this->assertNotContains( $plugin_basename, get_option( 'active_plugins', array() ) );
+
+		remove_filter( 'wp_die_handler', array( $this, 'filter_wp_die_handler' ) );
+		update_option( 'active_plugins', $original_active_plugins );
+		$GLOBALS['wp_version'] = $original_wp_version;
+
+		if ( is_multisite() ) {
+			revoke_super_admin( $admin_user_id );
+		}
+
+		wp_delete_user( $admin_user_id );
 	}
 }
