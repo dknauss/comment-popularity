@@ -28,7 +28,7 @@ All commands use `bin/php-runtime.sh` which cascades to Local PHP 8.4/8.3/8.2 wh
 ## Documentation
 
 - `ROADMAP.md` — fork priorities, phase status, guardrails.
-- `FORK_FIRST_POLICY.md` — fork governance and upstream submission rules.
+- `FORK_FIRST_POLICY.md` — fork governance and release workflow rules.
 - `CONTRIBUTING.md` — contributor setup and workflow.
 - `CHANGELOG_UNRELEASED.md` — in-progress release notes.
 - `docs/manual-testing-checklist.md` — UI/UX testing prompts.

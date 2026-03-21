@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Define an upstream-friendly backlog for modernizing Comment Popularity without turning it into a fork-only rewrite. The goal is to send small, reviewable improvements back to `humanmade/comment-popularity` while staying aligned with the existing plugin structure and WordPress coding standards.
+Define a fork-owned backlog for modernizing Comment Popularity while staying aligned with the existing plugin structure and WordPress coding standards.
 
 ## Workflow Direction (Current)
 
-The active workflow for this repository is fork-first. `dknauss/comment-popularity` `develop` is the canonical integration branch, and upstream PRs are minimized. See `FORK_FIRST_POLICY.md` for the authoritative working process.
+The active workflow for this repository is fork-first. `dknauss/comment-popularity` `develop` is the canonical integration branch, and `humanmade/comment-popularity` is a read-only reference repo for this workflow. See `FORK_FIRST_POLICY.md` for the authoritative working process.
 WordPress.org distribution is currently closed for this plugin (closed on March 3, 2021), so roadmap execution does not include SVN/.org release steps.
 
 ## Guardrails
@@ -14,7 +14,7 @@ WordPress.org distribution is currently closed for this plugin (closed on March 
 - Follow the WordPress Coding Standards already called out in `CONTRIBUTING.md`.
 - Prefer small PRs that change one concern at a time.
 - Preserve existing public behavior, hooks, options, and template helpers unless a bug fix requires a narrowly scoped change.
-- Avoid new runtime dependencies unless they are required for upstream maintenance.
+- Avoid new runtime dependencies unless they are required for fork maintenance.
 - Use the repo's existing tooling where possible: Composer, PHPUnit, Grunt, and `bin/install-wp-tests.sh`.
 
 ## Current Baseline
@@ -178,17 +178,17 @@ Close the loop after the code and tests are credible.
 1. Update README installation, testing, and extension guidance to match the current code.
 2. Record fixed bugs and modernization work in the changelog.
 3. Document any supported-version decisions that were made during modernization.
-4. Keep the roadmap updated as backlog items move upstream.
+4. Keep the roadmap updated as backlog items land in the fork.
 
 ### Acceptance Criteria
 
 - The README reflects the actual plugin behavior and supported contributor workflow.
-- Each upstream PR has a matching changelog or release-note decision.
+- Each completed roadmap item has a matching changelog or release-note decision.
 - The roadmap can be used as an issue and PR sequencing guide.
 
 ## Phase 7: Fork-Specific Modernization (Explicit PHP Floor, PSR-4, PHPStan)
 
-This phase is fork-only work that goes beyond the upstream-friendly scope of Phases 1–6. The fork now explicitly targets PHP `8.2`, so this phase is about sustaining that baseline while continuing PSR-4 autoloading work and static-analysis maintenance.
+This phase is fork-only work that goes beyond the stabilization scope of Phases 1–6. The fork now explicitly targets PHP `8.2`, so this phase is about sustaining that baseline while continuing PSR-4 autoloading work and static-analysis maintenance.
 
 ### Backlog
 
@@ -254,11 +254,11 @@ This phase consolidates the remaining review findings into one fork-first execut
 
 ## Branch Status (Phases 1–5)
 
-The branch status below reflects optional upstream export scaffolding, not the canonical fork execution workflow. See `.planning/prs/README.md` only when there is an explicit decision to export work upstream.
+The branch status below reflects fork execution scaffolding, not an upstream export queue.
 
 | Branch | Covers | Status |
 |--------|--------|--------|
-| `codex/core-correctness` | Phase 1 + Phase 2 | Ready for upstream PR |
+| `codex/core-correctness` | Phase 1 + Phase 2 | Ready for fork integration |
 | `codex/fix-comment-sort-signature` | Phase 3 (sort signature) | Ready, stacked on above |
 | `codex/wpcs-modernization` | Phase 3 (WPCS cleanup) + Phase 5 (PHPCS config) | Ready, stacked |
 | `codex/ci-quality` | Phase 5 (GitHub Actions CI) | Ready, stacked |
@@ -266,15 +266,15 @@ The branch status below reflects optional upstream export scaffolding, not the c
 
 ## Deferred Until Core Bugs Are Resolved
 
-These are not good first upstream targets for this codebase:
+These are not good first fork priorities for this codebase:
 
 - Reworking Wilson score or ranking-mode behavior that already ships in the fork.
 - Performance caching or async recalculation work.
 - REST API or block-editor rewrites.
 - Visual redesign of the voting UI.
-- Raising minimum supported WordPress or PHP versions without explicit upstream agreement.
+- Raising minimum supported WordPress or PHP versions without explicit fork release intent.
 
-## Recommended PR Sequence
+## Recommended Execution Sequence
 
 1. `fix(visitor): persist empty member state and preserve guest vote storage`
 2. `fix(ajax): guard missing visitors and invalid comments`
@@ -286,7 +286,7 @@ These are not good first upstream targets for this codebase:
 ## Definition Of Done For This Roadmap
 
 - The highest-risk voting bugs are fixed first.
-- Each phase can be proposed upstream as one or more focused pull requests.
-- Changes follow WordPress Coding Standards and do not depend on fork-only architecture.
-- Phase 7 (fork-specific modernization) is tracked separately and does not block upstream work.
+- Each phase can be delivered through focused pull requests against this fork.
+- Changes follow WordPress Coding Standards and do not depend on speculative upstream coordination.
+- Phase 7 (fork-specific modernization) is tracked separately and does not block fork releases.
 - The roadmap stays grounded in the code that actually exists in this repository.

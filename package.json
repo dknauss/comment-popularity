@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/humanmade/comment-popularity"
+    "url": "https://github.com/dknauss/comment-popularity"
   },
   "keywords": [
     "comments",
@@ -15,9 +15,9 @@
   "author": "Human Made Limited",
   "license": "GPLv2",
   "bugs": {
-    "url": "https://github.com/humanmade/comment-popularity/issues"
+    "url": "https://github.com/dknauss/comment-popularity/issues"
   },
-  "homepage": "https://github.com/humanmade/comment-popularity",
+  "homepage": "https://github.com/dknauss/comment-popularity",
   "devDependencies": {
     "grunt": "^1.0.0",
     "grunt-contrib-cssmin": "^2.2.1",

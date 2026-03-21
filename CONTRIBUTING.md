@@ -1,4 +1,4 @@
-Contributing guidelines [![Build Status](https://travis-ci.org/humanmade/comment-popularity.svg?branch=master)](https://travis-ci.org/humanmade/comment-popularity)
+Contributing guidelines
 =======================
 
 Canonical workflow policy: see `FORK_FIRST_POLICY.md`. If this file and another document conflict, follow `FORK_FIRST_POLICY.md`.
@@ -64,7 +64,7 @@ Fork-first workflow
 -------------------
 
 1. Default integration branch is `develop` on `dknauss/comment-popularity`.
-2. Keep upstream PRs to a minimum; ship from the fork unless explicitly needed.
+2. Do not push branches or open PRs against `humanmade/comment-popularity`; ship from this fork.
 3. Use short-lived feature branches only when needed, then delete local and remote branches after merge.
 4. Follow the branch/checklist details in `FORK_FIRST_POLICY.md`.
 

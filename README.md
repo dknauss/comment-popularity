@@ -10,7 +10,7 @@ This repository is the active fork (`dknauss/comment-popularity`) and is operate
 - Long-lived release branch: `master`
 - Active release channel: Git tags + GitHub Releases from this fork
 - WordPress.org plugin distribution: closed (March 3, 2021)
-- Upstream PRs (`humanmade/comment-popularity`): minimized and optional
+- Upstream repository (`humanmade/comment-popularity`): reference-only, no pushes or PRs from this fork
 
 For canonical branch/release policy, see [FORK_FIRST_POLICY.md](FORK_FIRST_POLICY.md).
 

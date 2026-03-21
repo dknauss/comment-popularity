@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Comment Popularity
-Plugin URI: https://github.com/humanmade/comment-popularity
+Plugin URI: https://github.com/dknauss/comment-popularity
 Description: Allow visitors to vote on comments.
 Version: 1.5.3-dev
 Requires at least: 6.4

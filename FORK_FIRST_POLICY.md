@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Keep delivery velocity and quality control in the fork (`dknauss/comment-popularity`) without relying on upstream approvals.
+Keep delivery velocity and quality control in the fork (`dknauss/comment-popularity`) without relying on upstream approvals or upstream merge paths.
 
 ## Canonical Integration Branch
 
@@ -11,9 +11,9 @@ Keep delivery velocity and quality control in the fork (`dknauss/comment-popular
 
 ## Pull Request Policy
 
-- Upstream PRs (`humanmade/comment-popularity`) are optional and minimized.
-- Open upstream PRs only when there is a clear external need.
-- Do not keep overlapping upstream PR stacks open.
+- Open pull requests only against this fork (`dknauss/comment-popularity`).
+- Do not push branches to `humanmade/comment-popularity`.
+- Treat the upstream repository as a read-only historical reference unless this policy is explicitly changed.
 
 ## Distribution Channel Policy
 
