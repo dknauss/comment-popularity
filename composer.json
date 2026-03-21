@@ -4,7 +4,7 @@
 	"minimum-stability": "stable",
 	"keywords"   : ["wordpress"],
 	"homepage"   : "https://github.com/dknauss/comment-popularity",
-	"license"    : "GPL-2.0+",
+	"license"    : "GPL-2.0-or-later",
 	"config": {
 		"vendor-dir": "inc/lib",
 		"allow-plugins": {

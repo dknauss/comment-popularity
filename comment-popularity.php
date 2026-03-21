@@ -9,7 +9,7 @@ Requires PHP: 8.2
 Author: Human Made Limited
 Author URI: http://humanmade.co.uk
 Text Domain: comment-popularity
-License: GPL-2.0+
+License: GPL-2.0-or-later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Domain Path: /languages
 */
