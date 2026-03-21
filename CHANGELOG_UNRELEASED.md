@@ -2,6 +2,13 @@ Unreleased
 ==========
 
 - Target version: 1.5.3-dev.
+- Compat: plugin metadata and activation-time gating now enforce WordPress `6.4+` consistently.
+- Fix: `comments_template` now falls back to the incoming theme template outside plugin-owned comment contexts.
+- Fix: anonymous visitors now receive the read-only popularity UI when guest voting is disabled instead of a blank render path.
+- Fix: uninstall now removes site-scoped user option data across multisite networks and resets any non-zero comment karma values.
+- Fix: capability cleanup now resolves editable roles by slug, so localized role labels do not leave plugin caps behind.
+- Tests: added regression coverage for activation version gating, comments-template fallback, true anonymous read-only rendering, localized-role capability teardown, and multisite user-option uninstall cleanup.
+- Tooling: refreshed the committed Psalm baseline after the lifecycle and uninstall type cleanups.
 - UX: clicking the active vote arrow is now a no-op; switching requires clicking the opposite arrow directly.
 - Tooling: namespaced plugin classes now bootstrap through Composer autoload instead of manual class includes.
 - Tests: local smoke/manual guidance and vote-transition regression coverage now track direct vote switching instead of `undo`.

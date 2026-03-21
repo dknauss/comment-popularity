@@ -35,77 +35,68 @@ if ( ! $wpdb instanceof wpdb ) {
 	return;
 }
 
-// Remove User meta
-$args = array(
-	'meta_query' => array(
-		array(
-			'key'     => $wpdb->get_blog_prefix() . 'hmn_user_expert_status',
-			'compare' => 'EXISTS',
-		),
-	),
-	'fields'     => 'all',
-);
+if ( ! function_exists( 'hmn_cp_delete_user_option_records' ) ) {
+	/**
+	 * Delete site-scoped user option data for an option name.
+	 *
+	 * @param int    $site_id Site ID.
+	 * @param string $option_name User option name.
+	 *
+	 * @return void
+	 */
+	function hmn_cp_delete_user_option_records( int $site_id, string $option_name ): void {
+		global $wpdb;
+		/** @var \wpdb $wpdb */
+		$database = $wpdb;
 
-// Delete user expert status
-$user_query = new WP_User_Query( $args );
+		$restore_blog = false;
+		if ( is_multisite() && get_current_blog_id() !== $site_id ) {
+			switch_to_blog( $site_id );
+			$restore_blog = true;
+		}
 
-if ( ! empty( $user_query->results ) ) {
+		$prefixed_option = $database->get_blog_prefix() . $option_name;
+		$user_query      = new WP_User_Query(
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => $prefixed_option,
+						'compare' => 'EXISTS',
+					),
+				),
+				'fields'     => 'all',
+			)
+		);
 
-	foreach ( $user_query->results as $user ) {
+		if ( ! empty( $user_query->results ) ) {
+			foreach ( $user_query->results as $user ) {
+				delete_user_meta( $user->ID, $option_name );
+				delete_user_meta( $user->ID, $prefixed_option );
+				delete_user_option( $user->ID, $option_name );
+			}
+		}
 
-		delete_user_meta( $user->ID, 'hmn_user_expert_status' );
-		delete_user_option( $user->ID, 'hmn_user_expert_status' );
-
+		if ( $restore_blog ) {
+			restore_current_blog();
+		}
 	}
 }
 
-$args = array(
-	'meta_query' => array(
-		array(
-			'key'     => $wpdb->get_blog_prefix() . 'hmn_user_karma',
-			'compare' => 'EXISTS',
-		),
-	),
-	'fields'     => 'all',
-);
+$site_ids = is_multisite() ? get_sites( array( 'fields' => 'ids' ) ) : array( get_current_blog_id() );
 
-$user_query = new WP_User_Query( $args );
-
-if ( ! empty( $user_query->results ) ) {
-
-	foreach ( $user_query->results as $user ) {
-
-		delete_user_meta( $user->ID, 'hmn_user_karma' );
-		delete_user_option( $user->ID, 'hmn_user_karma' );
-
-	}
+foreach ( $site_ids as $site_id ) {
+	hmn_cp_delete_user_option_records( $site_id, 'hmn_user_expert_status' );
+	hmn_cp_delete_user_option_records( $site_id, 'hmn_user_karma' );
+	hmn_cp_delete_user_option_records( $site_id, 'hmn_comments_voted_on' );
 }
 
-$args = array(
-	'meta_query' => array(
-		array(
-			'key'     => $wpdb->get_blog_prefix() . 'hmn_comments_voted_on',
-			'compare' => 'EXISTS',
-		),
-	),
-	'fields'     => 'all',
-);
+// Reset any stored comment karma value.
+/** @var \wpdb $wpdb */
+$database = $wpdb;
 
-$user_query = new WP_User_Query( $args );
-
-if ( ! empty( $user_query->results ) ) {
-
-	foreach ( $user_query->results as $user ) {
-
-		delete_user_option( $user->ID, 'hmn_comments_voted_on' );
-	}
-}
-
-// Select all comments with karma > 0, and reset value to zero.
-
-$wpdb->query(
-	(string) $wpdb->prepare(
-		"UPDATE {$wpdb->comments} SET comment_karma=0 WHERE comment_karma > %d",
+$database->query(
+	(string) $database->prepare(
+		"UPDATE {$database->comments} SET comment_karma=0 WHERE comment_karma != %d",
 		0
 	)
 );

@@ -20,7 +20,7 @@ class HMN_Comment_Popularity {
 	/**
 	 *
 	 */
-	const HMN_CP_REQUIRED_WP_VERSION = '4.9';
+	const HMN_CP_REQUIRED_WP_VERSION = '6.4';
 
 	const COMMENT_META_UPVOTES = '_hmn_cp_upvotes';
 
@@ -60,7 +60,7 @@ class HMN_Comment_Popularity {
 	protected $allow_negative_comment_weight = false;
 
 	/**
-	 * @var HMN_CP_Visitor
+	 * @var HMN_CP_Visitor|null
 	 */
 	protected $visitor;
 
@@ -118,7 +118,7 @@ class HMN_Comment_Popularity {
 	}
 
 	/**
-	 * @return HMN_CP_Visitor
+	 * @return HMN_CP_Visitor|null
 	 */
 	public function get_visitor() {
 		return $this->visitor;
@@ -179,7 +179,7 @@ class HMN_Comment_Popularity {
 		global $wp_version;
 
 		if ( ! current_user_can( 'activate_plugins' ) || version_compare( $wp_version, self::HMN_CP_REQUIRED_WP_VERSION, '<' ) ) {
-			deactivate_plugins( plugin_basename( __FILE__ ) );
+			deactivate_plugins( plugin_basename( dirname( __DIR__ ) . '/comment-popularity.php' ) );
 			/* translators: the plugin version number */
 			wp_die( sprintf( esc_html__( 'This plugin requires WordPress version %s. Sorry about that.', 'comment-popularity' ), esc_html( self::HMN_CP_REQUIRED_WP_VERSION ) ), 'Comment Popularity', array( 'back_link' => true ) );
 		}
@@ -192,9 +192,9 @@ class HMN_Comment_Popularity {
 	 */
 	public static function deactivate() {
 
-		foreach ( get_editable_roles() as $role ) {
+		foreach ( array_keys( get_editable_roles() ) as $role_slug ) {
 
-			$role_obj = get_role( strtolower( $role['name'] ) );
+			$role_obj = get_role( (string) $role_slug );
 
 			if ( ! empty( $role_obj ) ) {
 
@@ -289,15 +289,17 @@ class HMN_Comment_Popularity {
 	/**
 	 * Override comments template with custom one.
 	 *
+	 * @param string $template Existing comments template path.
+	 *
 	 * @return string
 	 */
-	public function custom_comments_template() {
+	public function custom_comments_template( $template ) {
 
 		global $post;
 
-		if ( ! ( is_singular() && ( have_comments() || 'open' === $post->comment_status ) ) ) {
+		if ( ! is_singular() || ! $post instanceof \WP_Post || ! ( have_comments() || 'open' === $post->comment_status ) ) {
 
-			return;
+			return $template;
 
 		}
 
@@ -325,11 +327,10 @@ class HMN_Comment_Popularity {
 	public function render_ui( $comment_id ) {
 
 		$container_classes = array( 'comment-weight-container' );
-
-		if ( ! $this->visitor ) {
-			return;
+		$votes             = array();
+		if ( $this->visitor ) {
+			$votes = $this->visitor->retrieve_logged_votes();
 		}
-		$votes = $this->visitor->retrieve_logged_votes();
 		if ( ! is_array( $votes ) ) {
 			$votes = array();
 		}
@@ -658,7 +659,12 @@ class HMN_Comment_Popularity {
 			'vote_time'   => 0,
 		);
 
-		$logged_votes = $this->get_visitor()->retrieve_logged_votes();
+		$visitor = $this->get_visitor();
+		if ( ! $visitor instanceof HMN_CP_Visitor ) {
+			return $state;
+		}
+
+		$logged_votes = $visitor->retrieve_logged_votes();
 		$key          = 'comment_id_' . $comment_id;
 
 		if ( ! is_array( $logged_votes ) || ! isset( $logged_votes[ $key ] ) || ! is_array( $logged_votes[ $key ] ) ) {
@@ -806,7 +812,12 @@ class HMN_Comment_Popularity {
 			wp_send_json_error( $return );
 		}
 
-		$result = $this->comment_vote( $this->visitor->get_id(), $comment_id, $vote );
+		$visitor = $this->get_visitor();
+		if ( ! $visitor instanceof HMN_CP_Visitor ) {
+			wp_send_json_error( $this->send_error( 'invalid_visitor', __( 'Voting is unavailable for this user', 'comment-popularity' ), $comment_id ) );
+		}
+
+		$result = $this->comment_vote( $visitor->get_id(), $comment_id, $vote );
 
 		if ( array_key_exists( 'error_message', $result ) ) {
 
@@ -876,10 +887,9 @@ class HMN_Comment_Popularity {
 	/**
 	 * Processes the comment vote logic.
 	 *
-	 * @param $vote
-	 * @param $comment_id
-	 *
-	 * @param $user_id
+	 * @param int|string $user_id User or guest identifier.
+	 * @param int    $comment_id Comment ID.
+	 * @param string $vote Vote action.
 	 *
 	 * @return array
 	 */
@@ -889,6 +899,11 @@ class HMN_Comment_Popularity {
 
 		if ( ! array_key_exists( $vote, $labels ) ) {
 			return $this->send_error( 'invalid_action', __( 'Invalid action', 'comment-popularity' ), $comment_id );
+		}
+
+		$visitor = $this->get_visitor();
+		if ( ! $visitor instanceof HMN_CP_Visitor ) {
+			return $this->send_error( 'invalid_visitor', __( 'Voting is unavailable for this user', 'comment-popularity' ), $comment_id );
 		}
 
 		$result = $this->is_vote_valid( $comment_id, $labels, $vote );
@@ -918,7 +933,7 @@ class HMN_Comment_Popularity {
 		$counts       = $this->update_comment_vote_counts( $comment_id, $previous_vote, $next_vote );
 		$wilson_score = $this->update_comment_wilson_rank( $comment_id, $counts );
 
-		$this->get_visitor()->log_vote( $comment_id, $next_vote );
+		$visitor->log_vote( $comment_id, $next_vote );
 
 		do_action( 'hmn_cp_comment_vote', $user_id, $comment_id, $labels[ $vote ] );
 
@@ -947,7 +962,15 @@ class HMN_Comment_Popularity {
 	 * @return array
 	 */
 	protected function is_vote_valid( $comment_id, $labels, $action ) {
-		$user_can_vote = $this->get_visitor()->is_vote_valid( $comment_id, $labels[ $action ] );
+		$visitor = $this->get_visitor();
+		if ( ! $visitor instanceof HMN_CP_Visitor ) {
+			return array(
+				'error_code' => 'invalid_visitor',
+				'error_msg'  => __( 'Voting is unavailable for this user', 'comment-popularity' ),
+			);
+		}
+
+		$user_can_vote = $visitor->is_vote_valid( $comment_id, $labels[ $action ] );
 		if ( is_wp_error( $user_can_vote ) ) {
 
 			return array(
@@ -978,6 +1001,15 @@ class HMN_Comment_Popularity {
 		return array();
 	}
 
+	/**
+	 * Build a standardized vote error payload.
+	 *
+	 * @param string $error_code Error code.
+	 * @param string $error_msg Error message.
+	 * @param int    $comment_id Comment ID.
+	 *
+	 * @return array{error_code:string,error_message:string,comment_id:int,vote_type:string}
+	 */
 	protected function send_error( $error_code, $error_msg, $comment_id ) {
 		$return = array(
 			'error_code'    => $error_code,

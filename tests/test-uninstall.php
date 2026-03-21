@@ -118,11 +118,19 @@ class Test_HMN_CP_Uninstall extends WP_UnitTestCase {
 		$this->post_ids[]    = $post_id;
 		$comment_id          = $this->factory->comment->create( array( 'comment_post_ID' => $post_id ) );
 		$this->comment_ids[] = $comment_id;
+		$negative_comment_id = $this->factory->comment->create( array( 'comment_post_ID' => $post_id ) );
+		$this->comment_ids[] = $negative_comment_id;
 
 		wp_update_comment(
 			array(
 				'comment_ID'    => $comment_id,
 				'comment_karma' => 6,
+			)
+		);
+		wp_update_comment(
+			array(
+				'comment_ID'    => $negative_comment_id,
+				'comment_karma' => -3,
 			)
 		);
 
@@ -134,8 +142,10 @@ class Test_HMN_CP_Uninstall extends WP_UnitTestCase {
 		$this->run_uninstall();
 
 		clean_comment_cache( $comment_id );
+		clean_comment_cache( $negative_comment_id );
 
 		$this->assertSame( 0, (int) get_comment( $comment_id )->comment_karma );
+		$this->assertSame( 0, (int) get_comment( $negative_comment_id )->comment_karma );
 		$this->assertFalse( get_role( 'administrator' )->has_cap( 'manage_user_karma_settings' ) );
 		$this->assertFalse( get_role( 'subscriber' )->has_cap( 'vote_on_comments' ) );
 	}
@@ -182,5 +192,39 @@ class Test_HMN_CP_Uninstall extends WP_UnitTestCase {
 		$this->assertFalse( get_blog_option( $second_site_id, 'comment_popularity_prefs', false ) );
 		$this->assertFalse( get_blog_option( $second_site_id, 'hmn_cp_guests_logged_votes', false ) );
 		$this->assertFalse( get_blog_option( $second_site_id, 'hmn_cp_plugin_version', false ) );
+	}
+
+	public function test_uninstall_deletes_site_scoped_user_options_across_multisite_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Multisite only test.' );
+		}
+
+		$second_site_id   = self::factory()->blog->create();
+		$this->site_ids[] = $second_site_id;
+		$user_id          = $this->factory->user->create();
+		$this->user_ids[] = $user_id;
+
+		switch_to_blog( $second_site_id );
+		update_user_option( $user_id, 'hmn_user_expert_status', true );
+		update_user_option( $user_id, 'hmn_user_karma', 9 );
+		update_user_option(
+			$user_id,
+			'hmn_comments_voted_on',
+			array(
+				'comment_id_7' => array(
+					'vote_time'   => 3333333333,
+					'last_action' => 'downvote',
+				),
+			)
+		);
+		restore_current_blog();
+
+		$this->run_uninstall();
+
+		switch_to_blog( $second_site_id );
+		$this->assertFalse( get_user_option( 'hmn_user_expert_status', $user_id ) );
+		$this->assertFalse( get_user_option( 'hmn_user_karma', $user_id ) );
+		$this->assertFalse( get_user_option( 'hmn_comments_voted_on', $user_id ) );
+		restore_current_blog();
 	}
 }

@@ -115,8 +115,6 @@
       <code><![CDATA[HMN_Comment_Popularity]]></code>
     </ClassMustBeFinal>
     <DocblockTypeContradiction>
-      <code><![CDATA[! $this->visitor]]></code>
-      <code><![CDATA[$this->visitor]]></code>
       <code><![CDATA[is_array( $args )]]></code>
       <code><![CDATA[is_array( $legacy_args )]]></code>
     </DocblockTypeContradiction>
@@ -146,17 +144,11 @@
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$commenter_id]]></code>
       <code><![CDATA[$depth]]></code>
-      <code><![CDATA[$error_code]]></code>
-      <code><![CDATA[$error_msg]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$value]]></code>
-      <code><![CDATA[$vote]]></code>
       <code><![CDATA[$weight_value]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -169,7 +161,6 @@
       <code><![CDATA[insert_comment_callback]]></code>
       <code><![CDATA[register_widgets]]></code>
       <code><![CDATA[render_ui]]></code>
-      <code><![CDATA[send_error]]></code>
       <code><![CDATA[set_comment_vote_counts]]></code>
       <code><![CDATA[set_permissions]]></code>
       <code><![CDATA[set_visitor]]></code>
@@ -178,6 +169,7 @@
     <MixedArgument>
       <code><![CDATA[$comment->user_id]]></code>
       <code><![CDATA[$comment_arr]]></code>
+      <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$comment_id]]></code>
@@ -192,16 +184,8 @@
       <code><![CDATA[$previous_vote]]></code>
       <code><![CDATA[$previous_vote]]></code>
       <code><![CDATA[$role]]></code>
-      <code><![CDATA[$role['name']]]></code>
       <code><![CDATA[$template_path]]></code>
       <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$vote]]></code>
-      <code><![CDATA[$vote]]></code>
-      <code><![CDATA[$next_vote]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$next_vote]]></code>
-      <code><![CDATA[$comment_id]]></code>
       <code><![CDATA[$wp_version]]></code>
       <code><![CDATA[ARRAY_A]]></code>
       <code><![CDATA[ARRAY_A]]></code>
@@ -244,7 +228,6 @@
       <code><![CDATA[$locale]]></code>
       <code><![CDATA[$mode]]></code>
       <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$next_vote]]></code>
       <code><![CDATA[$previous_vote]]></code>
       <code><![CDATA[$role]]></code>
       <code><![CDATA[$role]]></code>
@@ -280,16 +263,12 @@
       <code><![CDATA[$comment->comment_karma]]></code>
       <code><![CDATA[$comment->user_id]]></code>
       <code><![CDATA[$comment->user_id]]></code>
-      <code><![CDATA[$post->comment_status]]></code>
       <code><![CDATA[$wp_roles->role_objects]]></code>
     </MixedPropertyFetch>
     <MixedReturnStatement>
       <code><![CDATA[$comment_arr['comment_karma']]]></code>
       <code><![CDATA[$delta]]></code>
       <code><![CDATA[$delta]]></code>
-      <code><![CDATA[$this->send_error( 'invalid_action', __( 'Invalid action', 'comment-popularity' ), $comment_id )]]></code>
-      <code><![CDATA[$this->send_error( (string) $result['error_code'], (string) $result['error_msg'], $comment_id )]]></code>
-      <code><![CDATA[$this->send_error( 'voting_flood', __( 'You have already cast this vote.', 'comment-popularity' ), $comment_id )]]></code>
       <code><![CDATA[apply_filters( 'hmn_cp_comments_template_path', plugin_dir_path( __FILE__ ) . 'templates/comments.php' )]]></code>
       <code><![CDATA[get_blog_option( $blog_id, 'comment_popularity_prefs', $defaults )]]></code>
       <code><![CDATA[get_option( 'comment_popularity_prefs', $defaults )]]></code>
@@ -309,16 +288,12 @@
     <PossiblyNullReference>
       <code><![CDATA[render]]></code>
     </PossiblyNullReference>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[$visitor]]></code>
-    </PropertyNotSetInConstructor>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $downvotes]]></code>
       <code><![CDATA[(int) $upvotes]]></code>
     </RedundantCastGivenDocblockType>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[array()]]></code>
-      <code><![CDATA[null !== $this->visitor]]></code>
     </RedundantConditionGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $this->is_negative_comment_weight_allowed()]]></code>
@@ -710,17 +685,11 @@
       <code><![CDATA[$user->ID]]></code>
       <code><![CDATA[$user->ID]]></code>
       <code><![CDATA[$user->ID]]></code>
-      <code><![CDATA[$user->ID]]></code>
-      <code><![CDATA[$user->ID]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
     </MixedAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$user->ID]]></code>
-      <code><![CDATA[$user->ID]]></code>
       <code><![CDATA[$user->ID]]></code>
     </MixedPropertyFetch>
     <UnresolvableInclude>

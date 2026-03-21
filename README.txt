@@ -2,7 +2,7 @@
 
 Contributors: pauldewouters,mattheu,humanmade,cfo-publishing
 Tags: comments,vote,upvote,karma,widget
-Requires at least: 4.9
+Requires at least: 6.4
 Tested up to: 6.4
 Stable tag: 1.5.3-dev
 Requires PHP: 8.2
