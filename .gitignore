@@ -4,3 +4,6 @@ build
 inc/lib
 tests/cache
 .phpunit.result.cache
+
+# Local agent config
+CLAUDE.md
