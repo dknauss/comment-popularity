@@ -3,7 +3,7 @@
 Plugin Name: Comment Popularity
 Plugin URI: https://github.com/dknauss/comment-popularity
 Description: Allow visitors to vote on comments.
-Version: 1.5.3-dev
+Version: 1.5.3
 Requires at least: 6.4
 Requires PHP: 8.2
 Author: Human Made Limited
