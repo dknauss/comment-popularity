@@ -1,7 +1,9 @@
 Unreleased
 ==========
 
-- Target version: 1.5.3-dev.
+1.5.3 - 2026-04-08
+==================
+
 - Compat: plugin metadata and activation-time gating now enforce WordPress `6.4+` consistently.
 - Fix: `comments_template` now falls back to the incoming theme template outside plugin-owned comment contexts.
 - Fix: anonymous visitors now receive the read-only popularity UI when guest voting is disabled instead of a blank render path.
