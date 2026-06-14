@@ -1,5 +1,5 @@
 # Comment Popularity (Fork)
-[![License](https://img.shields.io/github/license/dknauss/comment-popularity)](LICENSE) [![CI](https://github.com/dknauss/comment-popularity/actions/workflows/quality.yml/badge.svg)](https://github.com/dknauss/comment-popularity/actions/workflows/quality.yml) [![Latest Tag](https://img.shields.io/github/v/tag/dknauss/comment-popularity)](https://github.com/dknauss/comment-popularity/tags) [![Security Policy](https://img.shields.io/badge/security-policy-4c1)](SECURITY.md)
+[![License](https://img.shields.io/github/license/dknauss/comment-popularity)](LICENSE) [![CI](https://github.com/dknauss/comment-popularity/actions/workflows/quality.yml/badge.svg)](https://github.com/dknauss/comment-popularity/actions/workflows/quality.yml) [![Latest Tag](https://img.shields.io/github/v/tag/dknauss/comment-popularity)](https://github.com/dknauss/comment-popularity/tags) [![Security Policy](https://img.shields.io/badge/security-policy-4c1)](SECURITY.md) [![Docs](https://img.shields.io/badge/docs-available-0a7ea4.svg)](docs/)
 
 
 Comment Popularity adds upvote/downvote controls for WordPress comments, tracks commenter karma, and supports ranking by either legacy karma or Wilson score.
