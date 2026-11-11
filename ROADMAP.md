@@ -252,6 +252,39 @@ This phase consolidates the remaining review findings into one fork-first execut
 - [x] 08-01-PLAN.md — Comprehensive remediation backlog after full consistency review
 - [x] 08-02-PLAN.md — TDD coverage matrix and execution order for Phase 8 remediation
 
+## Phase 9: Moderation Signals
+
+This phase turns votes into signals that route comments to human moderators, without replacing moderation. The criteria come from "A Proper Comment System for WordPress: Twenty Simple Suggestions" (wpyeg.org, August 2025) and its comment thread. Only the voting-related criteria belong here. Comment-submission rules from that post (throttling, length limits, the Website field, Markdown preview, edit windows) are out of scope for this plugin.
+
+### Backlog
+
+1. [#40](https://github.com/dknauss/comment-popularity/issues/40) Reject votes on unapproved or non-public comments. `is_vote_valid()` currently checks only that the comment exists.
+2. [#41](https://github.com/dknauss/comment-popularity/issues/41) Add a votable-comment-types policy, defaulting to `comment`, and keep fediverse reactions (likes, reposts, mentions) separate from upvotes.
+3. [#42](https://github.com/dknauss/comment-popularity/issues/42) Add tests showing that weight ranking keeps replies under their parents with threading on or off.
+4. [#36](https://github.com/dknauss/comment-popularity/issues/36) Add a vote display mode setting (`net`, `split`, or `hidden`) built from existing comment meta. `net` stays the default.
+5. [#37](https://github.com/dknauss/comment-popularity/issues/37) Hold a comment for moderation when its downvote count reaches a configurable threshold (disabled by default).
+6. [#38](https://github.com/dknauss/comment-popularity/issues/38) Email moderators when a comment is held by votes, with context and action links.
+7. [#39](https://github.com/dknauss/comment-popularity/issues/39) Let visitors report comments, separately from downvotes, through the same hold-and-notify path.
+
+Items 1–3 harden existing behavior and come first. Items 5–7 depend on each other in order.
+
+### Acceptance Criteria
+
+- Default behavior for existing sites is unchanged: net display, no threshold, and no reporting until enabled.
+- Every new rule is enforced server-side, following Phase 2's transition discipline, with stable error codes.
+- Votes and reports can hold a comment for review, but never trash, spam, or delete it.
+- Nothing in this phase needs a REST/block-editor rewrite or a visual redesign. Both remain deferred.
+
+### Likely File Scope
+
+- `inc/class-comment-popularity.php`
+- `inc/class-visitor.php`
+- `inc/templates/voting-system.html`
+- `admin/class-comment-popularity-admin.php`
+- `js/voting.js`
+- `tests/`
+- `docs/current-metrics.md` (test counts)
+
 ## Branch Status (Phases 1–5)
 
 The branch status below reflects fork execution scaffolding, not an upstream export queue.
